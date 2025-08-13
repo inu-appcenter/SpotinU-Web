@@ -1,0 +1,17 @@
+{
+  // 자동 import & 저장시 정리
+  "typescript.suggest.autoImports": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true,
+    "source.fixAll.eslint": true
+  },
+
+  // 포맷터를 Prettier로 고정
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // 워크스페이스 단위 Prettier(개발자 전역설정과 달라도 이 값이 우선)
+  "prettier.singleQuote": true,
+  "prettier.semi": false,
+  "prettier.trailingComma": "all",
+  "prettier.printWidth": 100
+}
