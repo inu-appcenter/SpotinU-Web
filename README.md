@@ -1,5 +1,3 @@
-# SpotinU-Web
-
 # Spotinu - 캠퍼스 휴게공간 안내 서비스
 
 ## Description
