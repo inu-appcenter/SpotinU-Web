@@ -34,7 +34,7 @@
 
 - **React 19 + TypeScript + Vite**
 - **상태관리**: Zustand
-- **스타일링**: TailwindCSS + Styled Components
+- **스타일링**: Styled Components
 - **라우팅**: React Router
 - **코드 품질**: ESLint, Prettier
 - **데이터 통신**: Axios
