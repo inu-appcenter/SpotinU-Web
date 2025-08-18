@@ -16,7 +16,7 @@ const GlobalStyle = createGlobalStyle`
     --z-sticky-top: 50;      /* 상단 고정 바(필터) */
     --z-content: 0;
     --z-bottom-bar: 60;      /* 하단 네비바 */
-    --vh: 1vh;               /* iOS 폴백용 사용자 정의 vh */
+    --vh: 1vh;               /* iOS 폴백용 사용자 정의 vh  <-- 근데 꼭 필연적인걸까? */
   }
 
   /* 바디: 모바일처럼 보이게 폭 제한 + 가운데 정렬 */
