@@ -1,14 +1,14 @@
-import { Swiper, SwiperSlide } from 'swiper/react'
+import styled from 'styled-components'
 import { Autoplay, Pagination } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/pagination'
-import styled from 'styled-components'
 
 type Props = {
   photos: string[]
 }
 
-const Wrapper = styled.div`
+const PlaceImageSlideWrapper = styled.div`
   width: 100%;
   aspect-ratio: 1.5;
   position: relative;
@@ -32,10 +32,10 @@ const Image = styled.img`
 
 const PlaceImageSlide = ({ photos }: Props) => {
   return (
-    <Wrapper>
+    <PlaceImageSlideWrapper>
       <CustomSwiper
         modules={[Autoplay, Pagination]}
-        autoplay={{ delay: 7000 }}
+        autoplay={{ delay: 5000 }}
         pagination={{ clickable: true }} // 하단 도트 클릭으로 넘기기 가능
         loop={true}
       >
@@ -46,7 +46,7 @@ const PlaceImageSlide = ({ photos }: Props) => {
             </SwiperSlide>
           ))}
       </CustomSwiper>
-    </Wrapper>
+    </PlaceImageSlideWrapper>
   )
 }
 

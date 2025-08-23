@@ -1,10 +1,9 @@
-import styled from 'styled-components'
-
 import { ArrowLeft } from 'lucide-react'
+import styled from 'styled-components'
 
 import SaveButton from '../Common/SaveButton.tsx'
 
-const Wrapper = styled.header`
+const PageHeaderWrapper = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,7 +33,7 @@ const ReviewButton = styled.button`
 `
 const PageHeader = () => {
   return (
-    <Wrapper>
+    <PageHeaderWrapper>
       <Left>
         <button onClick={() => window.history.back()}>
           <ArrowLeft size={24} />
@@ -42,10 +41,12 @@ const PageHeader = () => {
       </Left>
 
       <Right>
-        <ReviewButton>이용후기 등록</ReviewButton>
-        <SaveButton />
+        <ReviewButton onClick={() => console.log('이용후기 등록 버튼 클릭')}>
+          이용후기 등록
+        </ReviewButton>
+        <SaveButton onClick={() => console.log('저장하기 버튼 클릭')} />
       </Right>
-    </Wrapper>
+    </PageHeaderWrapper>
   )
 }
 

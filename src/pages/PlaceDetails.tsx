@@ -1,14 +1,21 @@
-/* 장소 상세 페이지 */
+import { Map } from 'lucide-react'
+import { useState } from 'react'
 import styled from 'styled-components'
-import PlaceImageSlide from '../components/PlaceDetails/PlaceImageSlide.tsx'
+
+import BottomNavBar from '../components/Common/BottomNavBar.tsx'
+import DirectionInfoBox from '../components/PlaceDetails/DirectionInfoBox.tsx'
 import PageHeader from '../components/PlaceDetails/PageHeader.tsx'
+import PlaceImageSlide from '../components/PlaceDetails/PlaceImageSlide.tsx'
+import PlaceTitle from '../components/PlaceDetails/PlaceTitle.tsx'
+import ReviewInfoBox from '../components/PlaceDetails/ReviewInfoBox.tsx'
+import TimeInfoBox from '../components/PlaceDetails/TimeInfoBox.tsx'
+import { businessHours, directions, imageDummy, reviews } from '../dummy/PlaceDetailsDummy.ts'
 import { useViewportVH } from '../hooks/useViewportVH'
 
-const Wrapper = styled.div`
+const PlaceDetailsWrapper = styled.div`
   display: flex;
   position: relative;
   flex-direction: column;
-  min-height: 100vh;
   background: var(--bg);
 `
 
@@ -25,24 +32,59 @@ const HeaderWrapper = styled.div`
 `
 const Content = styled.div`
   z-index: 1;
-  margin-top: -60px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `
+const MapButton = styled.button`
+  width: 100%;
+  background: #073b7b;
+  color: white;
+  font-size: 12px;
+  border-radius: 20px;
+  padding: 4px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+`
+
+const sortReviews = [...reviews].sort(
+  (a, b) => new Date(b.visitDate).getTime() - new Date(a.visitDate).getTime(),
+)
+
 const PlaceDetails = () => {
   useViewportVH()
-
-  const ImageDummy = ['/장소사진더미.svg', '/장소사진더미.svg', '/장소사진더미.svg']
+  const [tab, setTab] = useState<'find' | 'map' | 'me'>('find')
 
   return (
-    <Wrapper className="app">
-      <SlideWrapper>
-        <PlaceImageSlide photos={ImageDummy} />
-        <HeaderWrapper>
-          <PageHeader />
-        </HeaderWrapper>
-      </SlideWrapper>
+    <>
+      <PlaceDetailsWrapper className="app">
+        <SlideWrapper>
+          <PlaceImageSlide photos={imageDummy} />
+          <HeaderWrapper>
+            <PageHeader />
+          </HeaderWrapper>
+          <PlaceTitle />
+        </SlideWrapper>
 
-      <Content></Content>
-    </Wrapper>
+        <Content>
+          <TimeInfoBox right={businessHours} />
+          <MapButton onClick={() => console.log('캠퍼스맵으로 이동')}>
+            <Map size={14} />
+            인천대 캠퍼스맵으로 이동
+          </MapButton>
+          <DirectionInfoBox directions={directions} />
+          <ReviewInfoBox
+            latestReview={sortReviews[0]}
+            onSeeAll={() => console.log('후기 모달 열림')}
+          />
+        </Content>
+        <BottomNavBar activeKey={tab} onChange={(key) => setTab(key as 'find' | 'map' | 'me')} />
+      </PlaceDetailsWrapper>
+    </>
   )
 }
 
