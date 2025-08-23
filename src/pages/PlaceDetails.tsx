@@ -8,6 +8,7 @@ import PageHeader from '../components/PlaceDetails/PageHeader.tsx'
 import PlaceImageSlide from '../components/PlaceDetails/PlaceImageSlide.tsx'
 import PlaceTitle from '../components/PlaceDetails/PlaceTitle.tsx'
 import ReviewInfoBox from '../components/PlaceDetails/ReviewInfoBox.tsx'
+import ReviewModal from '../components/PlaceDetails/ReviewModal.tsx'
 import TimeInfoBox from '../components/PlaceDetails/TimeInfoBox.tsx'
 import { businessHours, directions, imageDummy, reviews } from '../dummy/PlaceDetailsDummy.ts'
 import { useViewportVH } from '../hooks/useViewportVH'
@@ -58,6 +59,7 @@ const sortReviews = [...reviews].sort(
 const PlaceDetails = () => {
   useViewportVH()
   const [tab, setTab] = useState<'find' | 'map' | 'me'>('find')
+  const [showModal, setShowModal] = useState(false)
 
   return (
     <>
@@ -77,13 +79,11 @@ const PlaceDetails = () => {
             인천대 캠퍼스맵으로 이동
           </MapButton>
           <DirectionInfoBox directions={directions} />
-          <ReviewInfoBox
-            latestReview={sortReviews[0]}
-            onSeeAll={() => console.log('후기 모달 열림')}
-          />
+          <ReviewInfoBox latestReview={sortReviews[0]} onSeeAll={() => setShowModal(true)} />
         </Content>
         <BottomNavBar activeKey={tab} onChange={(key) => setTab(key as 'find' | 'map' | 'me')} />
       </PlaceDetailsWrapper>
+      {showModal && <ReviewModal reviews={sortReviews} onClose={() => setShowModal(false)} />}
     </>
   )
 }

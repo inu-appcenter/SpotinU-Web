@@ -27,6 +27,56 @@ type Props = {
   review: Review
 }
 
+const ReviewWrapper = styled.div`
+  display: flex;
+  gap: 12px;
+`
+
+const Photo = styled.img`
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+`
+
+const RightGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`
+
+const DateText = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #99a1af;
+  font-size: 12px;
+`
+
+const Content = styled.div`
+  font-size: 12px;
+  font-weight: 500;
+  white-space: pre-wrap;
+`
+
+const Keyword = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+`
+
+const KeywordItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+`
+const IconWrapper = styled.div`
+  top: 1px;
+  display: inline-flex;
+  position: relative;
+`
+
 const ReviewItem = ({ review }: Props) => {
   const { photo, content, visitDate, visitTime, keywords } = review
   const day = `${visitDate.replaceAll('-', '.')} (${getDay(visitDate)}) ${visitTime.slice(0, 2)}시`
@@ -61,53 +111,3 @@ const ReviewItem = ({ review }: Props) => {
 }
 
 export default ReviewItem
-
-const ReviewWrapper = styled.div`
-  display: flex;
-  gap: 18px;
-`
-
-const Photo = styled.img`
-  width: 75px;
-  height: 75px;
-  object-fit: cover;
-  border-radius: 8px;
-`
-
-const RightGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  font-size: 12px;
-`
-
-const DateText = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #99a1af;
-`
-
-const Content = styled.div`
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.5;
-`
-
-const Keyword = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-`
-
-const KeywordItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  font-size: 12px;
-`
-const IconWrapper = styled.div`
-  top: 1px;
-  display: inline-flex;
-  position: relative;
-`
