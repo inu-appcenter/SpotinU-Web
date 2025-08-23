@@ -31,7 +31,7 @@ const ReviewButton = styled.button`
   background: #073b7b;
   border-radius: 20px;
 `
-const PageHeader = () => {
+const PageHeader = ({ onRequireLogin }: { onRequireLogin: () => void }) => {
   return (
     <PageHeaderWrapper>
       <Left>
@@ -41,10 +41,8 @@ const PageHeader = () => {
       </Left>
 
       <Right>
-        <ReviewButton onClick={() => console.log('이용후기 등록 버튼 클릭')}>
-          이용후기 등록
-        </ReviewButton>
-        <SaveButton onClick={() => console.log('저장하기 버튼 클릭')} />
+        <ReviewButton onClick={onRequireLogin}>이용후기 등록</ReviewButton>
+        <SaveButton onClick={onRequireLogin} />
       </Right>
     </PageHeaderWrapper>
   )

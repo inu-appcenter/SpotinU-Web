@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import SaveIcon from '../../assets/icons/saveIcon.svg'
+import SaveIcon from '../../assets/saveIcon.svg'
 
 const Button = styled.button`
   width: 33px;

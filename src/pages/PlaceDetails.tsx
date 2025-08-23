@@ -3,6 +3,7 @@ import { useState } from 'react'
 import styled from 'styled-components'
 
 import BottomNavBar from '../components/Common/BottomNavBar.tsx'
+import LoginBottomSheet from '../components/Common/LoginBottomSheet.tsx'
 import DirectionInfoBox from '../components/PlaceDetails/DirectionInfoBox.tsx'
 import PageHeader from '../components/PlaceDetails/PageHeader.tsx'
 import PlaceImageSlide from '../components/PlaceDetails/PlaceImageSlide.tsx'
@@ -55,6 +56,7 @@ const PlaceDetails = () => {
   useViewportVH()
   const [tab, setTab] = useState<'find' | 'map' | 'me'>('find')
   const [showModal, setShowModal] = useState(false)
+  const [showBottomSheet, setShowBottomSheet] = useState(false)
 
   return (
     <>
@@ -62,7 +64,7 @@ const PlaceDetails = () => {
         <SlideWrapper>
           <PlaceImageSlide photos={imageDummy} />
           <HeaderWrapper>
-            <PageHeader />
+            <PageHeader onRequireLogin={() => setShowBottomSheet(true)} />
           </HeaderWrapper>
           <PlaceTitle />
         </SlideWrapper>
@@ -81,6 +83,13 @@ const PlaceDetails = () => {
         <BottomNavBar activeKey={tab} onChange={(key) => setTab(key as 'find' | 'map' | 'me')} />
       </PlaceDetailsWrapper>
       {showModal && <ReviewModal reviews={sortReviews} onClose={() => setShowModal(false)} />}
+      {showBottomSheet && (
+        <LoginBottomSheet
+          isOpen={showBottomSheet}
+          onClose={() => setShowBottomSheet(false)}
+          onClickLogin={() => console.log('로그인 페이지로 이동')}
+        />
+      )}
     </>
   )
 }
