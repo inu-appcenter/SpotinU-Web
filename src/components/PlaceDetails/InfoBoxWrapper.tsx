@@ -10,7 +10,7 @@ type Props = {
 
 const Box = styled.div`
   padding: 14px;
-  background-color: white;
+  background-color: var(--surface);
   border: 2px solid #e5e5e5;
   border-radius: 16px;
 `

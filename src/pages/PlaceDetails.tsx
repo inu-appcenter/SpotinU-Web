@@ -13,12 +13,7 @@ import TimeInfoBox from '../components/PlaceDetails/TimeInfoBox.tsx'
 import { businessHours, directions, imageDummy, reviews } from '../dummy/PlaceDetailsDummy.ts'
 import { useViewportVH } from '../hooks/useViewportVH'
 
-const PlaceDetailsWrapper = styled.div`
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  background: var(--bg);
-`
+const PlaceDetailsWrapper = styled.div``
 
 const SlideWrapper = styled.div`
   position: relative;
@@ -32,11 +27,11 @@ const HeaderWrapper = styled.div`
   z-index: 10;
 `
 const Content = styled.div`
-  z-index: 1;
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-bottom: 16px;
 `
 const MapButton = styled.button`
   width: 100%;
@@ -72,7 +67,7 @@ const PlaceDetails = () => {
           <PlaceTitle />
         </SlideWrapper>
 
-        <Content>
+        <Content className={'app-content'}>
           <TimeInfoBox right={businessHours} />
           <MapButton onClick={() => console.log('캠퍼스맵으로 이동')}>
             <Map size={14} />
@@ -81,6 +76,8 @@ const PlaceDetails = () => {
           <DirectionInfoBox directions={directions} />
           <ReviewInfoBox latestReview={sortReviews[0]} onSeeAll={() => setShowModal(true)} />
         </Content>
+
+        <div className={'bottom-gap'} />
         <BottomNavBar activeKey={tab} onChange={(key) => setTab(key as 'find' | 'map' | 'me')} />
       </PlaceDetailsWrapper>
       {showModal && <ReviewModal reviews={sortReviews} onClose={() => setShowModal(false)} />}
