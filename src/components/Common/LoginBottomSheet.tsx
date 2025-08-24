@@ -1,4 +1,6 @@
-import styled from 'styled-components'
+import { useEffect, useState } from 'react'
+import styled, { keyframes } from 'styled-components'
+
 import mascot from '../../assets/횃불이.png'
 
 type Props = {
@@ -8,44 +10,37 @@ type Props = {
   title?: string
 }
 
-const SheetWrapper = styled.div`
+const slideUp = keyframes`
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+`
+const Dimmed = styled.div`
   position: fixed;
   inset: 0;
+  background: rgba(0, 0, 0, 0.6);
   z-index: 999;
-  height: 100%;
 `
-
-const Dimmed = styled.div`
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 1;
-`
-
-const Sheet = styled.div`
+const SheetWrapper = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
-  right: 0;
+  width: 100%;
+  z-index: 1000;
+`
 
+const Sheet = styled.div`
   width: 100%;
   max-width: 430px;
   margin: 0 auto;
-
   background: #eeeeee;
   border-radius: 20px 20px 0 0;
   padding: 8px 14px 0;
-  z-index: 2;
 
-  // 아래에서 올라옴
-  transform: translateY(100%);
-  animation: slideUp 0.4s ease-out forwards;
-
-  @keyframes slideUp {
-    to {
-      transform: translateY(0);
-    }
-  }
+  animation: ${slideUp} 0.5s ease-out forwards;
 `
 
 const GrayBar = styled.div`
@@ -64,6 +59,7 @@ const Title = styled.p`
   text-align: center;
   margin-bottom: 20px;
 `
+
 const Content = styled.div`
   display: flex;
   align-items: center;
@@ -74,7 +70,6 @@ const MascotImg = styled.img`
   width: 150px;
   height: 160px;
   margin-left: -20px;
-
   object-fit: contain;
   image-rendering: auto;
 `
@@ -106,32 +101,45 @@ const NoLoginButton = styled.button`
   border-radius: 30px;
 `
 
+// 컴포넌트
 const LoginBottomSheet = ({
   isOpen,
   onClose,
   onClickLogin,
   title = '로그인 후 이용 가능한 서비스입니다.\n지금 로그인하시겠어요?',
 }: Props) => {
-  if (!isOpen) return null
+  const [isVisible, setIsVisible] = useState(false)
+
+  // 열고 닫는 애니메이션 감지
+  useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true)
+      document.body.style.overflow = 'hidden'
+    } else {
+      setIsVisible(false)
+      document.body.style.overflow = 'visible'
+    }
+  }, [isOpen])
+
+  if (!isVisible) return null
 
   return (
-    <SheetWrapper className="app">
+    <>
       <Dimmed onClick={onClose} />
-      <Sheet>
-        <GrayBar />
-
-        <Title>{title}</Title>
-
-        <Content>
-          <MascotImg src={mascot} alt="횃불이" />
-
-          <ButtonGroup>
-            <LoginButton onClick={onClickLogin}>로그인 하기</LoginButton>
-            <NoLoginButton onClick={onClose}>나중에 할게요</NoLoginButton>
-          </ButtonGroup>
-        </Content>
-      </Sheet>
-    </SheetWrapper>
+      <SheetWrapper>
+        <Sheet>
+          <GrayBar />
+          <Title>{title}</Title>
+          <Content>
+            <MascotImg src={mascot} alt="횃불이" />
+            <ButtonGroup>
+              <LoginButton onClick={onClickLogin}>로그인 하기</LoginButton>
+              <NoLoginButton onClick={onClose}>나중에 할게요</NoLoginButton>
+            </ButtonGroup>
+          </Content>
+        </Sheet>
+      </SheetWrapper>
+    </>
   )
 }
 

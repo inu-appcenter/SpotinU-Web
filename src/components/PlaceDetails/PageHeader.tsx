@@ -36,7 +36,7 @@ const PageHeader = ({ onRequireLogin }: { onRequireLogin: () => void }) => {
     <PageHeaderWrapper>
       <Left>
         <button onClick={() => window.history.back()}>
-          <ArrowLeft size={24} />
+          <ArrowLeft size={24} color={'#000000'} />
         </button>
       </Left>
 

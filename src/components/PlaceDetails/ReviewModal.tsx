@@ -21,7 +21,7 @@ const ModalWrapper = styled.div`
   z-index: 1000;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.8); // 뒷배경 어둡게
+  background-color: rgba(0, 0, 0, 0.6); // 뒷배경 어둡게
 `
 
 const ModalContent = styled.div`
@@ -62,7 +62,7 @@ const ReviewModal = ({ reviews, onClose }: Props) => {
         <Top>
           <Title>이용후기</Title>
           <CloseButton onClick={onClose}>
-            <X size={18} />
+            <X size={18} color={'#000000'} />
           </CloseButton>
         </Top>
 
