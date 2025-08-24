@@ -5,6 +5,12 @@ import SaveButton from '../Common/SaveButton.tsx'
 
 import ReviewButton from './ReviewButton.tsx'
 
+/**
+ * 장소 상세페이지 상단 헤더
+ * 뒤로가기 + 후기등록버튼 + 저장하기 버튼
+ * 후기/저장버튼은 로그인 여부에 따라 동작 달라짐
+ */
+
 const PageHeaderWrapper = styled.header`
   display: flex;
   justify-content: space-between;

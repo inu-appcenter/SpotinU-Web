@@ -3,6 +3,11 @@ import styled from 'styled-components'
 import savedIcon from '../../assets/savedIcon.svg'
 import saveIcon from '../../assets/saveIcon.svg'
 
+/**
+ * isSaved값에 따라 저장/저장X 아이콘 표시
+ * 버튼 동작은 부모 컴포넌트에서
+ */
+
 const Button = styled.button`
   width: 33px;
   height: 33px;
@@ -18,7 +23,7 @@ const Icon = styled.img`
 `
 
 type Props = {
-  isSaved?: boolean
+  isSaved?: boolean // 저장 상태
   onClick?: () => void
 }
 
