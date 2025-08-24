@@ -119,6 +119,9 @@ const LoginBottomSheet = ({
       setIsVisible(false)
       document.body.style.overflow = 'visible'
     }
+    return () => {
+      document.body.style.overflow = 'visible'
+    }
   }, [isOpen])
 
   if (!isVisible) return null

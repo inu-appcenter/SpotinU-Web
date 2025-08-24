@@ -11,7 +11,12 @@ import PlaceTitle from '../components/PlaceDetails/PlaceTitle.tsx'
 import ReviewInfoBox from '../components/PlaceDetails/ReviewInfoBox.tsx'
 import ReviewModal from '../components/PlaceDetails/ReviewModal.tsx'
 import TimeInfoBox from '../components/PlaceDetails/TimeInfoBox.tsx'
-import { businessHours, directions, imageDummy, reviews } from '../dummy/PlaceDetailsDummy.ts'
+import {
+  businessHours,
+  descriptionDetail,
+  imageDummy,
+  reviews,
+} from '../dummy/PlaceDetailsDummy.ts'
 import { useViewportVH } from '../hooks/useViewportVH'
 
 const PlaceDetailsWrapper = styled.div``
@@ -75,7 +80,7 @@ const PlaceDetails = () => {
             <Map size={14} />
             인천대 캠퍼스맵으로 이동
           </MapButton>
-          <DirectionInfoBox directions={directions} />
+          <DirectionInfoBox directions={descriptionDetail} />
           <ReviewInfoBox latestReview={sortReviews[0]} onSeeAll={() => setShowModal(true)} />
         </Content>
 

@@ -2,10 +2,7 @@ export const imageDummy = ['/장소사진더미.svg', '/장소사진더미.svg',
 
 export const businessHours = `10:00 ~ 18:00\n10:00 ~ 14:00\n휴관`
 
-export const directions = [
-  '학식당 건물과 중앙 편의점 중간에 위치한 중앙 엘리베이터를 타고 올라갑니다.',
-  '엘리베이터를 타고 3층에서 내려 왼쪽 방향으로 00m 이동합니다.교육혁신원 맞은편에 위치합니다.',
-]
+export const descriptionDetail = ['좌로 돌고 우로 돌고 빙빙 가다보면 정수기 옆']
 
 export const reviews = [
   {
