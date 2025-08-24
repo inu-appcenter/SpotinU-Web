@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
-import SaveIcon from '../../assets/saveIcon.svg'
+import savedIcon from '../../assets/savedIcon.svg'
+import saveIcon from '../../assets/saveIcon.svg'
 
 const Button = styled.button`
   width: 33px;
@@ -16,10 +17,15 @@ const Icon = styled.img`
   height: 33px;
 `
 
-const SaveButton = ({ onClick }: { onClick?: () => void }) => {
+type Props = {
+  isSaved?: boolean
+  onClick?: () => void
+}
+
+const SaveButton = ({ isSaved = false, onClick }: Props) => {
   return (
     <Button onClick={onClick}>
-      <Icon src={SaveIcon} alt="저장하기 버튼" />
+      <Icon src={isSaved ? savedIcon : saveIcon} alt="저장하기 버튼" />
     </Button>
   )
 }

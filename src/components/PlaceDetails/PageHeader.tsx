@@ -3,6 +3,8 @@ import styled from 'styled-components'
 
 import SaveButton from '../Common/SaveButton.tsx'
 
+import ReviewButton from './ReviewButton.tsx'
+
 const PageHeaderWrapper = styled.header`
   display: flex;
   justify-content: space-between;
@@ -24,14 +26,19 @@ const Right = styled.div`
   gap: 14px;
 `
 
-const ReviewButton = styled.button`
-  padding: 6px 12px;
-  font-size: 14px;
-  color: white;
-  background: #073b7b;
-  border-radius: 20px;
-`
-const PageHeader = ({ onRequireLogin }: { onRequireLogin: () => void }) => {
+const PageHeader = ({
+  isLogin,
+  isSaved,
+  toggleSave,
+  showLoginSheet,
+  goToReviewPage,
+}: {
+  isLogin: boolean
+  isSaved?: boolean
+  toggleSave: () => void
+  showLoginSheet: () => void
+  goToReviewPage: () => void
+}) => {
   return (
     <PageHeaderWrapper>
       <Left>
@@ -41,8 +48,12 @@ const PageHeader = ({ onRequireLogin }: { onRequireLogin: () => void }) => {
       </Left>
 
       <Right>
-        <ReviewButton onClick={onRequireLogin}>이용후기 등록</ReviewButton>
-        <SaveButton onClick={onRequireLogin} />
+        <ReviewButton
+          isLogin={isLogin}
+          onClickLogin={showLoginSheet}
+          onClickReview={goToReviewPage}
+        />
+        <SaveButton isSaved={isLogin && isSaved} onClick={isLogin ? toggleSave : showLoginSheet} />
       </Right>
     </PageHeaderWrapper>
   )

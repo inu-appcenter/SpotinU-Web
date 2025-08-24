@@ -62,6 +62,9 @@ const PlaceDetails = () => {
   const [tab, setTab] = useState<'find' | 'map' | 'me'>('find')
   const [showModal, setShowModal] = useState(false)
   const [showBottomSheet, setShowBottomSheet] = useState(false)
+  const [isSaved, setIsSaved] = useState(false) //저장 여부
+  const toggleSave = () => setIsSaved((prev) => !prev) // 저장 상태 토글
+  const isLogin = false // false로 바꿔보면서 테스트
 
   return (
     <>
@@ -69,7 +72,13 @@ const PlaceDetails = () => {
         <SlideWrapper>
           <PlaceImageSlide photos={imageDummy} />
           <HeaderWrapper>
-            <PageHeader onRequireLogin={() => setShowBottomSheet(true)} />
+            <PageHeader
+              isLogin={isLogin}
+              isSaved={isSaved}
+              toggleSave={toggleSave}
+              showLoginSheet={() => setShowBottomSheet(true)}
+              goToReviewPage={() => console.log('후기작성 페이지로 이동')}
+            />
           </HeaderWrapper>
           <PlaceTitle />
         </SlideWrapper>
