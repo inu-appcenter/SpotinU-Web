@@ -17,30 +17,36 @@ const HeaderWrapper = styled.header`
   width: 100%;
 `
 
-const Content = styled.div`
+const Side = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
+  width: 24px;
+`
+const BackButton = styled.button`
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
 `
 
 const Title = styled.h1`
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: black;
-  flex: 1;
   text-align: center;
 `
 
 const BackHeader = ({ title }: Props) => {
   return (
     <HeaderWrapper>
-      <Content>
-        <button onClick={() => window.history.back()}>
+      <Side>
+        <BackButton onClick={() => window.history.back()}>
           <ArrowLeft size={24} color={'#000000'} />
-        </button>
-        {title && <Title>{title}</Title>}
-      </Content>
+        </BackButton>
+      </Side>
+      {title && <Title>{title}</Title>}
+      <Side /> {/*오른쪽 공간 확보*/}
     </HeaderWrapper>
   )
 }
