@@ -1,8 +1,6 @@
-import { useState } from 'react'
 import styled from 'styled-components'
 
 import BackHeader from '../components/Common/BackHeader.tsx'
-import BottomNavBar from '../components/Common/BottomNavBar.tsx'
 import LoginBox from '../components/LoginPage/LoginBox.tsx'
 import { useViewportVH } from '../hooks/useViewportVH'
 
@@ -22,7 +20,6 @@ const Content = styled.div`
 
 const LoginPage = () => {
   useViewportVH()
-  const [tab, setTab] = useState<'find' | 'map' | 'me'>('find')
 
   return (
     <LoginPageWrapper className="app">
@@ -33,7 +30,6 @@ const LoginPage = () => {
         <LoginBox />
       </Content>
       <div className={'bottom-gap'} />
-      <BottomNavBar activeKey={tab} onChange={(key) => setTab(key as 'find' | 'map' | 'me')} />
     </LoginPageWrapper>
   )
 }

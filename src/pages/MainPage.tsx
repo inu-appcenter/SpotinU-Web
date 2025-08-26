@@ -1,10 +1,10 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 // 민준 :
 // 사실 이 임포트 방식이 좋지 않음
 // alias 걸어서 @/ 이렇게 하는게 좋을 것 같긴 한데.. 이건 논의해보죠
-import BottomNavBar from '../components/Common/BottomNavBar'
 import Banner from '../components/MainPage/Banner'
 import FilterButtons, { type FilterKey } from '../components/MainPage/FilterButtons'
 import PlaceList from '../components/MainPage/PlaceList'
@@ -25,7 +25,7 @@ const StickyWrap = styled.div`
 
 const MainPage = () => {
   useViewportVH() // iOS 폴백 vh 설정 피하려고 호출하는 훅임
-  const [tab, setTab] = useState<'find' | 'map' | 'me'>('find')
+  const navigate = useNavigate()
   const [filter, setFilter] = useState<FilterKey | ''>('')
 
   return (
@@ -38,12 +38,8 @@ const MainPage = () => {
       </StickyWrap>
 
       <Content className="app-content">
-        <PlaceList
-          onCardClick={(id) => console.log('상세페이지로 넘어가기 라우팅 구현해야댐', id)}
-        />
+        <PlaceList onCardClick={() => navigate('/places')} />
       </Content>
-
-      <BottomNavBar activeKey={tab} onChange={(key) => setTab(key as 'find' | 'map' | 'me')} />
     </main>
   )
 }

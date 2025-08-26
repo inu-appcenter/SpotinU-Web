@@ -2,7 +2,6 @@ import { Map } from 'lucide-react'
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import BottomNavBar from '../components/Common/BottomNavBar.tsx'
 import LoginBottomSheet from '../components/Common/LoginBottomSheet.tsx'
 import DirectionInfoBox from '../components/PlaceDetails/DirectionInfoBox.tsx'
 import PageHeader from '../components/PlaceDetails/PageHeader.tsx'
@@ -59,7 +58,6 @@ const sortReviews = [...reviews].sort(
 
 const PlaceDetails = () => {
   useViewportVH()
-  const [tab, setTab] = useState<'find' | 'map' | 'me'>('find')
   const [showModal, setShowModal] = useState(false)
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const [isSaved, setIsSaved] = useState(false) //저장 여부
@@ -95,7 +93,6 @@ const PlaceDetails = () => {
         </Content>
 
         <div className={'bottom-gap'} />
-        <BottomNavBar activeKey={tab} onChange={(key) => setTab(key as 'find' | 'map' | 'me')} />
       </PlaceDetailsWrapper>
       {showModal && <ReviewModal reviews={sortReviews} onClose={() => setShowModal(false)} />}
       {showBottomSheet && (

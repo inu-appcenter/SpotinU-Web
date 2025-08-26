@@ -2,7 +2,6 @@ import { useState } from 'react'
 import styled from 'styled-components'
 
 import BackHeader from '../components/Common/BackHeader.tsx'
-import BottomNavBar from '../components/Common/BottomNavBar.tsx'
 import CommonModal from '../components/Common/CommonModal.tsx'
 import PhotoUploadButton from '../components/Register/PhotoUploadButton.tsx'
 import RegisterBox from '../components/Register/RegisterBox.tsx'
@@ -41,7 +40,6 @@ const Description = styled.span`
 `
 const Register = () => {
   useViewportVH()
-  const [tab, setTab] = useState<'find' | 'map' | 'me'>('find')
   const [showModal, setShowModal] = useState(false)
 
   const handlePhotoChange = (file: File) => {
@@ -62,7 +60,6 @@ const Register = () => {
         <RegisterBox onPrivacyClick={() => setShowModal(true)} />
       </Content>
       <div className={'bottom-gap'} />
-      <BottomNavBar activeKey={tab} onChange={(key) => setTab(key as 'find' | 'map' | 'me')} />
       <CommonModal
         isOpen={showModal}
         title="개인정보 수집 · 이용 동의"
