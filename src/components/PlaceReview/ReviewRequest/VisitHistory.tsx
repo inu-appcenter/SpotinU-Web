@@ -16,6 +16,7 @@ type Props = {
 const Wrap = styled.section`
   display: grid;
   gap: 8px;
+  margin-top: 75px;
 `
 
 const Head = styled.div`
@@ -26,13 +27,21 @@ const Head = styled.div`
 
 const Title = styled.div`
   display: grid;
-  gap: 4px;
+  gap: 1px;
+  margin-left: 12px;
+  margin-bottom: 14px;
   strong {
-    font-size: 16px;
+    font-size: 14px;
   }
   .meta {
-    font-size: 12px;
-    color: #666;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000000ff;
+  }
+  .visit {
+    font-weight: 500;
+    font-size: 11px;
+    color: #000000ff;
   }
 `
 
@@ -40,6 +49,7 @@ const PillBar = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  margin-bottom: 5px;
 `
 
 const Pill = styled.span`
@@ -47,17 +57,19 @@ const Pill = styled.span`
   align-items: center;
   height: 28px;
   padding: 0 10px;
-  border-radius: 999px;
+  border-radius: 6px;
   font-size: 12px;
   background: #f2f4f8;
   color: #333;
   border: 1px solid #e3e8ef;
+  margin-left: 12px;
 `
 
 const PillOutlinePrimary = styled(Pill)`
-  background: #eaf1ff;
-  color: #2e5aff;
-  border-color: #bbd3ff;
+  border: 2px solid #073b7b;
+  background: #eeeeee;
+  color: #073b7b;
+  font-weight: 500;
 `
 
 function formatDate(isoOrDate?: string | Date) {
@@ -86,10 +98,9 @@ export default function VisitHistory({
         <Title>
           <strong>[{placeName}]</strong>
           <div className="meta">
-            {dateText || '방문 일시 미선택'} · {visitCount}번째 방문
+            {dateText || '방문 일시 미선택'} <span className="visit">{visitCount}번째 방문</span>
           </div>
         </Title>
-        {/* 우측 X 버튼 등 액션이 필요하면 여기 추가 */}
       </Head>
 
       <PillBar>

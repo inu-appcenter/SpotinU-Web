@@ -11,16 +11,17 @@ type Props = {
 
 const Wrap = styled.section`
   display: grid;
-  gap: 16px;
+  gap: 24px;
+  padding-inline: clamp(2px, 5vw, 9px);
 `
 
 // 업로드 박스
 const UploadBox = styled.button`
   width: 100%;
-  min-height: 160px;
+  min-height: 220px;
   border-radius: 16px;
   border: 1px dashed #c8cfd9;
-  background: #f3f5f9;
+  background: #d9d9d9;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,26 +34,28 @@ const UploadBox = styled.button`
 
 const UploadInner = styled.div`
   text-align: center;
+
   color: #222;
   > .title {
     font-size: 14px;
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 26px;
   }
   > .plus {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #999;
+    border: 1px solid #000000ff;
     border-radius: 50%;
     font-size: 18px;
     line-height: 1;
+    margin-bottom: 26px;
   }
 `
 
-// 미리보기 영역(있을 때만 노출)
+// 미리보기 영역(있을 때만 노출됨)
 const PreviewStrip = styled.div`
   display: flex;
   gap: 8px;
@@ -67,10 +70,9 @@ const Thumb = styled.div`
   border-radius: 10px;
   overflow: hidden;
   flex: 0 0 auto;
-  background: #e9edf2;
+  background: #d9d9d9;
 
-  img,
-  video {
+  img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -86,7 +88,7 @@ const RemoveBtn = styled.button`
   height: 22px;
   border-radius: 50%;
   border: none;
-  color: #fff;
+  color: #ffffffff;
   background: rgba(0, 0, 0, 0.55);
   display: inline-flex;
   align-items: center;
@@ -97,7 +99,7 @@ const RemoveBtn = styled.button`
 // 텍스트 박스
 const TextCard = styled.div`
   border-radius: 16px;
-  background: #f3f5f9;
+  background: #d9d9d9;
   border: 1px solid #e6eaf2;
   padding: 14px;
 `
@@ -105,7 +107,7 @@ const TextCard = styled.div`
 const Label = styled.div`
   font-size: 14px;
   margin-bottom: 8px;
-  color: #222;
+  color: #8b8888;
   &:before {
     content: '✎ ';
   }
@@ -113,28 +115,22 @@ const Label = styled.div`
 
 const Textarea = styled.textarea`
   width: 100%;
+  font-size: 12px;
+  line-height: 1.5;
+  min-height: 120px;
+  margin-top: 12px;
+
   border: none;
   outline: none;
   resize: none;
   background: transparent;
-  font-size: 14px;
-  line-height: 1.5;
-  min-height: 110px;
 `
-
-// const Counter = styled.div<{ danger?: boolean }>`
-//   text-align: right;
-//   font-size: 12px;
-//   color: ${({ danger }) => (danger ? '#e5484d' : '#8a94a6')};
-// `
 
 const Counter = styled.div<{ $danger?: boolean }>`
   text-align: right;
   font-size: 12px;
-  color: ${({ $danger }) => ($danger ? '#e5484d' : '#8a94a6')};
+  color: ${({ $danger }) => ($danger ? '#a6363aff' : '#8a94a6')};
 `
-
-// -----------------------------
 
 export default function ReviewInput({ photos, comment, maxLength = 400, onChange }: Props) {
   const fileRef = useRef<HTMLInputElement>(null)
@@ -161,8 +157,6 @@ export default function ReviewInput({ photos, comment, maxLength = 400, onChange
     onChange(photos, v)
   }
 
-  const left = maxLength - comment.length
-
   // 미리보기 URL (메모+정리)
   const previews = useMemo(
     () => photos.map((f) => ({ url: URL.createObjectURL(f), type: f.type })),
@@ -182,29 +176,27 @@ export default function ReviewInput({ photos, comment, maxLength = 400, onChange
 
   return (
     <Wrap>
-      {/* 업로드 박스 */}
       <UploadBox
         type="button"
         onClick={openPicker}
         onDrop={onDrop}
         onDragOver={prevent}
-        aria-label="사진 또는 영상을 추가하세요"
+        aria-label="사진을 추가하세요"
       >
         <UploadInner>
-          <div className="title">사진/영상을 추가해 주세요</div>
+          <div className="title">사진을 추가해 주세요</div>
           <div className="plus">+</div>
         </UploadInner>
         <input
           ref={fileRef}
           type="file"
           hidden
-          accept="image/*,video/*"
+          accept="image/*"
           multiple
           onChange={(e) => appendFiles(e.target.files)}
         />
       </UploadBox>
 
-      {/* 미리보기 */}
       {previews.length > 0 && (
         <PreviewStrip>
           {previews.map((p, i) => (
@@ -222,7 +214,6 @@ export default function ReviewInput({ photos, comment, maxLength = 400, onChange
         </PreviewStrip>
       )}
 
-      {/* 텍스트 입력 */}
       <TextCard>
         <Label>리뷰를 작성해 주세요</Label>
         <Textarea
@@ -232,8 +223,8 @@ export default function ReviewInput({ photos, comment, maxLength = 400, onChange
 욕설, 비방, 명예훼손성 표현을 삼가주세요."
           maxLength={maxLength}
         />
-        <Counter $danger={left < 0}>
-          {Math.max(0, left)}/{maxLength}
+        <Counter $danger={comment.length > maxLength}>
+          {comment.length}/{maxLength}
         </Counter>
       </TextCard>
     </Wrap>

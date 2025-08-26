@@ -184,10 +184,9 @@ export default function PlaceReviewPage() {
     <Page>
       <RaiseBottomBarZ />
       <Container>
-        <CardPlaceholder>PlaceCard 자리</CardPlaceholder>
-
         {step === 'date' && (
           <>
+            <CardPlaceholder>PlaceCard 자리</CardPlaceholder>
             <DateTimeSelector
               valueDate={selectedDate}
               valueTime={selectedTime}
@@ -206,10 +205,10 @@ export default function PlaceReviewPage() {
           </>
         )}
 
-        {/* ====== STEP: KEYWORD ====== */}
         {step === 'keyword' && (
           <>
-            {/* 필요하면 상단에 일시 요약 배치 가능 */}
+            <CardPlaceholder>PlaceCard 자리</CardPlaceholder>
+
             <ReviewKeywordSelector
               selected={selectedKeywords}
               onChange={handleKeywordsChange}
