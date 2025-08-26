@@ -11,7 +11,7 @@ const HeaderWrapper = styled.header`
   align-items: center;
   padding: 16px;
   background: white;
-  position: absolute;
+  position: sticky;
   top: 0;
   z-index: 2;
   width: 100%;
