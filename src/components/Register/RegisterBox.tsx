@@ -4,6 +4,10 @@ import styled from 'styled-components'
 
 import InputField from './InputField.tsx'
 
+type Props = {
+  onPrivacyClick: () => void
+}
+
 const Wrapper = styled.div`
   border: none;
   border-radius: 20px;
@@ -46,7 +50,7 @@ const SubmitButton = styled.button<{ disabled?: boolean }>`
   font-weight: 500;
 `
 
-const RegisterBox = () => {
+const RegisterBox = ({ onPrivacyClick }: Props) => {
   const [nickname, setNickname] = useState('')
   const [department, setDepartment] = useState('')
   const [studentNumber, setStudentNumber] = useState('')
@@ -114,7 +118,7 @@ const RegisterBox = () => {
           <StyledCheckbox type="checkbox" checked={agreed} onChange={() => setAgreed(!agreed)} />
           <span>개인정보 수집 및 이용 동의* </span>
         </AgreeLabel>
-        <ChevronRight size={16} onClick={() => console.log('모달 띄우기')} />
+        <ChevronRight size={16} onClick={onPrivacyClick} />
       </AgreeRow>
 
       <SubmitButton disabled={!isMustWrite} onClick={handleSubmit}>
