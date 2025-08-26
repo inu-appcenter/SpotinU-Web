@@ -8,6 +8,7 @@ type Props = {
   subText?: string
   hasCheckButton?: boolean
   onCheck?: () => void
+  error?: string
 }
 
 const Wrapper = styled.div`
@@ -57,6 +58,14 @@ const SubText = styled.p`
   padding: 0 16px 2px 2px;
 `
 
+const ErrorText = styled.div`
+  color: red;
+  font-size: 10px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0 16px 2px 2px;
+`
+
 const InputField = ({
   label,
   value,
@@ -65,6 +74,7 @@ const InputField = ({
   subText,
   hasCheckButton,
   onCheck,
+  error,
 }: Props) => {
   return (
     <Wrapper>
@@ -75,6 +85,7 @@ const InputField = ({
       </InputWrapper>
 
       {subText && <SubText>{subText}</SubText>}
+      {error && <ErrorText>{error}</ErrorText>}
     </Wrapper>
   )
 }

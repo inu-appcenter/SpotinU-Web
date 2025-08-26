@@ -53,8 +53,21 @@ const RegisterBox = () => {
   const [building, setBuilding] = useState('')
   const [agreed, setAgreed] = useState(false)
 
+  //뭔진 모르겠는데 닉네임/학번 조합 ?
+  const isValidNickname = /^[가-힣a-z0-9]{4,12}$/.test(nickname)
+  const isValidStudentNumber = /^\d{9}$/.test(studentNumber)
+
+  //에러 텍스트
+  const nicknameError = nickname.length === 0 ? '' : !isValidNickname ? '다시 입력해주세요' : ''
+
+  const studentNumberError =
+    studentNumber.length === 0 ? '' : !isValidStudentNumber ? '다시 입력해주세요' : ''
+
+  //필수항목 입력했는지
+  const isMustWrite = isValidNickname && department.trim() !== '' && isValidStudentNumber && agreed
+
   const handleCheckNickname = () => {
-    console.log('중복확인 로직은 나중에 구현')
+    console.log('중복확인 버튼')
   }
 
   const handleSubmit = () => {
@@ -71,6 +84,7 @@ const RegisterBox = () => {
         subText="4~12자 / 한글, 영문 소문자(숫자 조합 가능)"
         hasCheckButton
         onCheck={handleCheckNickname}
+        error={nicknameError}
       />
 
       <InputField
@@ -85,6 +99,7 @@ const RegisterBox = () => {
         value={studentNumber}
         onChange={(e) => setStudentNumber(e.target.value)}
         placeholder="ex: 2025*****"
+        error={studentNumberError}
       />
 
       <InputField
@@ -102,7 +117,7 @@ const RegisterBox = () => {
         <ChevronRight size={16} onClick={() => console.log('모달 띄우기')} />
       </AgreeRow>
 
-      <SubmitButton disabled={!agreed} onClick={handleSubmit}>
+      <SubmitButton disabled={!isMustWrite} onClick={handleSubmit}>
         가입
       </SubmitButton>
     </Wrapper>

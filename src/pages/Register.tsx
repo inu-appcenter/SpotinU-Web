@@ -16,7 +16,7 @@ const RegisterWrapper = styled.div`
 
 const HeaderWrapper = styled.div`
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 30px;
 `
 const Content = styled.div`
   display: flex;
@@ -55,9 +55,7 @@ const Register = () => {
         <PhotoWrapper>
           <PhotoUploadButton onChange={handlePhotoChange} />
         </PhotoWrapper>
-        <Description>
-          초기 프로필 설정을 해주세요! <br /> 이 과정은 한 번만 필요해요
-        </Description>
+        <Description>* 표시는 필수 입력 항목입니다.</Description>
 
         <RegisterBox />
       </Content>
