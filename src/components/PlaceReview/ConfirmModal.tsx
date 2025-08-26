@@ -20,11 +20,10 @@ export default function ConfirmModal({
   message = '작성된 리뷰 내용이 없습니다.<br/>방문만 기록하시겠습니까?',
   cancelLabel = '취소',
   visitOnlyLabel = '방문만 기록',
-  closeOnBackdrop = true, // ✅ 기본값 포함해 구조분해
+  closeOnBackdrop = true, //  기본값 포함해 구조분해
 }: ConfirmModalProps) {
-  const sheetRef = useRef<HTMLDivElement>(null) // ✅ 선언
+  const sheetRef = useRef<HTMLDivElement>(null)
 
-  // ✅ 훅은 항상 호출 → 내부에서만 분기
   useEffect(() => {
     if (!open) return
 
@@ -41,8 +40,6 @@ export default function ConfirmModal({
       document.body.style.overflow = prev
     }
   }, [open, onCancel])
-
-  // ✅ 훅 뒤에서 early return
   if (!open) return null
 
   const handleBackdrop = () => {
@@ -56,7 +53,6 @@ export default function ConfirmModal({
         onClick={(e) => e.stopPropagation()}
         aria-labelledby="confirm-modal-heading"
       >
-        <Heading id="confirm-modal-heading">확인</Heading>
         <Message dangerouslySetInnerHTML={{ __html: message }} />
         <BtnRow>
           <GhostButton type="button" onClick={onCancel}>
@@ -71,25 +67,23 @@ export default function ConfirmModal({
   )
 }
 
-/* 이하 styled-components (Dim, Sheet, Heading, Message, BtnRow, GhostButton, PrimaryButton) */
-
-/* -------------------- styles -------------------- */
-
 const Dim = styled.div`
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgba(17, 24, 39, 0.45); /* #111827 with alpha */
+  background: rgba(0, 0, 0, 0.7);
   display: grid;
   place-items: center;
   padding: 20px;
 `
 
 const Sheet = styled.div`
-  width: min(420px, 92vw);
-  border-radius: 16px;
+  width: min(440px, 90vw);
+  border-radius: 12px;
   background: #fff;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+
+  height: 210px;
+
   padding: 18px 16px 16px;
   animation: pop 140ms ease-out;
 
@@ -105,24 +99,19 @@ const Sheet = styled.div`
   }
 `
 
-const Heading = styled.h2`
-  margin: 2px 4px 8px;
-  font-size: 16px;
-  font-weight: 700;
-  color: #0f172a; /* slate-900 */
-`
-
 const Message = styled.p`
-  margin: 6px 4px 16px;
-  color: #111827; /* gray-900 */
+  margin: 40px 4px 25px;
+  color: #111827;
   line-height: 1.5;
   word-break: keep-all;
+  text-align: center;
+  font-size: 14px;
 `
 
 const BtnRow = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  gap: 20px;
 
   @media (max-width: 360px) {
     grid-template-columns: 1fr;
@@ -130,11 +119,15 @@ const BtnRow = styled.div`
 `
 
 const GhostButton = styled.button`
-  height: 44px;
+  height: 30px;
+  width: 130px;
   border-radius: 10px;
-  border: 1px solid #d7dce3;
+  border: 2px solid #073b7b;
   background: #fff;
   font-weight: 600;
+  font-size: 12px;
+  margin-left: 28px; ///// _____________이거 나중에 한번에 묶어서 관리하도록 바꿔야됨________________
+
   color: #0f172a;
   transition:
     transform 0.06s ease,
@@ -149,12 +142,14 @@ const GhostButton = styled.button`
 `
 
 const PrimaryButton = styled.button`
-  height: 44px;
+  height: 30px;
+  width: 130px;
   border-radius: 10px;
   border: 0;
-  background: #0a5cff;
+  background: #073b7b;
   color: #fff;
   font-weight: 700;
+  font-size: 12px;
   transition:
     transform 0.06s ease,
     filter 0.12s ease;
@@ -166,30 +161,3 @@ const PrimaryButton = styled.button`
     filter: brightness(0.96);
   }
 `
-
-// const BtnRowTwo = styled.div`
-//   display: grid;
-//   grid-template-columns: 1fr 1fr;
-//   gap: 10px;
-
-//   @media (max-width: 360px) {
-//     grid-template-columns: 1fr;
-//   }
-// `
-
-/* -------------------- usage example (참고용) --------------------
-import ConfirmModal from './ConfirmModal';
-
-<ConfirmModal
-  open={showEmptyModal}
-  onCancel={() => setShowEmptyModal(false)}
-  onVisitOnly={() => {
-    setShowEmptyModal(false);
-    submitVisitOnly();
-  }}
-  onForceRegister={() => {
-    setShowEmptyModal(false);
-    submitEmptyReview();
-  }}
-/>
------------------------------------------------------------------- */
