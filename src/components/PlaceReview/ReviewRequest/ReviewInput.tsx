@@ -1,0 +1,241 @@
+// 사진 + 코멘트
+import React, { useEffect, useMemo, useRef } from 'react'
+import styled from 'styled-components'
+
+type Props = {
+  photos: File[]
+  comment: string
+  maxLength?: number
+  onChange: (nextPhotos: File[], nextComment: string) => void // ★
+}
+
+const Wrap = styled.section`
+  display: grid;
+  gap: 16px;
+`
+
+// 업로드 박스
+const UploadBox = styled.button`
+  width: 100%;
+  min-height: 160px;
+  border-radius: 16px;
+  border: 1px dashed #c8cfd9;
+  background: #f3f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:active {
+    opacity: 0.9;
+  }
+`
+
+const UploadInner = styled.div`
+  text-align: center;
+  color: #222;
+  > .title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  > .plus {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #999;
+    border-radius: 50%;
+    font-size: 18px;
+    line-height: 1;
+  }
+`
+
+// 미리보기 영역(있을 때만 노출)
+const PreviewStrip = styled.div`
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+`
+
+const Thumb = styled.div`
+  position: relative;
+  width: 88px;
+  height: 88px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex: 0 0 auto;
+  background: #e9edf2;
+
+  img,
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+`
+
+const RemoveBtn = styled.button`
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`
+
+// 텍스트 박스
+const TextCard = styled.div`
+  border-radius: 16px;
+  background: #f3f5f9;
+  border: 1px solid #e6eaf2;
+  padding: 14px;
+`
+
+const Label = styled.div`
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #222;
+  &:before {
+    content: '✎ ';
+  }
+`
+
+const Textarea = styled.textarea`
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  background: transparent;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 110px;
+`
+
+// const Counter = styled.div<{ danger?: boolean }>`
+//   text-align: right;
+//   font-size: 12px;
+//   color: ${({ danger }) => (danger ? '#e5484d' : '#8a94a6')};
+// `
+
+const Counter = styled.div<{ $danger?: boolean }>`
+  text-align: right;
+  font-size: 12px;
+  color: ${({ $danger }) => ($danger ? '#e5484d' : '#8a94a6')};
+`
+
+// -----------------------------
+
+export default function ReviewInput({ photos, comment, maxLength = 400, onChange }: Props) {
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  // 파일 선택 트리거
+  const openPicker = () => fileRef.current?.click()
+
+  // 파일 추가
+  const appendFiles = (list: FileList | null) => {
+    if (!list) return
+    const next = [...photos, ...Array.from(list)]
+    onChange(next, comment)
+  }
+
+  // 파일 제거
+  const removeAt = (idx: number) => {
+    const next = photos.filter((_, i) => i !== idx)
+    onChange(next, comment)
+  }
+
+  // 코멘트 변경
+  const onComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const v = e.target.value.slice(0, maxLength)
+    onChange(photos, v)
+  }
+
+  const left = maxLength - comment.length
+
+  // 미리보기 URL (메모+정리)
+  const previews = useMemo(
+    () => photos.map((f) => ({ url: URL.createObjectURL(f), type: f.type })),
+    [photos],
+  )
+  useEffect(() => {
+    // 메모리 누수 방지
+    return () => previews.forEach((p) => URL.revokeObjectURL(p.url))
+  }, [previews])
+
+  // 드래그&드롭(선택)
+  const onDrop: React.DragEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault()
+    appendFiles(e.dataTransfer.files)
+  }
+  const prevent: React.DragEventHandler<HTMLButtonElement> = (e) => e.preventDefault()
+
+  return (
+    <Wrap>
+      {/* 업로드 박스 */}
+      <UploadBox
+        type="button"
+        onClick={openPicker}
+        onDrop={onDrop}
+        onDragOver={prevent}
+        aria-label="사진 또는 영상을 추가하세요"
+      >
+        <UploadInner>
+          <div className="title">사진/영상을 추가해 주세요</div>
+          <div className="plus">+</div>
+        </UploadInner>
+        <input
+          ref={fileRef}
+          type="file"
+          hidden
+          accept="image/*,video/*"
+          multiple
+          onChange={(e) => appendFiles(e.target.files)}
+        />
+      </UploadBox>
+
+      {/* 미리보기 */}
+      {previews.length > 0 && (
+        <PreviewStrip>
+          {previews.map((p, i) => (
+            <Thumb key={i}>
+              {p.type.startsWith('video') ? (
+                <video src={p.url} muted />
+              ) : (
+                <img src={p.url} alt={`upload-${i}`} />
+              )}
+              <RemoveBtn type="button" onClick={() => removeAt(i)} aria-label="삭제">
+                ×
+              </RemoveBtn>
+            </Thumb>
+          ))}
+        </PreviewStrip>
+      )}
+
+      {/* 텍스트 입력 */}
+      <TextCard>
+        <Label>리뷰를 작성해 주세요</Label>
+        <Textarea
+          value={comment}
+          onChange={onComment}
+          placeholder="리뷰 작성 시 유의사항 한 번  확인하기!
+욕설, 비방, 명예훼손성 표현을 삼가주세요."
+          maxLength={maxLength}
+        />
+        <Counter $danger={left < 0}>
+          {Math.max(0, left)}/{maxLength}
+        </Counter>
+      </TextCard>
+    </Wrap>
+  )
+}

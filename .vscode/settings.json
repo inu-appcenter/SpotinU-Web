@@ -2,8 +2,8 @@
   // 자동 import & 저장시 정리
   "typescript.suggest.autoImports": true,
   "editor.codeActionsOnSave": {
-    "source.organizeImports": true,
-    "source.fixAll.eslint": true
+    "source.organizeImports": "explicit",
+    "source.fixAll.eslint": "explicit"
   },
 
   // 포맷터를 Prettier로 고정
