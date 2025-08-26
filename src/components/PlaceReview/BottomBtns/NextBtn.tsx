@@ -22,22 +22,25 @@ const Bar = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
 
+  padding: 12px 16px calc(env(safe-area-inset-bottom) + 45px);
   display: flex;
   justify-content: center;
   z-index: 100;
+  background: #f8f9fe;
 `
 
 const Button = styled.button<{ disabled?: boolean }>`
-  width: min(560px, 100%);
-  height: 52px;
+  width: calc(100% - 50px);
+  max-width: 560px;
+
+  height: 40px;
   border: none;
-  border-radius: 14px;
+  border-radius: 50px;
   background: ${({ disabled }) => (disabled ? '#0d3b66' : '#0d3b66')};
   color: #fff;
-  font-weight: 800;
-  font-size: 16px;
+  font-weight: 500;
+  font-size: 15px;
   letter-spacing: 0.3px;
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   transition: transform 0.06s ease;

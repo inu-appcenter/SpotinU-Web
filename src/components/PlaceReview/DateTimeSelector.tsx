@@ -1,13 +1,23 @@
+import { Hand } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import WheelDateTimePicker from './WheelDateTimePicker'
 
-type Props = {
+type DateTimeSelectorProps = {
   valueDate?: Date | null
   valueTime?: { hour: number; minute: number } | null
   onChangeDate?: (date: Date) => void
   onChangeTime?: (time: { hour: number; minute: number }) => void
+}
+
+function formatKoreanDate(d: Date) {
+  const yy = d.getFullYear().toString().slice(-2)
+  const m = d.getMonth() + 1
+  const day = d.getDate()
+  const weekday = ['일', '월', '화', '수', '목', '금', '토'][d.getDay()]
+
+  return `${yy}년 ${m}월 ${day}일 ${weekday}`
 }
 
 export default function DateTimeSelector({
@@ -15,14 +25,12 @@ export default function DateTimeSelector({
   valueTime: controlledTime,
   onChangeDate,
   onChangeTime,
-}: Props) {
+}: DateTimeSelectorProps) {
   const [date, setDate] = useState<Date | null>(controlledDate ?? null)
   const [time, setTime] = useState<{ hour: number; minute: number } | null>(controlledTime ?? null)
 
   const [openDate, setOpenDate] = useState(false)
   const [openTime, setOpenTime] = useState(false)
-
-  // 외부에서 값이 바뀌어 들어오는 경우도 반영
 
   if (controlledDate && controlledDate !== date) setDate(controlledDate)
   if (controlledTime && controlledTime !== time) setTime(controlledTime)
@@ -34,46 +42,10 @@ export default function DateTimeSelector({
   )
 
   const showGuideForDate = !date
-  const showGuideForTime = !!date && !time // ← 날짜 선택했고, 시간은 아직 없을 때
+  const showGuideForTime = !!date && !time // ← 날짜 선택O, 시간 선택X
 
   return (
     <Wrap>
-      {/* <Row>
-        <Box
-          role="button"
-          aria-label="날짜 선택"
-          $active={!!date}
-          onClick={() => setOpenDate(true)}
-        >
-          <span>{dateText}</span>
-          {date && (
-            <EditText
-              onClick={(e) => {
-                e.stopPropagation()
-                setOpenDate(true)
-              }}
-            >
-              수정
-            </EditText>
-          )}
-        </Box>
-
-        <Spacer />
-
-        <Box
-          role="button"
-          aria-label="시간 선택"
-          $active={!!time}
-          onClick={() => setOpenTime(true)}
-        >
-          <span>{timeText}</span>
-        </Box>
-      </Row> */}
-
-      {/* // 가이드 말풍선  */}
-      {/* {showGuideForDate && <Guide $left>날짜를 선택해주세요 !</Guide>}
-      {showGuideForTime && <Guide> 시간을 선택해주세요 !</Guide>}  */}
-
       <Grid>
         <Cell>
           <Box
@@ -82,7 +54,7 @@ export default function DateTimeSelector({
             $active={!!date}
             onClick={() => setOpenDate(true)}
           >
-            <span>{dateText}</span>
+            <Value $active={!!date}>{dateText}</Value>
             {date && (
               <EditText
                 onClick={(e) => {
@@ -103,12 +75,14 @@ export default function DateTimeSelector({
             $active={!!time}
             onClick={() => setOpenTime(true)}
           >
-            <span>{timeText}</span>
+            <Value $active={!!time} $time>
+              {timeText}
+            </Value>
             {time && (
               <EditText
                 onClick={(e) => {
                   e.stopPropagation()
-                  setOpenDate(true)
+                  setOpenTime(true)
                 }}
               >
                 수정
@@ -117,12 +91,25 @@ export default function DateTimeSelector({
           </Box>
         </Cell>
 
-        {/* 버튼 바로 아래 각 칸에 가이드 배치 */}
-        <Cell>{showGuideForDate && <Guide $left> 날짜를 선택해주세요 !</Guide>}</Cell>
-        <Cell>{showGuideForTime && <Guide> 시간을 선택해주세요 !</Guide>}</Cell>
+        <Cell>
+          {showGuideForDate && (
+            <Guide $left>
+              <Hand size={16} color="#f2b705" />
+              <Highlight>날짜</Highlight>를 선택해주세요 !
+            </Guide>
+          )}
+        </Cell>
+
+        <Cell>
+          {showGuideForTime && (
+            <Guide>
+              <Hand size={16} color="#f2b705" />
+              <Highlight>시간</Highlight>을 선택해주세요 !
+            </Guide>
+          )}
+        </Cell>
       </Grid>
 
-      {/* 날짜 휠 모달 */}
       <WheelDateTimePicker
         open={openDate}
         mode="date"
@@ -135,7 +122,6 @@ export default function DateTimeSelector({
         }}
       />
 
-      {/* 시간 휠 모달 */}
       <WheelDateTimePicker
         open={openTime}
         mode="time"
@@ -157,40 +143,40 @@ export default function DateTimeSelector({
   )
 }
 
-/* ===== utils / styles ===== */
-
 function to2(n: number) {
   return n.toString().padStart(2, '0')
-}
-function formatKoreanDate(d: Date) {
-  const m = d.getMonth() + 1
-  const day = d.getDate()
-  const weekday = ['일', '월', '화', '수', '목', '금', '토'][d.getDay()]
-  return `${m}월${day}일 ${weekday}`
 }
 
 const Wrap = styled.div`
   width: 100%;
 `
 
-// const Row = styled.div`
-//   display: flex;
-//   gap: 16px;
-//   align-items: center;
-// `
-
 const Box = styled.div<{ $active?: boolean }>`
   flex: 1;
   min-height: 52px;
   border-radius: 12px;
-  border: 2px solid ${({ $active }) => ($active ? '#111' : '#222')};
-  background: ${({ $active }) => ($active ? '#efefef' : '#fff')};
-  font-size: 16px;
+
+  border: ${({ $active }) => ($active ? '0' : '2px solid #073B7B')};
+  background: ${({ $active }) => ($active ? '#EEEEEE' : '#F7FAFF')};
+
   padding: 12px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+`
+const Value = styled.span<{ $active?: boolean; $time?: boolean }>`
+  color: ${({ $active }) => ($active ? '#222' : '#073B7B')};
+  font-weight: ${({ $active }) => ($active ? 700 : 800)};
+  padding-left: ${({ $active, $time }) => {
+    if (!$active) return '0'
+    return $time ? '4px' : '1px'
+  }};
 `
 
 const EditText = styled.span`
@@ -199,36 +185,10 @@ const EditText = styled.span`
   font-size: 14px;
 `
 
-// const Spacer = styled.div`
-//   width: 16px;
-// `
-
-// const Guide = styled.div<{ $left?: boolean }>`
-//   margin-top: 10px;
-//   display: inline-block;
-//   background: #0d3b66;
-//   color: #fff;
-//   padding: 10px 14px;
-//   border-radius: 10px;
-//   position: relative;
-//   font-size: 14px;
-
-//   ${({ $left }) => ($left ? 'margin-right:auto;' : 'margin-left:auto;')}
-
-//   &::before {
-//     content: '';
-//     position: absolute;
-//     top: -8px;
-//     ${({ $left }) => ($left ? 'left:18px;' : 'right:18px;')}
-//     border-width: 0 8px 8px 8px;
-//     border-style: solid;
-//     border-color: transparent transparent #0d3b66 transparent;
-//   }
-// `
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px 16px; /* 행 간격 / 열 간격 */
+  gap: 12px 16px;
   align-items: start;
 `
 
@@ -236,7 +196,9 @@ const Cell = styled.div``
 
 const Guide = styled.div<{ $left?: boolean }>`
   margin-top: 6px;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: #0d3b66;
   color: #fff;
   padding: 10px 14px;
@@ -253,4 +215,9 @@ const Guide = styled.div<{ $left?: boolean }>`
     border-style: solid;
     border-color: transparent transparent #0d3b66 transparent;
   }
+`
+
+const Highlight = styled.span`
+  color: #f2b705;
+  font-weight: 600;
 `

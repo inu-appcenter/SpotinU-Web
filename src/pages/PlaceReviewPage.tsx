@@ -16,11 +16,11 @@ type Step = 'date' | 'keyword' | 'media'
 
 const Page = styled.main`
   min-height: 100dvh;
-  background: #f3f5f7;
+  background: #f8f9fe;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 16px 12px 120px; /* 하단 버튼 영역 여유 */
+  padding: 16px 12px 120px;
 `
 
 const Container = styled.div`
@@ -88,64 +88,83 @@ export default function PlaceReviewPage() {
 
   const canGoNextFromKeyword = Boolean(finalDateTime) && (noKeyword || selectedKeywords.size >= 1)
 
-  //  미디어/리뷰
+  const selectedPlace = { name: '공간이름', buildingText: '00호관 00층 00호' }
+  const visitCount = 1 // 서버에 맞게 다시 변경해야됨
+
+  const placeName = selectedPlace?.name ?? '00호관 00층 00호'
+  const buildingText = selectedPlace?.buildingText ?? '00호관 00층 00호'
+
   const [photos, setPhotos] = useState<File[]>([])
   const [comment, setComment] = useState('')
 
   //  모달 on/off
   const [showEmptyModal, setShowEmptyModal] = useState(false)
 
-  // 등록 버튼을 눌렀을 때(미디어 스텝에서 PrevNextBtn.onNext로 연결)
+  // 등록 버튼을 눌렀을 때(미디어 스텝에서 PrevNextBtn.onNext로 연결함)
   const handleRegister = () => {
     if (!finalDateTime) return
     const noMedia = photos.length === 0
     const noComment = comment.trim() === ''
     if (noMedia && noComment) {
-      // “등록을 막지 않음”: 먼저 물어보는 모달만 띄움
-      setShowEmptyModal(true)
+      setShowEmptyModal(true) // 등록 모달 띄움
       return
     }
-    // 파일/코멘트 중 하나라도 있으면 일반 등록
-    submitWithReview()
+
+    submitWithReview() //내용이 있는경우
   }
 
-  // --- 기존 submit은 그대로 두고, 상황별 함수만 분리 ---
   const submitWithReview = () => {
     if (!finalDateTime) return
-    const payload = {
+
+    const uploadedUrls = photos.map((f) => URL.createObjectURL(f)) // 미리보기 (사진)
+
+    //  API 확인해야됨
+    console.log('리뷰 포함 등록', {
       visitAt: finalDateTime.toISOString(),
       keywords: Array.from(selectedKeywords),
       noKeyword,
       comment,
-      // photos: File[] -> 실제 업로드는 FormData 권장
-    }
-    console.log('리뷰 포함 등록', payload)
-    // TODO: API 호출 or 완료 화면 이동
+      medias: photos,
+    })
+
+    //  내용 있는 완료 화면으로
+    navigate('/visit/complete', {
+      state: {
+        placeName,
+        buildingText,
+        visitAt: finalDateTime.toISOString(),
+        visitCount,
+        isFavorite: false,
+        keywords: Array.from(selectedKeywords),
+        noKeyword,
+        mediaUrls: uploadedUrls, // 서버 다시 봐야됨
+        comment,
+      },
+      replace: true,
+    })
   }
 
   const submitVisitOnly = () => {
     if (!finalDateTime) return
 
-    // 방문 시각 ISO 문자열
-    const visitAtISO = finalDateTime.toISOString()
-
-    const payload = {
-      visitAt: visitAtISO,
+    console.log('방문만 기록', {
+      visitAt: finalDateTime.toISOString(),
       keywords: Array.from(selectedKeywords),
       noKeyword,
-      comment: '', // 방문만 기록
-    }
-    console.log('방문만 기록', payload)
+      comment: '',
+    })
 
-    //  여기서 바로 이동 (함수 밖이 아니라 함수 안)
+    //  방문만 완료로
     navigate('/visit/complete', {
       state: {
-        placeName: '공간이름', // 실제 값으로 교체
-        buildingText: '00호관 00층 00호', // 실제 값으로 교체
-        visitAt: visitAtISO, // ← payload.visitAt 대신 바로 사용
-        visitCount: 1,
+        placeName,
+        buildingText,
+        visitAt: finalDateTime.toISOString(),
+        visitCount,
         isFavorite: false,
-        medias: [],
+        keywords: [], // 방문만이므로 비움
+        noKeyword,
+        mediaUrls: [], // 방문만이므로 비움
         comment: '',
       },
       replace: true,
@@ -154,7 +173,7 @@ export default function PlaceReviewPage() {
 
   // 모달에서 호출
   const handleVisitOnly = (e?: React.MouseEvent) => {
-    e?.preventDefault() // 혹시 모를 submit 방지
+    e?.preventDefault() //  submit 방지용임
     setShowEmptyModal(false)
     submitVisitOnly()
   }
@@ -167,7 +186,6 @@ export default function PlaceReviewPage() {
       <Container>
         <CardPlaceholder>PlaceCard 자리</CardPlaceholder>
 
-        {/*  STEP: DATE (키워드 안 보임) */}
         {step === 'date' && (
           <>
             <DateTimeSelector
