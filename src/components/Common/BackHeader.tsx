@@ -9,12 +9,12 @@ const HeaderWrapper = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 0 16px;
   background: white;
-  position: sticky;
   top: 0;
   z-index: 2;
   width: 100%;
+  border-bottom: 1px solid #e5e5e5;
 `
 
 const Side = styled.div`

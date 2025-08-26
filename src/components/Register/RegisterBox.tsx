@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import InputField from './InputField.tsx'
 
 const Wrapper = styled.div`
-  border: 1px solid #073b7b;
+  border: none;
   border-radius: 20px;
   padding: 16px;
   width: calc(100% - 32px);

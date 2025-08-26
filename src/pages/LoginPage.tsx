@@ -8,9 +8,9 @@ import { useViewportVH } from '../hooks/useViewportVH'
 
 const LoginPageWrapper = styled.div`
   background: white;
+  position: relative;
 `
 const HeaderWrapper = styled.div`
-  position: relative;
   width: 100%;
 `
 const Content = styled.div`
