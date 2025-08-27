@@ -3,8 +3,9 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled, { createGlobalStyle } from 'styled-components'
 
-import NextBtn from '../components/PlaceReview/BottomBtns/NextBtn'
-import PrevNextBtn from '../components/PlaceReview/BottomBtns/PrevNextBtn'
+import CloseHeader from '../components/PlaceReview/Btns/CloseBtn'
+import NextBtn from '../components/PlaceReview/Btns/NextBtn'
+import PrevNextBtn from '../components/PlaceReview/Btns/PrevNextBtn'
 import ConfirmModal from '../components/PlaceReview/ConfirmModal'
 import DateTimeSelector from '../components/PlaceReview/DateTimeSelector'
 import ReviewKeywordSelector from '../components/PlaceReview/ReviewKeywordSelector'
@@ -61,6 +62,10 @@ export const StickyBottom = styled.div`
 
 export default function PlaceReviewPage() {
   const navigate = useNavigate()
+
+  const handleClose = () => {
+    navigate('/place/detail') // PlaceDetail 페이지로 이동
+  }
 
   // 방문 일시
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
@@ -184,6 +189,7 @@ export default function PlaceReviewPage() {
   return (
     <Page>
       <RaiseBottomBarZ />
+      <CloseHeader onClose={handleClose} />
       <Container>
         {step === 'date' && (
           <>

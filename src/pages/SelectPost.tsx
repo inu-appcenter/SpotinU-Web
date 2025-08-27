@@ -1,19 +1,16 @@
 import { Image as ImageIcon } from 'lucide-react'
 import styled from 'styled-components'
 
+import BackHeader from '../components/Common/BackHeader'
+
 type Props = {
   hasPermission: boolean
-  onOpenSettings?: () => void
-  onBack?: () => void
 }
 
-export default function SelectPost({ hasPermission, onOpenSettings }: Props) {
+export default function SelectPost({ hasPermission }: Props) {
   return (
     <Page>
-      <Header>
-        <Title>사진 불러오기 (최근 항목)</Title>
-        <div style={{ width: 22 }} />
-      </Header>
+      <BackHeader title="사진 불러오기 (최근 항목)" />
 
       {!hasPermission && (
         <>
@@ -22,11 +19,12 @@ export default function SelectPost({ hasPermission, onOpenSettings }: Props) {
               모든 사진을 불러오려면 <br />
               앱의 관련 설정을 변경해 주세요.
             </NoticeText>
-            <NoticeBtn onClick={onOpenSettings}>설정</NoticeBtn>
+
+            <NoticeBtn>설정</NoticeBtn>
           </NoticeBar>
 
           <EmptyWrap>
-            <ImageIcon size={110} strokeWidth={0.5} />
+            <ImageIcon size={110} strokeWidth={1} />
             <EmptyText>사진이 없습니다.</EmptyText>
           </EmptyWrap>
         </>
@@ -36,39 +34,21 @@ export default function SelectPost({ hasPermission, onOpenSettings }: Props) {
 }
 
 const Page = styled.div`
-  min-height: 100dvh;
-  background: #f6f8fb;
+  min-height: 100svh;
+  background: #f3f5f7;
   display: flex;
   flex-direction: column;
-`
-
-const Header = styled.div`
-  height: 80px;
-  padding: 0 12px;
-  display: flex;
-  align-items: center;
-
-  background: #fff;
-  border-bottom: 1px solid #e7eaf0;
-  justify-content: center;
-  position: relative;
-`
-
-const Title = styled.div`
-  font-size: 16px;
-  font-weight: 700;
 `
 
 const NoticeBar = styled.div`
   background: #0b3e82;
   color: #fff;
-  padding: 12px 14px;
+  padding: 16px 14px;
   display: flex;
   align-items: center;
   gap: 12px;
   justify-content: space-between;
   font-weight: 500;
-  height: 76px;
 `
 
 const NoticeText = styled.span`
@@ -81,10 +61,11 @@ const NoticeBtn = styled.button`
   border: 0;
   background: transparent;
   color: #fff;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 13.5px;
   cursor: pointer;
-  border-bottom: 1px solid #e5e8eb;
+
+  border-bottom: 1px solid white;
 `
 
 const EmptyWrap = styled.div`
@@ -93,11 +74,11 @@ const EmptyWrap = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 36px;
+
   gap: 8px;
 
   svg {
-    color: #000000ff;
+    color: #000;
   }
 `
 
