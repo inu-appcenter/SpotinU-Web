@@ -2,11 +2,12 @@
 import styled from 'styled-components'
 
 type Props = {
-  label?: string // 기본: [공간 이름]
-  buildingText?: string // ← 오타 수정
-  isFavorite?: boolean // 즐겨찾기 여부
+  label?: string
+  buildingText?: string
+  isFavorite?: boolean
   onToggleFavorite?: () => void
   rightSlot?: React.ReactNode
+  hideLabel?: boolean
 }
 
 export default function PlaceTitle({
@@ -14,11 +15,12 @@ export default function PlaceTitle({
   buildingText = '00호관 00층 00호',
   onToggleFavorite,
   rightSlot,
+  hideLabel = false,
 }: Props) {
   return (
     <Wrap>
       <Left>
-        <Label>{label}</Label>
+        {!hideLabel && <Label>{label}</Label>}
         <Title>{buildingText}</Title>
       </Left>
       <Right>

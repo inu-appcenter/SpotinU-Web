@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
+const ITEM_H = 36
+const WHEEL_H = 180
+const PAD_H = (WHEEL_H - ITEM_H) / 2
+
 type TimeVal = { hour: number; minute: number }
 
 type Props = {
@@ -22,7 +26,6 @@ export default function WheelDateTimePicker({
   onConfirmDate,
   onConfirmTime,
 }: Props) {
-  /** ----- state ----- */
   const [year, setYear] = useState(initialDate.getFullYear())
   const [month, setMonth] = useState(initialDate.getMonth() + 1) // 1~12
   const [day, setDay] = useState(initialDate.getDate())
@@ -30,15 +33,12 @@ export default function WheelDateTimePicker({
   const [hour, setHour] = useState(initialTime.hour)
   const [minute, setMinute] = useState(initialTime.minute - (initialTime.minute % 5)) // 5분 스텝
 
-  /** 월별 일수(윤년 포함) */
   const daysInMonth = useMemo(() => new Date(year, month, 0).getDate(), [year, month])
 
-  /** day가 넘치면 보정 */
   useEffect(() => {
     if (day > daysInMonth) setDay(daysInMonth)
   }, [daysInMonth, day])
 
-  /** ----- wheel data ----- */
   const baseYear = initialDate.getFullYear()
   const years = useMemo(() => range(baseYear - 3, baseYear + 6), [baseYear])
   const months = useMemo(() => range(1, 12), [])
@@ -106,7 +106,6 @@ export default function WheelDateTimePicker({
   )
 }
 
-// WheelColumn (scroll-snap)
 function WheelColumn<T extends number | string>({
   values,
   value,
@@ -128,9 +127,7 @@ function WheelColumn<T extends number | string>({
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const itemH = 44
-    el.scrollTo({ top: index * itemH, behavior: 'auto' })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    el.scrollTo({ top: index * ITEM_H, behavior: 'auto' })
   }, [])
 
   //  스크롤 시 중앙 항목으로 값 동기화
@@ -138,8 +135,7 @@ function WheelColumn<T extends number | string>({
     const el = ref.current
     if (!el) return
     const onScroll = () => {
-      const itemH = 44
-      const i = Math.round(el.scrollTop / itemH)
+      const i = Math.round(el.scrollTop / ITEM_H)
       const clamp = Math.min(values.length - 1, Math.max(0, i))
       const v = values[clamp]
       if (v !== value) onChange(v)
@@ -174,60 +170,56 @@ function range(start: number, end: number, step = 1) {
 const Dim = styled.div`
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.35);
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  padding-bottom: calc(120px + env(safe-area-inset-bottom));
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
   z-index: 1000;
 `
 
 const Modal = styled.div`
   width: 100%;
   max-width: 520px;
-  background: #111;
-  color: #fff;
-  border-radius: 20px;
-  padding: 18px 16px 16px;
-  box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.4);
+  background: #282828ff;
+  color: #e6e9ee;
+  border-radius: 22px;
+  padding: 16px 14px 14px;
+  box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 `
 
 const WheelWrap = styled.div<{ $cols: 2 | 3 }>`
   position: relative;
-  margin-top: 14px;
+  margin-top: 5px;
   display: grid;
   grid-template-columns: ${({ $cols }) => `repeat(${$cols}, 1fr)`};
-  gap: 12px;
-
-  height: 240px;
+  gap: 10px;
+  height: ${WHEEL_H}px;
 `
 
 const CenterHighlight = styled.div`
   pointer-events: none;
   position: absolute;
-  left: 12px;
-  right: 12px;
-  top: calc(50% - 22px);
-  height: 44px;
-  border-radius: 12px; /* 둥근 하이라이트 바 */
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.15),
-    /* 얇은 외곽선 */ 0 2px 12px rgba(0, 0, 0, 0.35); /* 살짝 그림자 */
+  left: 8px;
+  right: 8px;
+  top: calc(50% - ${ITEM_H / 2}px);
+  height: ${ITEM_H}px;
+  background: transparent;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 `
 
 const Col = styled.div`
   height: 100%;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
-  padding: 0 6px;
+  padding: 0 4px;
   -webkit-overflow-scrolling: touch;
 
-  /* 양 끝 페이드 */
-  mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
-  -webkit-mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, black 16%, black 84%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 16%, black 84%, transparent);
 
-  /* iOS처럼 스크롤바 숨김 */
   scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
@@ -235,27 +227,24 @@ const Col = styled.div`
 `
 
 const Item = styled.div`
-  height: 44px;
+  height: ${ITEM_H}px;
   display: flex;
   align-items: center;
   justify-content: center;
   scroll-snap-align: center;
-  font-size: 18px;
-  opacity: 0.45;
-  transform: scale(0.96);
-  transition:
-    opacity 0.15s,
-    transform 0.15s,
-    font-weight 0.15s;
 
-  /* 선택된 중앙 라인 */
+  font-size: 15px;
+  font-weight: 400;
+  color: rgba(230, 233, 238, 0.55);
+  transform: translateZ(0);
+  transition: color 0.12s ease;
+
   &[aria-selected='true'] {
-    opacity: 1;
-    transform: scale(1.02);
-    font-weight: 700;
+    color: #eef2f6;
+    font-weight: 600;
   }
 `
 
 const Pad = styled.div`
-  height: calc((240px - 44px) / 2);
+  height: ${PAD_H}px;
 `

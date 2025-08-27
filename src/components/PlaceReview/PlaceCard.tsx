@@ -112,7 +112,7 @@ const Card = styled.section`
 
 const Header = styled.header`
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 1px;
 `
 
 const Title = styled.h2`
@@ -163,12 +163,11 @@ const Slide = styled.div`
 const Img = styled.img<{ $h: number }>`
   width: 100%;
   height: ${({ $h }) => $h}px;
-  // height: ${({ $h }) => $h || 20}svh; /* 🔹 화면 높이 비율 (20% 정도) */
+  // height: ${({ $h }) => $h || 20}svh;
   object-fit: cover;
 
-  border-top-left-radius: 12px; /* ⬅️ 위 왼쪽만 둥글게 */
-  border-top-right-radius: 12px; /* ⬅️ 위 오른쪽만 둥글게 */
-  border-bottom-left-radius: 0; /* ⬅️ 아래는 직각 */
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   display: block;
 `

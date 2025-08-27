@@ -1,8 +1,6 @@
-import type { LucideIcon } from 'lucide-react'
-import { Armchair, Smile } from 'lucide-react'
 import styled from 'styled-components'
 
-export type Keyword = { id: string; label: string; Icon?: LucideIcon }
+export type Keyword = { id: string; label: string }
 export type Group = { title: string; items: Keyword[] }
 
 type Props = {
@@ -20,7 +18,7 @@ const DEFAULT_GROUPS: Group[] = [
   {
     title: '분위기',
     items: [
-      { id: 'cozy', label: '아늑해요', Icon: Smile },
+      { id: 'cozy', label: '아늑해요' },
       { id: 'view', label: '뷰가 좋아요' },
       { id: 'interior', label: '인테리어가 멋져요' },
       { id: 'alone', label: '혼밥하기 좋아요' },
@@ -29,7 +27,7 @@ const DEFAULT_GROUPS: Group[] = [
   {
     title: '기타',
     items: [
-      { id: 'seat', label: '좌석이 편해요', Icon: Armchair },
+      { id: 'seat', label: '좌석이 편해요' },
       { id: 'clean', label: '공간이 청결해요' },
       { id: 'group', label: '단체모임하기 좋아요' },
       { id: 'nokey', label: '선택할 키워드가 없어요' }, // 전용 버튼으로 처리
@@ -85,15 +83,8 @@ export default function ReviewKeywordSelector({
                 const isActive = selected.has(val)
                 const dimmed = !isNoKey && noKeyword
 
-                const Icon = it.Icon
-
                 const content = (
                   <ChipInner>
-                    {Icon && (
-                      <IconWrap $active={isActive} $dimmed={dimmed}>
-                        <Icon size={16} strokeWidth={1.7} />
-                      </IconWrap>
-                    )}
                     <Label>{it.label}</Label>
                   </ChipInner>
                 )
@@ -142,7 +133,7 @@ const Head = styled.div``
 
 const Title = styled.div`
   font-weight: 800;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   font-size: 15px;
 `
 const Required = styled.span`
@@ -160,9 +151,9 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
 
-  margin-top: 12px;
+  margin-top: 1px;
   margin-left: 8px;
-  gap: 50px; // -----------수정-------------------------
+  gap: 5px; // -----------수정-------------------------
 
   @media (max-width: 360px) {
     grid-template-columns: 1fr;
@@ -173,8 +164,8 @@ const Grid = styled.div`
 const Col = styled.div``
 const ColTitle = styled.div`
   font-weight: 600;
-  margin-bottom: 13px;
-  margin-top: 13px;
+  margin-bottom: 8px;
+  margin-top: 8px;
   font-size: 12px;
 `
 
@@ -193,6 +184,9 @@ const Chip = styled.button<{
   height: 24px;
 
   display: flex;
+
+  align-items: center;
+  justify-content: center;
 
   padding: 0px 12px;
   border-radius: 6px;
@@ -242,27 +236,9 @@ const Chip = styled.button<{
 const ChipInner = styled.span`
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   width: 100%;
   justify-content: center;
-`
-
-const IconWrap = styled.span<{ $active?: boolean; $dimmed?: boolean }>`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-
-  color: inherit;
-
-  ${({ $dimmed }) =>
-    $dimmed &&
-    `
-    border-color: #a9a9a9;
-    background: #5D5858;
-  `}
 `
 
 const Label = styled.span`

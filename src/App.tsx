@@ -1,35 +1,25 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+// export default function App() {
+//   return <MainPage />
+// }
 
-import PlaceReviewPage from './pages/PlaceReviewPage'
-import VisitCompletePage from './pages/VisitCompletePage'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+
+import BottomNavBar from './components/Common/BottomNavBar'
+import LoginPage from './pages/LoginPage'
+import MainPage from './pages/MainPage'
+// import MyCampusMap from './pages/MyCampusMap'
+import PlaceDetails from './pages/PlaceDetails'
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/place/review" replace />} />
-
-        <Route path="/place/review" element={<PlaceReviewPage />} />
-        <Route path="/visit/complete" element={<VisitCompletePage />} />
-
-        <Route path="*" element={<Navigate to="/place/review" replace />} />
+        <Route path="/" element={<MainPage />} />
+        <Route path="/places" element={<PlaceDetails />} />
+        {/* <Route path="/my-campus-map" element={<MyCampusMap />} /> */}
+        <Route path="/my-page" element={<LoginPage />} />
       </Routes>
+      <BottomNavBar />
     </BrowserRouter>
   )
 }
-
-// import SelectPost from './pages/SelectPost'
-
-// function App() {
-//   return (
-//     <div style={{ height: '100vh' }}>
-//       {/* 권한 없음 상태 미리보기 */}
-//       <SelectPost hasPermission={false} onOpenSettings={() => alert('설정 클릭됨')} />
-
-//       {/* 권한 있음 상태 보고 싶으면 아래 주석 해제 */}
-//       {/* <SelectPost hasPermission={true} /> */}
-//     </div>
-//   )
-// }
-
-// export default App

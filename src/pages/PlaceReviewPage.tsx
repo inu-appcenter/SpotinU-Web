@@ -1,12 +1,13 @@
 // 리뷰등록페이지
-import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import type React from 'react' // React.MouseEvent 타입용 (JSX 자동임포트와 별개)
+import { useEffect, useMemo, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled, { createGlobalStyle } from 'styled-components'
 
+import CommonModal from '../components/Common/CommonModal'
 import CloseHeader from '../components/PlaceReview/Btns/CloseBtn'
 import NextBtn from '../components/PlaceReview/Btns/NextBtn'
 import PrevNextBtn from '../components/PlaceReview/Btns/PrevNextBtn'
-import ConfirmModal from '../components/PlaceReview/ConfirmModal'
 import DateTimeSelector from '../components/PlaceReview/DateTimeSelector'
 import PlaceCard from '../components/PlaceReview/PlaceCard'
 import ReviewKeywordSelector from '../components/PlaceReview/ReviewKeywordSelector'
@@ -15,6 +16,15 @@ import VisitHistory from '../components/PlaceReview/ReviewRequest/VisitHistory'
 
 type TimeVal = { hour: number; minute: number }
 type Step = 'date' | 'keyword' | 'media'
+
+type RestoreState = {
+  step?: 'date' | 'keyword' | 'media'
+  visitAt?: string
+  keywords?: string[]
+  noKeyword?: boolean
+  mediaUrls?: string[] // 사진(문자열 경로를 넘긴 경우)
+  comment?: string
+}
 
 export const Page = styled.main`
   min-height: 100dvh;
@@ -34,7 +44,7 @@ export const Container = styled.div`
 `
 
 const RaiseBottomBarZ = createGlobalStyle`
-  :root { --z-bottom-bar: 100; }  /* 필요하면 90~100으로 */
+  :root { --z-bottom-bar: 100; }
 `
 
 export const StickyBottom = styled.div`
@@ -52,9 +62,10 @@ export const StickyBottom = styled.div`
 
 export default function PlaceReviewPage() {
   const navigate = useNavigate()
+  const { state: restore } = useLocation() as { state?: RestoreState }
 
   const handleClose = () => {
-    navigate('/place/detail') // PlaceDetail 페이지로 이동
+    navigate('/place/detail')
   }
 
   const images = useMemo(() => ['/장소사진더미.svg', '/장소사진더미.svg', '/장소사진더미.svg'], [])
@@ -73,7 +84,8 @@ export default function PlaceReviewPage() {
   }, [selectedDate, selectedTime])
 
   // 스텝 전환
-  const [step, setStep] = useState<Step>('date')
+  // const [step, setStep] = useState<Step>('date')
+  const [step, setStep] = useState<Step>(restore?.step ?? 'date')
 
   // 키워드
   const [selectedKeywords, setSelectedKeywords] = useState<Set<string>>(new Set())
@@ -89,31 +101,54 @@ export default function PlaceReviewPage() {
 
   const canGoNextFromKeyword = Boolean(finalDateTime) && (noKeyword || selectedKeywords.size >= 1)
 
-  const [photos, setPhotos] = useState<File[]>([])
+  const [photos, setPhotos] = useState<(File | string)[]>([])
   const [comment, setComment] = useState('')
 
-  //  모달 on/off
+  // 모달 on/off (리뷰 비어있을 때)
   const [showEmptyModal, setShowEmptyModal] = useState(false)
 
-  // 등록 버튼을 눌렀을 때(미디어 스텝에서 PrevNextBtn.onNext로 연결함)
+  useEffect(() => {
+    if (!restore) return
+
+    // 날짜/시간
+    if (restore.visitAt) {
+      const d = new Date(restore.visitAt)
+      setSelectedDate(d)
+      setSelectedTime({ hour: d.getHours(), minute: d.getMinutes() })
+    }
+
+    // 키워드/노키워드
+    if (restore.keywords) setSelectedKeywords(new Set(restore.keywords))
+    if (typeof restore.noKeyword === 'boolean') setNoKeyword(restore.noKeyword)
+
+    // 사진/코멘트
+    if (restore.mediaUrls) {
+      setPhotos(restore.mediaUrls)
+    }
+    if (typeof restore.comment === 'string') setComment(restore.comment)
+
+    // 마지막으로 요청된 step으로 이동
+    if (restore.step) setStep(restore.step)
+  }, [restore])
+
+  // 등록 버튼(미디어 스텝)
   const handleRegister = () => {
     if (!finalDateTime) return
     const noMedia = photos.length === 0
     const noComment = comment.trim() === ''
     if (noMedia && noComment) {
-      setShowEmptyModal(true) // 등록 모달 띄움
+      setShowEmptyModal(true) // 🔹 네 모달 열기
       return
     }
-
-    submitWithReview() //내용이 있는경우
+    submitWithReview()
   }
 
+  // 리뷰 포함 등록
   const submitWithReview = () => {
     if (!finalDateTime) return
 
-    const uploadedUrls = photos.map((f) => URL.createObjectURL(f)) // 미리보기 (사진)
+    const uploadedUrls = photos.map((p) => (typeof p === 'string' ? p : URL.createObjectURL(p)))
 
-    //  API 확인해야됨
     console.log('리뷰 포함 등록', {
       visitAt: finalDateTime.toISOString(),
       keywords: Array.from(selectedKeywords),
@@ -122,7 +157,6 @@ export default function PlaceReviewPage() {
       medias: photos,
     })
 
-    //  내용 있는 완료 화면으로
     navigate('/visit/complete', {
       state: {
         placeName,
@@ -132,13 +166,14 @@ export default function PlaceReviewPage() {
         isFavorite: false,
         keywords: Array.from(selectedKeywords),
         noKeyword,
-        mediaUrls: uploadedUrls, // 서버 다시 봐야됨
+        mediaUrls: uploadedUrls,
         comment,
       },
       replace: true,
     })
   }
 
+  // 방문만 기록
   const submitVisitOnly = () => {
     if (!finalDateTime) return
 
@@ -149,7 +184,6 @@ export default function PlaceReviewPage() {
       comment: '',
     })
 
-    //  방문만 완료로
     navigate('/visit/complete', {
       state: {
         placeName,
@@ -159,20 +193,19 @@ export default function PlaceReviewPage() {
         isFavorite: false,
         keywords: Array.from(selectedKeywords),
         noKeyword,
-        mediaUrls: [], // 방문만이므로 비움
+        mediaUrls: [],
         comment: '',
       },
       replace: true,
     })
   }
 
-  // 모달에서 호출
+  // 모달 버튼들
   const handleVisitOnly = (e?: React.MouseEvent) => {
-    e?.preventDefault() //  submit 방지용임
+    e?.preventDefault()
     setShowEmptyModal(false)
     submitVisitOnly()
   }
-
   const handleCancel = () => setShowEmptyModal(false)
 
   return (
@@ -181,6 +214,7 @@ export default function PlaceReviewPage() {
 
       <Container>
         <CloseHeader onClose={handleClose} />
+
         {step === 'date' && (
           <>
             <PlaceCard buildingText={buildingText} placeName={placeName} images={images} />
@@ -191,12 +225,13 @@ export default function PlaceReviewPage() {
               onChangeDate={setSelectedDate}
               onChangeTime={setSelectedTime}
             />
+
             <StickyBottom>
               <NextBtn
                 disabled={!finalDateTime}
                 onClick={() => {
                   if (!finalDateTime) return
-                  setStep('keyword') // 날짜/시간 완료 후에만 키워드 화면으로
+                  setStep('keyword')
                 }}
               />
             </StickyBottom>
@@ -214,8 +249,9 @@ export default function PlaceReviewPage() {
               onNoKeywordChange={handleNoKeywordChange}
               minPick={1}
               maxPick={3}
-              valueKey="label" // label값 사용 (깨끗해요 선택 -> 깨끗해요로 넘어감)
+              valueKey="label"
             />
+
             <StickyBottom>
               <PrevNextBtn
                 onPrev={() => setStep('date')}
@@ -239,6 +275,7 @@ export default function PlaceReviewPage() {
               keywords={[...selectedKeywords]}
               noKeyword={noKeyword}
             />
+
             <ReviewInput
               photos={photos}
               comment={comment}
@@ -247,20 +284,35 @@ export default function PlaceReviewPage() {
                 setComment(c)
               }}
             />
+
             {/* 버튼은 NavBar '위'에 고정 */}
             <PrevNextBtn
               onPrev={() => setStep('keyword')}
-              // onNext={submit}
               onNext={handleRegister}
               prevLabel="이전"
               nextLabel="등록"
-              fixed // ← PrevNextBtn에 추가한 prop
+              fixed
             />
           </>
         )}
       </Container>
 
-      <ConfirmModal open={showEmptyModal} onCancel={handleCancel} onVisitOnly={handleVisitOnly} />
+      {/* <ConfirmModal open={showEmptyModal} onCancel={handleCancel} onVisitOnly={handleVisitOnly} /> */}
+      <CommonModal
+        isOpen={showEmptyModal}
+        title="" // 제목은 비워두면 안 보임
+        content={
+          <div style={{ textAlign: 'center', lineHeight: 1.5 }}>
+            작성된 리뷰 내용이 없습니다.
+            <br />
+            방문만 기록하시겠습니까?
+          </div>
+        }
+        confirmText="방문만 기록"
+        cancelText="취소"
+        onConfirm={handleVisitOnly}
+        onCancel={handleCancel}
+      />
     </Page>
   )
 }

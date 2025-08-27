@@ -23,7 +23,7 @@ const Bar = styled.div`
   right: 0;
   bottom: 0;
 
-  padding: 12px 16px calc(env(safe-area-inset-bottom) + 45px);
+  padding: 1px 12px calc(env(safe-area-inset-bottom) + 28px);
   display: flex;
   justify-content: center;
   z-index: 100;

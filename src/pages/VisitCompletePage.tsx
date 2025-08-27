@@ -1,4 +1,3 @@
-// VisitCompletePage.tsx (일부 생략 없이 전체 교체해도 됨)
 import { format } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
@@ -23,14 +22,38 @@ type VisitCompleteState = {
   visitCount?: number
   isFavorite?: boolean
   keywords?: string[]
+  noKeyword?: boolean
   mediaUrls?: string[]
   comment?: string
 }
 
 export default function VisitCompletePage() {
+  const navigate = useNavigate()
   const nav = useNavigate()
   const { state } = useLocation() as { state?: VisitCompleteState }
 
+  const [showKeyword, setShowKeyword] = useState(false)
+
+  const onBack = () => {
+    if (showKeyword) {
+      setShowKeyword(false)
+      return
+    }
+
+    navigate('/place/review', {
+      replace: true,
+      state: {
+        step: 'media', // ← 바로 글/사진 화면으로
+        visitAt: state?.visitAt,
+        keywords: state?.keywords ?? [],
+        noKeyword: !!state?.noKeyword,
+        mediaUrls: state?.mediaUrls ?? [],
+        comment: state?.comment ?? '',
+      },
+    })
+  }
+
+  // 삭제 확인 모달 on/off (공용 CommonModal 사용)
   const [isDeleteOpen, setDeleteOpen] = useState(false)
 
   const placeTitle = state?.placeName ?? state?.buildingText ?? '00호관 00층 00호'
@@ -46,23 +69,24 @@ export default function VisitCompletePage() {
   const mediaUrls = state?.mediaUrls ?? []
   const comment = state?.comment ?? ''
 
+  // 저장(즐겨찾기) 버튼 상태
   const isLogin = true
   const [isSaved, setIsSaved] = useState<boolean>(!!state?.isFavorite)
   const showLoginSheet = useCallback(() => {
     console.log('로그인 필요: 로그인 시트 열기')
   }, [])
-
   const toggleSave = useCallback(async () => {
     if (!isLogin) return showLoginSheet()
     setIsSaved((prev) => !prev)
     try {
-      // TODO: API 연동
+      // TODO: 저장/해제 API 연동
     } catch (e) {
       console.error(e)
-      setIsSaved((prev) => !prev)
+      setIsSaved((prev) => !prev) // 실패 시 롤백
     }
   }, [isLogin, showLoginSheet])
 
+  // 모달 오픈 시 스크롤 잠금
   useEffect(() => {
     if (!isDeleteOpen) return
     const prev = document.body.style.overflow
@@ -72,8 +96,10 @@ export default function VisitCompletePage() {
     }
   }, [isDeleteOpen])
 
+  // 삭제 확정
   const handleConfirmDelete = useCallback(async () => {
     try {
+      // TODO: 방문내역 삭제 API
       console.log('방문내역 삭제 확정')
       setDeleteOpen(false)
       nav(-1)
@@ -83,11 +109,12 @@ export default function VisitCompletePage() {
     }
   }, [nav])
 
+  // 삭제 취소
   const handleCancelDelete = useCallback(() => {
     setDeleteOpen(false)
   }, [])
 
-  // 헤더 실제 높이를 CSS 변수로 저장 (그라디언트 분기점에 사용)
+  // 헤더 높이를 CSS 변수에 기록해서 그라디언트 분기점으로 사용
   useLayoutEffect(() => {
     const headerEl = document.querySelector('header')
     const h = headerEl ? Math.round(headerEl.getBoundingClientRect().height) : 56
@@ -96,12 +123,15 @@ export default function VisitCompletePage() {
 
   return (
     <Viewport>
-      <BackBtn />
+      <BackWrap>
+        <BackBtn onClick={onBack} />
+      </BackWrap>
 
       <Screen>
         <Main>
           <PlaceTitle
-            title={placeTitle}
+            buildingText={placeTitle} // 아랫줄만
+            hideLabel // 윗줄 숨김
             isFavorite={isFavorite}
             onToggleFavorite={() => console.log('toggle favorite')}
             rightSlot={
@@ -147,6 +177,7 @@ export default function VisitCompletePage() {
 
       <BottomNavBar />
 
+      {/* ▼ 공용 모달로 교체된 삭제 확인 모달 */}
       <CommonModal
         isOpen={isDeleteOpen}
         title="방문내역 삭제"
@@ -166,6 +197,13 @@ export default function VisitCompletePage() {
   )
 }
 
+const BackWrap = styled.div`
+  position: absolute;
+  top: 16px;
+
+  z-index: 100;
+`
+
 const Viewport = styled.div`
   min-height: 100dvh;
   overflow-y: auto;
@@ -174,17 +212,23 @@ const Viewport = styled.div`
 const Screen = styled.div`
   width: min(100vw, 430px);
   margin: 0 auto;
-  background: transparent; /* Viewport 그라디언트 보이도록 */
+
+  margin-top: -1px;
+  padding-top: 1px;
+
+  background: transparent;
 `
 
 const Main = styled.main`
   display: flex;
   flex-direction: column;
-  gap: 13px;
-  padding: 12px 16px 0;
+  padding: 16px 16px 0;
+  gap: 16px;
 `
 
-const CTA = styled.div``
+const CTA = styled.div`
+  padding: 16px 0;
+`
 
 const Center = styled.div`
   text-align: center;

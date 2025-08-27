@@ -3,10 +3,10 @@ import React, { useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 type Props = {
-  photos: File[]
+  photos: (File | string)[]
   comment: string
   maxLength?: number
-  onChange: (nextPhotos: File[], nextComment: string) => void // ★
+  onChange: (p: (File | string)[], c: string) => void
 }
 
 const Wrap = styled.section`
@@ -157,11 +157,18 @@ export default function ReviewInput({ photos, comment, maxLength = 400, onChange
     onChange(photos, v)
   }
 
-  // 미리보기 URL (메모+정리)
+  // 미리보기 URL 배열 만들기
   const previews = useMemo(
-    () => photos.map((f) => ({ url: URL.createObjectURL(f), type: f.type })),
+    () =>
+      photos.map(
+        (f) =>
+          typeof f === 'string'
+            ? { url: f, type: 'image' } // 문자열(URL)인 경우 그대로
+            : { url: URL.createObjectURL(f), type: f.type }, // File인 경우 createObjectURL
+      ),
     [photos],
   )
+
   useEffect(() => {
     // 메모리 누수 방지
     return () => previews.forEach((p) => URL.revokeObjectURL(p.url))

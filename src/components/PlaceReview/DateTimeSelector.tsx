@@ -156,9 +156,11 @@ const Wrap = styled.div`
 `
 
 const Box = styled.div<{ $active?: boolean }>`
-  flex: 1;
-  min-height: 52px;
+  min-height: 46px;
   border-radius: 12px;
+  max-width: 160px;
+
+  flex: none;
 
   border: ${({ $active }) => ($active ? '0' : '2px solid #073B7B')};
   background: ${({ $active }) => ($active ? '#EEEEEE' : '#F7FAFF')};
@@ -177,6 +179,7 @@ const Box = styled.div<{ $active?: boolean }>`
 const Value = styled.span<{ $active?: boolean; $time?: boolean }>`
   color: ${({ $active }) => ($active ? '#222' : '#073B7B')};
   font-weight: ${({ $active }) => ($active ? 700 : 800)};
+  font-size: ${({ $time }) => ($time ? '13px' : '13px')};
   padding-left: ${({ $active, $time }) => {
     if (!$active) return '0'
     return $time ? '4px' : '1px'
@@ -186,14 +189,21 @@ const Value = styled.span<{ $active?: boolean; $time?: boolean }>`
 const EditText = styled.span`
   color: #4b5cff;
   text-decoration: underline;
-  font-size: 14px;
+  font-size: 12px;
 `
 
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px 16px;
+
   align-items: start;
+  max-width: 360px;
+  grid-template-columns: repeat(2, 160px);
+  justify-content: center;
+  column-gap: 16px;
+
+  margin: 0 auto;
 `
 
 const Cell = styled.div``
@@ -205,10 +215,10 @@ const Guide = styled.div<{ $left?: boolean }>`
   gap: 6px;
   background: #0d3b66;
   color: #fff;
-  padding: 10px 14px;
+  padding: 8px 12px;
   border-radius: 10px;
   position: relative;
-  font-size: 14px;
+  font-size: 12px;
 
   &::before {
     content: '';

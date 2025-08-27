@@ -1,5 +1,4 @@
-// src/components/Common/BackButton.tsx
-import { ChevronLeft } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -14,13 +13,13 @@ export default function BackButton({ onClick }: Props) {
     if (onClick) {
       onClick()
     } else {
-      navigate(-1) // 기본 동작: 이전 페이지로 이동
+      navigate(-1)
     }
   }
 
   return (
     <Button onClick={handleClick}>
-      <ChevronLeft size={24} />
+      <ArrowLeft size={24} />
     </Button>
   )
 }
