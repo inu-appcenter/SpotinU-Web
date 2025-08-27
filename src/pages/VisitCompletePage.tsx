@@ -55,7 +55,6 @@ export default function VisitCompletePage() {
   const toggleSave = useCallback(async () => {
     if (!isLogin) return showLoginSheet()
 
-    // 낙관적 업데이트
     setIsSaved((prev) => !prev)
     try {
       // TODO: API 연동 (저장/해제)
@@ -148,11 +147,11 @@ export default function VisitCompletePage() {
         isOpen={isDeleteOpen}
         title="방문내역 삭제"
         content={
-          <>
+          <Center>
             이후 다시 리뷰를 작성할 수 없습니다.
             <br />
             삭제하시겠습니까?
-          </>
+          </Center>
         }
         confirmText="삭제"
         cancelText="취소"
@@ -182,4 +181,7 @@ const Main = styled.main`
 
 const CTA = styled.div`
   padding: 16px 0;
+`
+const Center = styled.div`
+  text-align: center;
 `
