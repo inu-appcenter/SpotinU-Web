@@ -8,6 +8,7 @@ import NextBtn from '../components/PlaceReview/Btns/NextBtn'
 import PrevNextBtn from '../components/PlaceReview/Btns/PrevNextBtn'
 import ConfirmModal from '../components/PlaceReview/ConfirmModal'
 import DateTimeSelector from '../components/PlaceReview/DateTimeSelector'
+import PlaceCard from '../components/PlaceReview/PlaceCard'
 import ReviewKeywordSelector from '../components/PlaceReview/ReviewKeywordSelector'
 import ReviewInput from '../components/PlaceReview/ReviewRequest/ReviewInput'
 import VisitHistory from '../components/PlaceReview/ReviewRequest/VisitHistory'
@@ -30,17 +31,6 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-`
-
-const CardPlaceholder = styled.div`
-  margin-top: 200px;
-  height: 200px;
-  background: #eee;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #666;
 `
 
 const RaiseBottomBarZ = createGlobalStyle`
@@ -66,6 +56,11 @@ export default function PlaceReviewPage() {
   const handleClose = () => {
     navigate('/place/detail') // PlaceDetail 페이지로 이동
   }
+
+  const images = useMemo(() => ['/장소사진더미.svg', '/장소사진더미.svg', '/장소사진더미.svg'], [])
+  const buildingText = '00호관 101호'
+  const placeName = '공간이름'
+  const visitCount = 1
 
   // 방문 일시
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
@@ -93,12 +88,6 @@ export default function PlaceReviewPage() {
   }
 
   const canGoNextFromKeyword = Boolean(finalDateTime) && (noKeyword || selectedKeywords.size >= 1)
-
-  const selectedPlace = { name: '공간이름', buildingText: '00호관 00층 00호' }
-  const visitCount = 1 // 서버에 맞게 다시 변경해야됨
-
-  const placeName = selectedPlace?.name ?? '00호관 00층 00호'
-  const buildingText = selectedPlace?.buildingText ?? '00호관 00층 00호'
 
   const [photos, setPhotos] = useState<File[]>([])
   const [comment, setComment] = useState('')
@@ -189,11 +178,13 @@ export default function PlaceReviewPage() {
   return (
     <Page>
       <RaiseBottomBarZ />
-      <CloseHeader onClose={handleClose} />
+
       <Container>
+        <CloseHeader onClose={handleClose} />
         {step === 'date' && (
           <>
-            <CardPlaceholder>PlaceCard </CardPlaceholder>
+            <PlaceCard buildingText={buildingText} placeName={placeName} images={images} />
+
             <DateTimeSelector
               valueDate={selectedDate}
               valueTime={selectedTime}
@@ -214,7 +205,7 @@ export default function PlaceReviewPage() {
 
         {step === 'keyword' && (
           <>
-            <CardPlaceholder>PlaceCard </CardPlaceholder>
+            <PlaceCard buildingText={buildingText} placeName={placeName} images={images} />
 
             <ReviewKeywordSelector
               selected={selectedKeywords}
@@ -273,137 +264,3 @@ export default function PlaceReviewPage() {
     </Page>
   )
 }
-
-// // 장소 리뷰 페이지
-// import { useMemo, useState } from 'react'
-// import styled from 'styled-components'
-
-// // import PlaceCard from '../components/PlaceReview/PlaceCard'
-// import NextBtn from '../components/PlaceReview/BottomBtns/NextBtn'
-// import PrevNextBtn from '../components/PlaceReview/BottomBtns/PrevNextBtn'
-// import DateTimeSelector from '../components/PlaceReview/DateTimeSelector'
-// import ReviewKeywordSelector from '../components/PlaceReview/ReviewKeywordSelector'
-
-// // ReviewRequest
-
-// type TimeVal = { hour: number; minute: number }
-
-// const Page = styled.main`
-//   min-height: 100dvh;
-//   background: #f3f5f7;
-//   display: flex;
-//   align-items: flex-start;
-//   justify-content: center;
-//   padding: 16px 12px 32px;
-// `
-
-// const Container = styled.div`
-//   width: 100%;
-//   max-width: 560px;
-//   display: flex;
-//   flex-direction: column;
-//   gap: 16px;
-// `
-
-// const CardPlaceholder = styled.div`
-//   height: 200px;
-//   background: #eee;
-//   border-radius: 12px;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   color: #666;
-// `
-
-// export default function PlaceReviewPage() {
-//   // PlaceCard컴포넌트 코드임
-
-//   // const { list, loading } = usePlaces()
-//   // const place = list[0]
-//   // if (loading || !place) return null // 얘네 지우니까 깜빡임이 사라지네?????????????????? 니가 문제냐????
-//   // const images = [place.imageUrl, `${place.imageUrl}?v=2`, `${place.imageUrl}?v=3`]
-
-//   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-//   const [selectedTime, setSelectedTime] = useState<TimeVal | null>(null)
-
-//   const finalDateTime = useMemo(() => {
-//     if (!selectedDate || !selectedTime) return null
-//     const d = new Date(selectedDate)
-//     d.setHours(selectedTime.hour, selectedTime.minute, 0, 0)
-//     return d
-//   }, [selectedDate, selectedTime])
-
-//   // 컴포넌트 내부 상태 추가
-//   const [showKeywordStep, setShowKeywordStep] = useState(false)
-//   const [selectedKeywords, setSelectedKeywords] = useState<Set<string>>(new Set())
-//   const [noKeyword, setNoKeyword] = useState(false)
-
-//   // 2단계에서 '다음(등록)' 활성 조건 (예: 키워드 최소 1개 또는 '없어요' 체크)
-//   const canSubmit = noKeyword || selectedKeywords.size >= 1
-
-//   return (
-//     <>
-//       <Page>
-//         {/* <PlaceCard
-//           buildingText={`${place.building} 101호`}
-//           placeName={place.title}
-//           images={images}
-//         /> */}
-//         {/* <div style={{ height: 200, width: 500, background: '#eee', borderRadius: 12 }}>
-//           PlaceCard자리
-//         </div>   */}
-
-//         <Container>
-//           <CardPlaceholder>PlaceCard 자리</CardPlaceholder>
-
-//           <DateTimeSelector
-//             valueDate={selectedDate}
-//             valueTime={selectedTime}
-//             onChangeDate={(d) => setSelectedDate(d)} // 달력 외 화면 클릭 시 자동 저장
-//             onChangeTime={(t) => setSelectedTime(t)}
-//           />
-//           {showKeywordStep && (
-//             <ReviewKeywordSelector
-//               selected={selectedKeywords}
-//               onChange={setSelectedKeywords}
-//               noKeyword={noKeyword}
-//               onNoKeywordChange={setNoKeyword}
-//               minPick={1}
-//               maxPick={3}
-//             />
-//           )}
-//         </Container>
-
-//         {!showKeywordStep && (
-//           <NextBtn
-//             disabled={!finalDateTime}
-//             onClick={() => {
-//               if (!finalDateTime) return
-//               setShowKeywordStep(true) //  키워드 단계로 전환
-//             }}
-//           />
-//         )}
-
-//         {/* PrevNextBtn */}
-//         {showKeywordStep && (
-//           <PrevNextBtn
-//             onPrev={() => setShowKeywordStep(false)} //  다시 날짜/시간 단계로
-//             onNext={() => {
-//               if (!canSubmit) return
-//               const payload = {
-//                 visitAt: finalDateTime?.toISOString(),
-//                 keywords: Array.from(selectedKeywords),
-//                 noKeyword,
-//               }
-//               console.log('등록 payload:', payload)
-//               // TODO: 등록 API 또는 다음 화면
-//             }}
-//             nextDisabled={!canSubmit}
-//             prevLabel="이전"
-//             nextLabel="다음"
-//           />
-//         )}
-//       </Page>
-//     </>
-//   )
-// }
