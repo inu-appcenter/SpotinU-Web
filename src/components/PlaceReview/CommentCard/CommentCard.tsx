@@ -37,10 +37,9 @@ const Card = styled.div`
   padding: 12px;
   color: #fff;
 
-  margin: 12px 12px 0;
+  margin: 1px 12px 0;
   background: #4f74a2;
   border-radius: 12px;
-  margin-bottom: 8px;
 `
 
 const Row = styled.div<{ $reverse?: boolean }>`

@@ -34,10 +34,7 @@ const Wrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 16px;
-  margin-top: 22px;
-
-  gap: 12px;
+  padding: 12px;
 `
 
 const Left = styled.div`
@@ -51,7 +48,7 @@ const DateTitle = styled.div`
 `
 
 const Sub = styled.div`
-  margin-top: 18px;
+  margin-top: 6px;
   font-size: 15px;
   color: #000000ff;
 `
@@ -60,7 +57,7 @@ const Right = styled.div``
 
 const DeleteBtn = styled.button`
   margin-top: 10px;
-  font-size: 15px;
+  font-size: 13px;
   background: none;
   border: 0;
   color: #073b7b;

@@ -12,7 +12,7 @@ type Props = {
 const Wrap = styled.section`
   display: grid;
   gap: 8px;
-  margin-top: 75px;
+  margin-top: px;
 `
 
 const Head = styled.div`
@@ -25,7 +25,7 @@ const Title = styled.div`
   display: grid;
   gap: 1px;
   margin-left: 12px;
-  margin-bottom: 14px;
+  margin-bottom: px;
   strong {
     font-size: 14px;
   }
@@ -45,7 +45,6 @@ const PillBar = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 5px;
 `
 
 const Pill = styled.span`

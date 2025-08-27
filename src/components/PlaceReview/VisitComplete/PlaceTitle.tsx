@@ -34,7 +34,7 @@ const Wrap = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 20px 16px 10px;
-  padding-top: 120px;
+  margin-top: 28px;
 `
 
 const Left = styled.div`
@@ -46,7 +46,6 @@ const Label = styled.div`
   font-size: 19px;
   color: #000000ff;
   font-weight: 800;
-  margin-bottom: 16px;
 `
 
 const Title = styled.h1`

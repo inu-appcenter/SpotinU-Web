@@ -18,7 +18,7 @@ const Wrap = styled.section`
 // 업로드 박스
 const UploadBox = styled.button`
   width: 100%;
-  min-height: 220px;
+  min-height: 180px;
   border-radius: 16px;
   border: 1px dashed #c8cfd9;
   background: #d9d9d9;
@@ -117,7 +117,7 @@ const Textarea = styled.textarea`
   width: 100%;
   font-size: 12px;
   line-height: 1.5;
-  min-height: 120px;
+  min-height: 90px;
   margin-top: 12px;
 
   border: none;

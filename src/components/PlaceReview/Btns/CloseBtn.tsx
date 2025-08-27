@@ -27,13 +27,13 @@ const HeaderOuter = styled.header`
 
 const Inner = styled.div`
   max-width: 560px;
-  height: 48px;
+  height: 0px;
   margin: 0 auto;
 
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 0 16px;
+  padding: 0 8px;
 `
 
 const CloseButton = styled.button`

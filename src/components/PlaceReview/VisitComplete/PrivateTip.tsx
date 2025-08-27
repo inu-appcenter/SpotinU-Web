@@ -30,7 +30,7 @@ const Wrap = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
-  margin: 22px 16px 0;
+  margin: 0 16px 0;
   background: #fff;
   border: 1.5px solid #073b7b;
   border-radius: 10px;

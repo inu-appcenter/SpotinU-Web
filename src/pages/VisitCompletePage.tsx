@@ -1,13 +1,14 @@
-// 리뷰 등록
+// VisitCompletePage.tsx (일부 생략 없이 전체 교체해도 됨)
 import { format } from 'date-fns'
 import { ko } from 'date-fns/locale'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import BottomNavBar from '../components/Common/BottomNavBar'
 import CommonModal from '../components/Common/CommonModal'
 import SaveButton from '../components/Common/SaveButton'
+import BackBtn from '../components/PlaceReview/Btns/BackBtn'
 import CommentCard from '../components/PlaceReview/CommentCard/CommentCard'
 import KeywordChips from '../components/PlaceReview/CommentCard/KeywordChips'
 import PlaceTitle from '../components/PlaceReview/VisitComplete/PlaceTitle'
@@ -22,7 +23,6 @@ type VisitCompleteState = {
   visitCount?: number
   isFavorite?: boolean
   keywords?: string[]
-  noKeyword?: boolean
   mediaUrls?: string[]
   comment?: string
 }
@@ -54,18 +54,14 @@ export default function VisitCompletePage() {
 
   const toggleSave = useCallback(async () => {
     if (!isLogin) return showLoginSheet()
-
     setIsSaved((prev) => !prev)
     try {
-      // TODO: API 연동 (저장/해제)
-      // if (!isSaved) await api.save(state?.placeId)
-      // else await api.unsave(state?.placeId)
+      // TODO: API 연동
     } catch (e) {
       console.error(e)
-      // 실패 시 롤백
       setIsSaved((prev) => !prev)
     }
-  }, [isLogin, showLoginSheet /*, isSaved, state?.placeId */])
+  }, [isLogin, showLoginSheet])
 
   useEffect(() => {
     if (!isDeleteOpen) return
@@ -75,27 +71,33 @@ export default function VisitCompletePage() {
       document.body.style.overflow = prev
     }
   }, [isDeleteOpen])
-  //// 선택임
 
   const handleConfirmDelete = useCallback(async () => {
     try {
-      // TODO: 방문내역 삭제 API 호출
       console.log('방문내역 삭제 확정')
-
       setDeleteOpen(false)
       nav(-1)
     } catch (e) {
       console.error(e)
       setDeleteOpen(false)
     }
-  }, [nav /* , state?.visitId */])
+  }, [nav])
 
   const handleCancelDelete = useCallback(() => {
     setDeleteOpen(false)
   }, [])
 
+  // 헤더 실제 높이를 CSS 변수로 저장 (그라디언트 분기점에 사용)
+  useLayoutEffect(() => {
+    const headerEl = document.querySelector('header')
+    const h = headerEl ? Math.round(headerEl.getBoundingClientRect().height) : 56
+    document.documentElement.style.setProperty('--header-h', `${h}px`)
+  }, [])
+
   return (
     <Viewport>
+      <BackBtn />
+
       <Screen>
         <Main>
           <PlaceTitle
@@ -142,7 +144,9 @@ export default function VisitCompletePage() {
           </CTA>
         </Main>
       </Screen>
+
       <BottomNavBar />
+
       <CommonModal
         isOpen={isDeleteOpen}
         title="방문내역 삭제"
@@ -164,24 +168,24 @@ export default function VisitCompletePage() {
 
 const Viewport = styled.div`
   min-height: 100dvh;
-  background: #f6f7f8;
   overflow-y: auto;
 `
 
 const Screen = styled.div`
   width: min(100vw, 430px);
   margin: 0 auto;
+  background: transparent; /* Viewport 그라디언트 보이도록 */
 `
 
 const Main = styled.main`
   display: flex;
   flex-direction: column;
-  padding: 16px 16px 0;
+  gap: 13px;
+  padding: 12px 16px 0;
 `
 
-const CTA = styled.div`
-  padding: 16px 0;
-`
+const CTA = styled.div``
+
 const Center = styled.div`
   text-align: center;
 `
