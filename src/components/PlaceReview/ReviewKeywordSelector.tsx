@@ -204,14 +204,14 @@ const Chip = styled.button<{
     border-color 0.15s ease;
   cursor: pointer;
 
-  border: 1.7px solid #d9d9d9;
+  border: 1.8px solid #d9d9d9;
   background: #eeeeee;
   color: #000000ff;
 
   ${({ $active }) =>
     $active &&
     `
-      border: 2px solid #073B7B;
+      border: 1.9px solid #073B7B;
       background: #eeeeee;
       color: #073B7B;
     `}
