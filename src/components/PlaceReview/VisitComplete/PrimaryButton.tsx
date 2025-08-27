@@ -1,4 +1,5 @@
 // 이용 후기 수정
+import { PencilLine } from 'lucide-react'
 import styled from 'styled-components'
 
 type Props = {
@@ -10,34 +11,31 @@ type Props = {
 export default function PrimaryButton({ label, onClick, disabled }: Props) {
   return (
     <Btn type="button" onClick={onClick} disabled={disabled}>
+      <PencilLine size={18} strokeWidth={2} />
       {label}
     </Btn>
   )
 }
 
-/* ---------- styled ---------- */
 const Btn = styled.button`
-  width: 100%;
+  width: 93%;
   height: 48px;
-  border-radius: 12px;
+  border-radius: 20px;
   border: 0;
   cursor: pointer;
+  margin: auto;
 
-  background: #007aff; /* 기본 파란색 CTA */
+  background: #073b7b;
   color: #fff;
-  font-weight: 700;
-  font-size: 14px;
+  font-weight: 300;
+  font-size: 16px;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
 
   transition: background 0.2s ease;
-
-  &:hover:not(:disabled) {
-    background: #0062cc;
-  }
 
   &:disabled {
     background: #d1d1d6;

@@ -1,14 +1,12 @@
 // 날짜/요일/시각/방문차수 + 내역삭제 버튼
+import { Trash2 } from 'lucide-react'
 import styled from 'styled-components'
 
 type Props = {
-  /** 예: "7월 25일 금" */
   dateText: string
-  /** 예: "오후 3시" */
   timeText: string
-  /** 예: "1번째 방문" */
   countText?: string
-  /** 내역삭제 버튼 클릭 시 실행 */
+
   onDelete?: () => void
 }
 
@@ -19,24 +17,26 @@ export default function VisitMetaRow({ dateText, timeText, countText, onDelete }
         <DateTitle>{dateText}</DateTitle>
         <Sub>
           {timeText}
-          {countText ? ` · ${countText}` : ''}
+          {countText ? `  ${countText}` : ''}
         </Sub>
       </Left>
       <Right>
         <DeleteBtn type="button" onClick={onDelete}>
-          🗑 내역삭제
+          <Trash2 size={15} strokeWidth={2} />
+          <span>내역삭제</span>
         </DeleteBtn>
       </Right>
     </Wrap>
   )
 }
 
-/* ---------- styled ---------- */
 const Wrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   padding: 16px;
+  margin-top: 22px;
+
   gap: 12px;
 `
 
@@ -46,29 +46,30 @@ const Left = styled.div`
 `
 
 const DateTitle = styled.div`
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 800;
 `
 
 const Sub = styled.div`
-  margin-top: 6px;
-  font-size: 12px;
-  color: #666;
+  margin-top: 18px;
+  font-size: 15px;
+  color: #000000ff;
 `
 
 const Right = styled.div``
 
 const DeleteBtn = styled.button`
-  font-size: 12px;
+  margin-top: 10px;
+  font-size: 15px;
   background: none;
   border: 0;
-  color: #666;
+  color: #073b7b;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-
-  &:hover {
-    color: #d33;
+  span {
+    text-decoration: underline;
+    text-underline-offset: 2.5px;
   }
 `

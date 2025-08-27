@@ -91,7 +91,7 @@ export default function ReviewKeywordSelector({
                   <ChipInner>
                     {Icon && (
                       <IconWrap $active={isActive} $dimmed={dimmed}>
-                        <Icon size={16} strokeWidth={2.5} />
+                        <Icon size={16} strokeWidth={1.7} />
                       </IconWrap>
                     )}
                     <Label>{it.label}</Label>
@@ -156,27 +156,13 @@ const Desc = styled.div`
   font-size: 12px;
 `
 
-// const Grid = styled.div`
-//   display: grid;
-//   grid-template-columns: 1fr 1fr;
-//   gap: 18px 80px;
-//   margin-top: 12px;
-
-//   @media (max-width: 420px) {
-//     grid-template-columns: 1fr;
-//   }
-// `
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
 
-  row-gap: clamp(2px, 2.5vw, 50px);
-
-  column-gap: clamp(80px, 8vw, 55px);
-
-  padding-inline: clamp(2px, 4vw, 0px);
-
   margin-top: 12px;
+  margin-left: 8px;
+  gap: 50px; // -----------수정-------------------------
 
   @media (max-width: 360px) {
     grid-template-columns: 1fr;
@@ -203,7 +189,7 @@ const Chip = styled.button<{
   $dimmed?: boolean
   $variant?: 'normal' | 'nokey'
 }>`
-  width: 140px;
+  width: 160px;
   height: 24px;
 
   display: flex;

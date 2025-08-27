@@ -3,13 +3,9 @@ import styled from 'styled-components'
 
 type Props = {
   placeName: string
-  /** ISO 문자열 또는 Date 객체 */
   visitAt?: string | Date
-  /** N번째 방문 */
   visitCount: number
-  /** 선택된 키워드(없으면 빈 배열) */
   keywords: string[]
-  /** '선택할 키워드가 없어요' 표시 여부 */
   noKeyword: boolean
 }
 
@@ -98,7 +94,8 @@ export default function VisitHistory({
         <Title>
           <strong>[{placeName}]</strong>
           <div className="meta">
-            {dateText || '방문 일시 미선택'} <span className="visit">{visitCount}번째 방문</span>
+            {dateText || '방문 일시 미선택'}
+            <span className="visit">{visitCount}번째 방문</span>
           </div>
         </Title>
       </Head>
@@ -107,9 +104,9 @@ export default function VisitHistory({
         {noKeyword ? (
           <PillOutlinePrimary>선택할 키워드가 없어요</PillOutlinePrimary>
         ) : keywords.length > 0 ? (
-          keywords.map((k) => <Pill key={k}>{k}</Pill>)
+          keywords.map((k) => <PillOutlinePrimary key={k}>{k}</PillOutlinePrimary>)
         ) : (
-          <Pill>키워드 미선택</Pill>
+          <PillOutlinePrimary>키워드 미선택</PillOutlinePrimary>
         )}
       </PillBar>
     </Wrap>

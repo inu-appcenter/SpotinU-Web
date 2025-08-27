@@ -1,4 +1,4 @@
-import { Hand } from 'lucide-react'
+import { Pointer } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -94,17 +94,21 @@ export default function DateTimeSelector({
         <Cell>
           {showGuideForDate && (
             <Guide $left>
-              <Hand size={16} color="#f2b705" />
-              <Highlight>날짜</Highlight>를 선택해주세요 !
+              <Pointer size={16} color="#f2b705" />
+              <span>
+                <Highlight>날짜</Highlight>을 선택해주세요!
+              </span>
             </Guide>
           )}
         </Cell>
 
         <Cell>
           {showGuideForTime && (
-            <Guide>
-              <Hand size={16} color="#f2b705" />
-              <Highlight>시간</Highlight>을 선택해주세요 !
+            <Guide $left>
+              <Pointer size={16} color="#f2b705" />
+              <span>
+                <Highlight>시간</Highlight>을 선택해주세요!
+              </span>
             </Guide>
           )}
         </Cell>

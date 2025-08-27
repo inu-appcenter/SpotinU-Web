@@ -21,17 +21,18 @@ export default KeywordChips
 const Wrap = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 16px;
   padding: 8px 16px 0;
 `
 
 const Chip = styled.span`
   display: inline-block;
-  font-size: 13px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid #2e5aac;
-  background: #fff;
-  color: #2e5aac;
-  font-weight: 600;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 10px;
+
+  border: 1.3px solid #073b7b;
+  background: #eeeeee;
+  color: #073b7b;
+  font-weight: 500;
 `

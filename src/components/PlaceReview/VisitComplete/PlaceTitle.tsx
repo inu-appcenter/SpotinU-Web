@@ -3,31 +3,27 @@ import styled from 'styled-components'
 
 type Props = {
   label?: string // 기본: [공간 이름]
-  title: string // 예: 00호관 00층 00호
+  buildingText?: string // ← 오타 수정
   isFavorite?: boolean // 즐겨찾기 여부
   onToggleFavorite?: () => void
+  rightSlot?: React.ReactNode
 }
 
 export default function PlaceTitle({
   label = '[공간 이름]',
-  title,
-  isFavorite = false,
+  buildingText = '00호관 00층 00호',
   onToggleFavorite,
+  rightSlot,
 }: Props) {
   return (
     <Wrap>
       <Left>
         <Label>{label}</Label>
-        <Title>{title}</Title>
+        <Title>{buildingText}</Title>
       </Left>
       <Right>
-        <Star
-          aria-label={isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가'}
-          $active={isFavorite}
-          onClick={onToggleFavorite}
-        >
-          {isFavorite ? '★' : '☆'}
-        </Star>
+        <StarBtn onClick={onToggleFavorite} aria-label="즐겨찾기" />
+        {rightSlot /*  외부에서 넣은 버튼 */}
       </Right>
     </Wrap>
   )
@@ -37,7 +33,8 @@ const Wrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 16px 8px;
+  padding: 20px 16px 10px;
+  padding-top: 120px;
 `
 
 const Left = styled.div`
@@ -46,24 +43,24 @@ const Left = styled.div`
 `
 
 const Label = styled.div`
-  font-size: 12px;
-  color: #555;
-  font-weight: 600;
-  margin-bottom: 6px;
+  font-size: 19px;
+  color: #000000ff;
+  font-weight: 800;
+  margin-bottom: 16px;
 `
 
 const Title = styled.h1`
-  font-size: 16px;
+  font-size: 19px;
   font-weight: 800;
   margin: 0;
 `
 
 const Right = styled.div``
 
-const Star = styled.button<{ $active: boolean }>`
-  background: none;
-  border: 0;
+const StarBtn = styled.button`
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  font-size: 22px;
-  color: ${({ $active }) => ($active ? '#FFC83D' : '#c7c7c7')};
 `

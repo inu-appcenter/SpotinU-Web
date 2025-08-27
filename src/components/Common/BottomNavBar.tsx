@@ -1,14 +1,7 @@
 // src/components/Common/BottomNavBar.tsx
 import { Map, MapPin, Settings } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
-
-type Item = { key: string; icon: ReactNode; label: string }
-type Props = {
-  items?: Item[]
-  activeKey: string
-  onChange?: (key: string) => void
-}
 
 const ACTIVE_BG = '#073B7B'
 
@@ -32,34 +25,46 @@ const Row = styled.div`
   gap: 12px;
 `
 
-const Tile = styled.button<{ $active?: boolean }>`
+/* NavLink 기반으로, .active 클래스에만 스타일 주기 */
+const Tile = styled(NavLink)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 6px;
   padding: 8px 12px;
   border-radius: 12px;
-  background: ${({ $active }) => ($active ? ACTIVE_BG : 'transparent')};
-  color: ${({ $active }) => ($active ? '#ffffff' : '#374151')};
+  text-decoration: none;
 
-  &:not([data-active='true']):hover {
+  background: transparent;
+  color: #374151;
+
+  .ico {
+    width: 24px;
+    height: 24px;
+    color: #9ca3af;
+  }
+  .txt {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+  }
+
+  &:hover {
     background: #f9fafb;
   }
   &:active {
     opacity: 0.95;
   }
 
-  .ico {
-    width: 24px;
-    height: 24px;
-    display: block;
-    color: ${({ $active }) => ($active ? '#ffffff' : '#9ca3af')};
-  }
-  .txt {
-    font-size: 12px;
-    font-weight: 600;
-    color: ${({ $active }) => ($active ? '#ffffff' : '#6b7280')};
+  &.active {
+    background: ${ACTIVE_BG};
+    color: #fff;
+    .ico {
+      color: #fff;
+    }
+    .txt {
+      color: #fff;
+    }
   }
 `
 
@@ -67,32 +72,36 @@ export const BottomGap = styled.div`
   height: calc(64px + 16px + env(safe-area-inset-bottom));
 `
 
-const BottomNavBar = ({ items, activeKey, onChange }: Props) => {
-  const fallback: Item[] = [
-    { key: 'find', icon: <MapPin />, label: '장소 찾기' },
-    { key: 'map', icon: <Map />, label: '나만의 캠퍼스 맵' },
-    { key: 'me', icon: <Settings />, label: '마이페이지' },
-  ]
-  const list = items?.length ? items : fallback
+const NAV = [
+  { key: 'places', label: '장소 찾기', path: '/' },
+  { key: 'myCampusMap', label: '나만의 캠퍼스 맵', path: '/my-campus-map' },
+  { key: 'myPage', label: '마이페이지', path: '/my-page' },
+]
 
+const BottomNavBar = () => {
   return (
     <Shell role="navigation" aria-label="하단 네비게이션">
       <Row>
-        {list.map((it) => {
-          const active = it.key === activeKey
-          return (
-            <Tile
-              key={it.key}
-              $active={active}
-              data-active={active ? 'true' : undefined}
-              onClick={() => onChange?.(it.key)}
-              aria-current={active ? 'page' : undefined}
-            >
-              <span className="ico">{it.icon}</span>
-              <span className="txt">{it.label}</span>
-            </Tile>
-          )
-        })}
+        <Tile to={NAV[0].path} end>
+          {' '}
+          {/* "/"는 exact 매칭 필요 → end */}
+          <span className="ico">
+            <MapPin />
+          </span>
+          <span className="txt">{NAV[0].label}</span>
+        </Tile>
+        <Tile to={NAV[1].path}>
+          <span className="ico">
+            <Map />
+          </span>
+          <span className="txt">{NAV[1].label}</span>
+        </Tile>
+        <Tile to={NAV[2].path}>
+          <span className="ico">
+            <Settings />
+          </span>
+          <span className="txt">{NAV[2].label}</span>
+        </Tile>
       </Row>
     </Shell>
   )

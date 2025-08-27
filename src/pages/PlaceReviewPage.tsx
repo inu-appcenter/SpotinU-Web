@@ -14,7 +14,7 @@ import VisitHistory from '../components/PlaceReview/ReviewRequest/VisitHistory'
 type TimeVal = { hour: number; minute: number }
 type Step = 'date' | 'keyword' | 'media'
 
-const Page = styled.main`
+export const Page = styled.main`
   min-height: 100dvh;
   background: #f8f9fe;
   display: flex;
@@ -23,7 +23,7 @@ const Page = styled.main`
   padding: 16px 12px 120px;
 `
 
-const Container = styled.div`
+export const Container = styled.div`
   width: 100%;
   max-width: 560px;
   display: flex;
@@ -32,6 +32,7 @@ const Container = styled.div`
 `
 
 const CardPlaceholder = styled.div`
+  margin-top: 200px;
   height: 200px;
   background: #eee;
   border-radius: 12px;
@@ -45,7 +46,7 @@ const RaiseBottomBarZ = createGlobalStyle`
   :root { --z-bottom-bar: 100; }  /* 필요하면 90~100으로 */
 `
 
-const StickyBottom = styled.div`
+export const StickyBottom = styled.div`
   position: fixed;
   left: 0;
   right: 0;
@@ -162,7 +163,7 @@ export default function PlaceReviewPage() {
         visitAt: finalDateTime.toISOString(),
         visitCount,
         isFavorite: false,
-        keywords: [], // 방문만이므로 비움
+        keywords: Array.from(selectedKeywords),
         noKeyword,
         mediaUrls: [], // 방문만이므로 비움
         comment: '',
@@ -186,7 +187,7 @@ export default function PlaceReviewPage() {
       <Container>
         {step === 'date' && (
           <>
-            <CardPlaceholder>PlaceCard 자리</CardPlaceholder>
+            <CardPlaceholder>PlaceCard </CardPlaceholder>
             <DateTimeSelector
               valueDate={selectedDate}
               valueTime={selectedTime}
@@ -207,7 +208,7 @@ export default function PlaceReviewPage() {
 
         {step === 'keyword' && (
           <>
-            <CardPlaceholder>PlaceCard 자리</CardPlaceholder>
+            <CardPlaceholder>PlaceCard </CardPlaceholder>
 
             <ReviewKeywordSelector
               selected={selectedKeywords}
