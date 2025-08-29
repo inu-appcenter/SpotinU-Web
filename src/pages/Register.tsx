@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 import BackHeader from '../components/Common/BackHeader.tsx'
 import CommonModal from '../components/Common/CommonModal.tsx'
-import PhotoUploadButton from '../components/Register/PhotoUploadButton.tsx'
 import RegisterBox from '../components/Register/RegisterBox.tsx'
 import { useViewportVH } from '../hooks/useViewportVH'
 
@@ -16,7 +15,7 @@ const RegisterWrapper = styled.div`
 
 const HeaderWrapper = styled.div`
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 0;
 `
 const Content = styled.div`
   display: flex;
@@ -26,25 +25,17 @@ const Content = styled.div`
   flex: 1;
   margin-bottom: 30px;
 `
-const PhotoWrapper = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  width: calc(100% - 60px);
-  margin-bottom: 16px;
-`
+
 const Description = styled.span`
-  font-size: 11px;
+  font-size: 18px;
   color: black;
   width: calc(100% - 64px);
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 `
 const Register = () => {
   useViewportVH()
   const [showModal, setShowModal] = useState(false)
-
-  const handlePhotoChange = (file: File) => {
-    console.log('파일', file) //서버 업로드 처리 해야됨
-  }
 
   return (
     <RegisterWrapper className="app">
@@ -52,11 +43,9 @@ const Register = () => {
         <BackHeader title={'프로필 설정'} />
       </HeaderWrapper>
       <Content className="app-content">
-        <PhotoWrapper>
-          <PhotoUploadButton onChange={handlePhotoChange} />
-        </PhotoWrapper>
-        <Description>* 표시는 필수 입력 항목입니다.</Description>
-
+        <Description>
+          초기 프로필 설정을 해주세요! <br />이 과정은 한 번만 필요해요
+        </Description>
         <RegisterBox onPrivacyClick={() => setShowModal(true)} />
       </Content>
       <div className={'bottom-gap'} />

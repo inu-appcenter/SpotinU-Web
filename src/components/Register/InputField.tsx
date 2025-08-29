@@ -9,6 +9,7 @@ type Props = {
   hasCheckButton?: boolean
   onCheck?: () => void
   error?: string
+  showNotice?: boolean
 }
 
 const Wrapper = styled.div`
@@ -22,10 +23,20 @@ const Wrapper = styled.div`
 const InputWrapper = styled.div`
   position: relative;
 `
+const LabelRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 3px;
+`
 
 const Label = styled.span`
   font-size: 14px;
   font-weight: 500;
+`
+const RequireNotice = styled.span`
+  color: black;
+  font-size: 10px;
 `
 
 const CheckButton = styled.button`
@@ -75,10 +86,18 @@ const InputField = ({
   hasCheckButton,
   onCheck,
   error,
+  showNotice,
 }: Props) => {
   return (
     <Wrapper>
-      <Label>{label}</Label>
+      {showNotice ? (
+        <LabelRow>
+          <Label>{label}</Label>
+          <RequireNotice>*표시는 필수 입력 항목입니다</RequireNotice>
+        </LabelRow>
+      ) : (
+        <Label>{label}</Label>
+      )}
       <InputWrapper>
         <Input type="text" value={value} onChange={onChange} placeholder={placeholder} />
         {hasCheckButton && <CheckButton onClick={onCheck}>중복확인</CheckButton>}

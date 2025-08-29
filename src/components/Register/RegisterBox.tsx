@@ -62,10 +62,10 @@ const RegisterBox = ({ onPrivacyClick }: Props) => {
   const isValidStudentNumber = /^\d{9}$/.test(studentNumber)
 
   //에러 텍스트
-  const nicknameError = nickname.length === 0 ? '' : !isValidNickname ? '다시 입력해주세요' : ''
+  const nicknameError = nickname.length === 0 ? '' : !isValidNickname ? '정확하게 입력해주세요' : ''
 
   const studentNumberError =
-    studentNumber.length === 0 ? '' : !isValidStudentNumber ? '다시 입력해주세요' : ''
+    studentNumber.length === 0 ? '' : !isValidStudentNumber ? '정확하게 입력해주세요' : ''
 
   //필수항목 입력했는지
   const isMustWrite = isValidNickname && department.trim() !== '' && isValidStudentNumber && agreed
@@ -89,6 +89,7 @@ const RegisterBox = ({ onPrivacyClick }: Props) => {
         hasCheckButton
         onCheck={handleCheckNickname}
         error={nicknameError}
+        showNotice
       />
 
       <InputField
