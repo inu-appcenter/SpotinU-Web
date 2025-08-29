@@ -1,11 +1,13 @@
 import { ChevronRight } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 
 import InputField from './InputField.tsx'
 
 type Props = {
-  onPrivacyClick: () => void
+  onPrivacyClick?: () => void
+  showPrivacy?: boolean
+  onValidChange?: (valid: boolean) => void
 }
 
 const Wrapper = styled.div`
@@ -40,17 +42,7 @@ const StyledCheckbox = styled.input`
   top: 1.5px;
 `
 
-const SubmitButton = styled.button<{ disabled?: boolean }>`
-  width: 100%;
-  height: 40px;
-  border-radius: 20px;
-  background-color: ${({ disabled }) => (disabled ? '#ddd' : '#073B7B')};
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-`
-
-const RegisterBox = ({ onPrivacyClick }: Props) => {
+const RegisterBox = ({ onPrivacyClick, showPrivacy, onValidChange }: Props) => {
   const [nickname, setNickname] = useState('')
   const [department, setDepartment] = useState('')
   const [studentNumber, setStudentNumber] = useState('')
@@ -62,20 +54,24 @@ const RegisterBox = ({ onPrivacyClick }: Props) => {
   const isValidStudentNumber = /^\d{9}$/.test(studentNumber)
 
   //에러 텍스트
-  const nicknameError = nickname.length === 0 ? '' : !isValidNickname ? '다시 입력해주세요' : ''
+  const nicknameError = nickname.length === 0 ? '' : !isValidNickname ? '정확하게 입력해주세요' : ''
 
   const studentNumberError =
-    studentNumber.length === 0 ? '' : !isValidStudentNumber ? '다시 입력해주세요' : ''
+    studentNumber.length === 0 ? '' : !isValidStudentNumber ? '정확하게 입력해주세요' : ''
 
   //필수항목 입력했는지
-  const isMustWrite = isValidNickname && department.trim() !== '' && isValidStudentNumber && agreed
+  const isMustWrite =
+    isValidNickname &&
+    department.trim() !== '' &&
+    isValidStudentNumber &&
+    (showPrivacy ? agreed : true)
+
+  useEffect(() => {
+    onValidChange?.(isMustWrite)
+  }, [isMustWrite, onValidChange])
 
   const handleCheckNickname = () => {
     console.log('중복확인 버튼')
-  }
-
-  const handleSubmit = () => {
-    console.log('제출하기 버튼 ')
   }
 
   return (
@@ -89,6 +85,7 @@ const RegisterBox = ({ onPrivacyClick }: Props) => {
         hasCheckButton
         onCheck={handleCheckNickname}
         error={nicknameError}
+        showNotice
       />
 
       <InputField
@@ -113,17 +110,15 @@ const RegisterBox = ({ onPrivacyClick }: Props) => {
         placeholder="ex: 12호관, 28호관"
       />
 
-      <AgreeRow>
-        <AgreeLabel>
-          <StyledCheckbox type="checkbox" checked={agreed} onChange={() => setAgreed(!agreed)} />
-          <span>개인정보 수집 및 이용 동의* </span>
-        </AgreeLabel>
-        <ChevronRight size={16} onClick={onPrivacyClick} />
-      </AgreeRow>
-
-      <SubmitButton disabled={!isMustWrite} onClick={handleSubmit}>
-        가입
-      </SubmitButton>
+      {showPrivacy && (
+        <AgreeRow>
+          <AgreeLabel>
+            <StyledCheckbox type="checkbox" checked={agreed} onChange={() => setAgreed(!agreed)} />
+            <span>개인정보 수집 및 이용 동의* </span>
+          </AgreeLabel>
+          <ChevronRight size={16} onClick={onPrivacyClick} />
+        </AgreeRow>
+      )}
     </Wrapper>
   )
 }

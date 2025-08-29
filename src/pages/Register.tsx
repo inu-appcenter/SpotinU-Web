@@ -3,12 +3,12 @@ import styled from 'styled-components'
 
 import BackHeader from '../components/Common/BackHeader.tsx'
 import CommonModal from '../components/Common/CommonModal.tsx'
-import PhotoUploadButton from '../components/Register/PhotoUploadButton.tsx'
+import FormButton from '../components/Common/FormButton.tsx'
 import RegisterBox from '../components/Register/RegisterBox.tsx'
 import { useViewportVH } from '../hooks/useViewportVH'
 
 const RegisterWrapper = styled.div`
-  background: white;
+  background: white
   display: flex;
   flex-direction: column;
   position: relative;
@@ -16,7 +16,7 @@ const RegisterWrapper = styled.div`
 
 const HeaderWrapper = styled.div`
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 0;
 `
 const Content = styled.div`
   display: flex;
@@ -26,24 +26,21 @@ const Content = styled.div`
   flex: 1;
   margin-bottom: 30px;
 `
-const PhotoWrapper = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  width: calc(100% - 60px);
-  margin-bottom: 16px;
-`
+
 const Description = styled.span`
-  font-size: 11px;
+  font-size: 18px;
   color: black;
   width: calc(100% - 64px);
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 `
 const Register = () => {
   useViewportVH()
   const [showModal, setShowModal] = useState(false)
+  const [isValid, setIsValid] = useState(false)
 
-  const handlePhotoChange = (file: File) => {
-    console.log('파일', file) //서버 업로드 처리 해야됨
+  const handleSubmit = () => {
+    console.log(' 회원가입 버튼 ')
   }
 
   return (
@@ -52,12 +49,20 @@ const Register = () => {
         <BackHeader title={'프로필 설정'} />
       </HeaderWrapper>
       <Content className="app-content">
-        <PhotoWrapper>
-          <PhotoUploadButton onChange={handlePhotoChange} />
-        </PhotoWrapper>
-        <Description>* 표시는 필수 입력 항목입니다.</Description>
-
-        <RegisterBox onPrivacyClick={() => setShowModal(true)} />
+        <Description>
+          초기 프로필 설정을 해주세요! <br />이 과정은 한 번만 필요해요
+        </Description>
+        <RegisterBox
+          showPrivacy={true}
+          onPrivacyClick={() => setShowModal(true)}
+          onValidChange={setIsValid}
+        />
+        <FormButton
+          buttonStyle={'filled'}
+          text={'가입'}
+          onClick={handleSubmit}
+          disabled={!isValid}
+        />
       </Content>
       <div className={'bottom-gap'} />
       <CommonModal
