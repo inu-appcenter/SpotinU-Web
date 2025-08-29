@@ -16,7 +16,6 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/places" element={<PlaceDetails />} />
-        <Route path="/my-campus-map" element={<MyCampusMap />} />
         <Route path="/my-page" element={<LoginPage />} />
       </Routes>
       <BottomNavBar />

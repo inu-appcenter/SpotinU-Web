@@ -3,11 +3,12 @@ import styled from 'styled-components'
 
 import BackHeader from '../components/Common/BackHeader.tsx'
 import CommonModal from '../components/Common/CommonModal.tsx'
+import FormButton from '../components/Common/FormButton.tsx'
 import RegisterBox from '../components/Register/RegisterBox.tsx'
 import { useViewportVH } from '../hooks/useViewportVH'
 
 const RegisterWrapper = styled.div`
-  background: white;
+  background: white
   display: flex;
   flex-direction: column;
   position: relative;
@@ -36,6 +37,11 @@ const Description = styled.span`
 const Register = () => {
   useViewportVH()
   const [showModal, setShowModal] = useState(false)
+  const [isValid, setIsValid] = useState(false)
+
+  const handleSubmit = () => {
+    console.log(' 회원가입 버튼 ')
+  }
 
   return (
     <RegisterWrapper className="app">
@@ -46,7 +52,17 @@ const Register = () => {
         <Description>
           초기 프로필 설정을 해주세요! <br />이 과정은 한 번만 필요해요
         </Description>
-        <RegisterBox onPrivacyClick={() => setShowModal(true)} />
+        <RegisterBox
+          showPrivacy={true}
+          onPrivacyClick={() => setShowModal(true)}
+          onValidChange={setIsValid}
+        />
+        <FormButton
+          buttonStyle={'filled'}
+          text={'가입'}
+          onClick={handleSubmit}
+          disabled={!isValid}
+        />
       </Content>
       <div className={'bottom-gap'} />
       <CommonModal

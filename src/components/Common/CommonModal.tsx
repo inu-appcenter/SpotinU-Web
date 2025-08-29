@@ -32,6 +32,11 @@ const Content = styled.div`
   color: black;
   margin-bottom: 20px;
 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14px;
+
   ul {
     font-size: 13px;
     padding-left: 16px;
@@ -58,15 +63,15 @@ const ButtonGroup = styled.div`
   justify-content: space-between;
 `
 
-const Button = styled.button<{ primary?: boolean }>`
+const Button = styled.button<{ $primary?: boolean }>`
   flex: 1;
   border-radius: 20px;
   font-size: 14px;
   height: 30px;
-  font-weight: 600;
-  background-color: ${({ primary }) => (primary ? '#073B7B' : '#F3F3F3')};
-  color: ${({ primary }) => (primary ? 'white' : '#073B7B')};
-  border: ${({ primary }) => (primary ? 'none' : '1px solid #073B7B')};
+  font-weight: 500;
+  background-color: ${(props) => (props.$primary ? '#073B7B' : '#F3F3F3')};
+  color: ${(props) => (props.$primary ? 'white' : '#073B7B')};
+  border: ${(props) => (props.$primary ? 'none' : '1px solid #073B7B')};
 `
 
 const CommonModal = ({
@@ -87,7 +92,7 @@ const CommonModal = ({
         <Content>{content}</Content>
         <ButtonGroup>
           {cancelText && <Button onClick={onCancel}>{cancelText}</Button>}
-          <Button primary onClick={onConfirm}>
+          <Button $primary={true} onClick={onConfirm}>
             {confirmText}
           </Button>
         </ButtonGroup>
