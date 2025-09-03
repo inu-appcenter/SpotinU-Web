@@ -25,6 +25,9 @@ const MapContainer = () => {
       map,
     })
   }, [loaded])
+  {
+    /* 임시 */
+  }
 
   return <div ref={mapRef} style={{ width: '100%', height: '100vh' }} />
 }
