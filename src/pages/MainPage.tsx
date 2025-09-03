@@ -5,10 +5,10 @@ import styled from 'styled-components'
 // 민준 :
 // 사실 이 임포트 방식이 좋지 않음
 // alias 걸어서 @/ 이렇게 하는게 좋을 것 같긴 한데.. 이건 논의해보죠
-import Banner from '../components/MainPage/Banner'
-import FilterButtons, { type FilterKey } from '../components/MainPage/FilterButtons'
-import PlaceList from '../components/MainPage/PlaceList'
-import { useViewportVH } from '../hooks/useViewportVH'
+import Banner from '@/components/MainPage/Banner'
+import FilterButtons, { type FilterKey } from '@/components/MainPage/FilterButtons'
+import PlaceList from '@/components/MainPage/PlaceList'
+import { useViewportVH } from '@/hooks/useViewportVH'
 
 const TopPad = styled.div`
   height: 12px;

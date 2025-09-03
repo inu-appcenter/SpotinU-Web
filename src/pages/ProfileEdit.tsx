@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import BackHeader from '../components/Common/BackHeader.tsx'
-import CommonModal from '../components/Common/CommonModal.tsx'
-import FormButton from '../components/Common/FormButton.tsx'
-import RegisterBox from '../components/Register/RegisterBox.tsx'
-import { useViewportVH } from '../hooks/useViewportVH'
+import BackHeader from '@/components/Common/BackHeader.tsx'
+import CommonModal from '@/components/Common/CommonModal.tsx'
+import FormButton from '@/components/Common/FormButton.tsx'
+import RegisterBox from '@/components/Register/RegisterBox.tsx'
+import { useViewportVH } from '@/hooks/useViewportVH'
 
 const RegisterWrapper = styled.div`
   background: white;

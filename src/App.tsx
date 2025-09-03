@@ -4,11 +4,11 @@
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
-import BottomNavBar from './components/Common/BottomNavBar'
-import LoginPage from './pages/LoginPage'
-import MainPage from './pages/MainPage'
-import MyCampusMap from './pages/MyCampusMap'
-import PlaceDetails from './pages/PlaceDetails'
+import BottomNavBar from '@/components/Common/BottomNavBar'
+import MainPage from '@/pages/MainPage'
+import MyCampusMap from '@/pages/MyCampusMap'
+import MyPage from '@/pages/MyPage'
+import PlaceDetails from '@/pages/PlaceDetails'
 
 export default function App() {
   return (
@@ -16,7 +16,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/places" element={<PlaceDetails />} />
-        <Route path="/my-page" element={<LoginPage />} />
+        <Route path="/my-campus-map" element={<MyCampusMap />} />
+        <Route path="/my-page" element={<MyPage />} />
       </Routes>
       <BottomNavBar />
     </BrowserRouter>

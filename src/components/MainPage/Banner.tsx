@@ -65,11 +65,7 @@ const Dot = styled.span<{ $active?: boolean }>`
 
 const Banner = () => {
   // 디자이너에게 포스터 images 받으면 삽입할 예정
-  const images = [
-    '/assets/BannerImg/banner1.png',
-    '/assets/BannerImg/banner2.png',
-    '/assets/BannerImg/banner3.png',
-  ]
+  const images = ['/Banner/Banner1.png', '/Banner/Banner2.png', '/Banner/Banner3.png']
 
   return (
     <Root $h={200}>

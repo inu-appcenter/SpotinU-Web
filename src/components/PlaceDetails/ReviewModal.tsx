@@ -1,7 +1,7 @@
 import { X } from 'lucide-react'
 import styled from 'styled-components'
 
-import type { Review } from '../../types/reviewType'
+import type { Review } from '@/types/reviewType'
 
 import ReviewItem from './ReviewItem'
 

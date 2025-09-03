@@ -18,7 +18,7 @@ export const reviews = [
     id: 2,
     memberName: '나현지',
     photo: '/장소사진더미.svg',
-    content: '조용해서 공부에 집중하기 좋았어요.',
+    content: '조용해서 공부에 집중하기 좋았어요. (구라임)',
     visitDate: '2025-08-20',
     visitTime: '10:00:00',
     keywords: ['COZY'],
