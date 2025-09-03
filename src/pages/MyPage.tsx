@@ -2,8 +2,6 @@ import { ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
-import BottomNavBar from '../components/Common/BottomNavBar'
-
 export default function MyPage() {
   return (
     <Wrap>
@@ -31,7 +29,6 @@ export default function MyPage() {
           </Row>
         </Card>
       </Content>
-      <BottomNavBar />
     </Wrap>
   )
 }

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import type { Review } from '../../types/reviewType.ts'
+import type { Review } from '@/types/reviewType.ts'
 
 import InfoBoxWrapper from './InfoBoxWrapper.tsx'
 import ReviewItem from './ReviewItem.tsx'

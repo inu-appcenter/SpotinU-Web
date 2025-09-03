@@ -1,7 +1,7 @@
 import { Image as ImageIcon } from 'lucide-react'
 import styled from 'styled-components'
 
-import BackHeader from '../components/Common/BackHeader'
+import BackHeader from '@/components/Common/BackHeader'
 
 type Props = {
   hasPermission: boolean

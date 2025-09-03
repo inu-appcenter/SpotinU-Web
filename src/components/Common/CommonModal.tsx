@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import type { CommonModalProps } from '../../types/commonModalType.ts'
+import type { CommonModalProps } from '@/types/commonModalType.ts'
 
 const Dimmed = styled.div`
   position: fixed;

@@ -1,7 +1,7 @@
 import { ArrowLeft } from 'lucide-react'
 import styled from 'styled-components'
 
-import SaveButton from '../Common/SaveButton.tsx'
+import SaveButton from '@/components/Common/SaveButton.tsx'
 
 import ReviewButton from './ReviewButton.tsx'
 

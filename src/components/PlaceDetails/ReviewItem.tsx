@@ -2,7 +2,7 @@ import { Calendar, Smile, Sofa } from 'lucide-react'
 import type { ReactNode } from 'react'
 import styled from 'styled-components'
 
-import type { Review } from '../../types/reviewType'
+import type { Review } from '@/types/reviewType'
 
 // 요일 매핑
 const getDay = (dateStr: string): string => {

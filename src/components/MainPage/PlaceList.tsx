@@ -1,9 +1,8 @@
-// src/components/MainPage/PlaceList.tsx
 import styled from 'styled-components'
 
-import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
-import { usePlaces } from '../../hooks/usePlaces'
-import { BottomGap } from '../Common/BottomNavBar'
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+import { usePlaces } from '@/hooks/usePlaces'
+import { BottomGap } from '@/components/Common/BottomNavBar'
 
 import PlaceCard from './PlaceCard'
 
@@ -31,10 +30,14 @@ type Props = {
 export default function PlaceList({ onCardClick }: Props) {
   const { list, loading, hasNext, loadMore } = usePlaces(8)
 
-  // 네가 이미 만든 무한스크롤 훅 사용 (바닥 치면 loadMore)
-  const bottomRef = useInfiniteScroll(() => {
-    if (!loading && hasNext) loadMore()
-  }, [loading, hasNext])
+  // 최신 상태를 보게 하고, 로딩/마지막 페이지 때는 관찰 잠깐 중지
+  const bottomRef = useInfiniteScroll(
+    () => {
+      if (!loading && hasNext) loadMore()
+    },
+    [loading, hasNext, loadMore], // loadMore 포함
+    { disabled: loading || !hasNext }, // 관찰 일시 중지
+  )
 
   return (
     <>

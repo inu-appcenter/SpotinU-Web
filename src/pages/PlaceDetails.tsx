@@ -2,21 +2,16 @@ import { Map } from 'lucide-react'
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import LoginBottomSheet from '../components/Common/LoginBottomSheet.tsx'
-import DirectionInfoBox from '../components/PlaceDetails/DirectionInfoBox.tsx'
-import PageHeader from '../components/PlaceDetails/PageHeader.tsx'
-import PlaceImageSlide from '../components/PlaceDetails/PlaceImageSlide.tsx'
-import PlaceTitle from '../components/PlaceDetails/PlaceTitle.tsx'
-import ReviewInfoBox from '../components/PlaceDetails/ReviewInfoBox.tsx'
-import ReviewModal from '../components/PlaceDetails/ReviewModal.tsx'
-import TimeInfoBox from '../components/PlaceDetails/TimeInfoBox.tsx'
-import {
-  businessHours,
-  descriptionDetail,
-  imageDummy,
-  reviews,
-} from '../dummy/PlaceDetailsDummy.ts'
-import { useViewportVH } from '../hooks/useViewportVH'
+import LoginBottomSheet from '@/components/Common/LoginBottomSheet.tsx'
+import DirectionInfoBox from '@/components/PlaceDetails/DirectionInfoBox.tsx'
+import PageHeader from '@/components/PlaceDetails/PageHeader.tsx'
+import PlaceImageSlide from '@/components/PlaceDetails/PlaceImageSlide.tsx'
+import PlaceTitle from '@/components/PlaceDetails/PlaceTitle.tsx'
+import ReviewInfoBox from '@/components/PlaceDetails/ReviewInfoBox.tsx'
+import ReviewModal from '@/components/PlaceDetails/ReviewModal.tsx'
+import TimeInfoBox from '@/components/PlaceDetails/TimeInfoBox.tsx'
+import { businessHours, descriptionDetail, imageDummy, reviews } from '@/dummy/PlaceDetailsDummy.ts'
+import { useViewportVH } from '@/hooks/useViewportVH'
 
 const PlaceDetailsWrapper = styled.div``
 

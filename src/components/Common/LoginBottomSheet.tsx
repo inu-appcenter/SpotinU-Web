@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 
-import mascot from '../../assets/횃불이.png'
+import mascot from '@/assets/횃불이.png'
 
 type Props = {
   isOpen: boolean
