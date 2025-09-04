@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { PLACES } from '@/dummy/PlacesDummy'
 
 export type Place = {
   id: string
@@ -8,34 +9,33 @@ export type Place = {
   distanceText: string
   imageUrl: string
   typeText?: string
+  tags?: string[]
 }
 
-/** 더미 fetch */
-async function fetchPlaces(page: number, pageSize: number) {
+/** 더미 fetch: 더미 데이터(PLACES)에서 필터+페이지네이션 적용 */
+async function fetchPlaces(page: number, pageSize: number, filter: string | '' = '') {
   const start = (page - 1) * pageSize
-  const total = 40
-  const count = Math.min(pageSize, total - start)
+  const pool = filter ? PLACES.filter((p) => p.tags.includes(filter)) : PLACES
+  const total = pool.length
+  const slice = pool.slice(start, start + pageSize)
+  const items: Place[] = slice.map((p) => ({
+    id: p.id,
+    title: p.title,
+    subtitle: p.subtitle,
+    building: p.building,
+    distanceText: p.distanceText,
+    imageUrl: p.imageUrl,
+    typeText: p.typeText,
+    tags: p.tags,
+  }))
 
-  const items: Place[] = Array.from({ length: Math.max(0, count) }, (_, i) => {
-    const n = start + i + 1
-    return {
-      id: `p-${page}-${i}`,
-      title: `복지회관 테라스`,
-      subtitle: '조용하고 힐링하기 좋은 야외 휴게 공간',
-      building: `1호관 1층`,
-      distanceText: `현재 위치에서 100m`,
-      imageUrl: `https://picsum.photos/seed/place-${n}/800/450`,
-      typeText: '자유석, 실외',
-    }
-  })
-
-  await new Promise((r) => setTimeout(r, 250))
-  const next = start + count < total ? page + 1 : null
+  await new Promise((r) => setTimeout(r, 200))
+  const next = start + items.length < total ? page + 1 : null
   return { items, next }
 }
 
 /** 중복 호출/중복 merge를 막는 초간단 페이징 스토어 */
-export function usePlaces(pageSize = 8) {
+export function usePlaces(pageSize = 8, filter: string | '' = '') {
   const [list, setList] = useState<Place[]>([])
   const [next, setNext] = useState<number | null>(1)
   const [loading, setLoading] = useState(false)
@@ -63,12 +63,11 @@ export function usePlaces(pageSize = 8) {
 
       // 이미 로딩 중/로딩 완료된 페이지면 스킵
       if (inFlight.current.has(page) || loaded.current.has(page)) return
-      if (!reset && next === null) return
 
       inFlight.current.add(page)
       setLoading(true)
       try {
-        const { items, next: np } = await fetchPlaces(page, pageSize)
+        const { items, next: np } = await fetchPlaces(page, pageSize, filter)
         loaded.current.add(page)
         setList((prev) => (reset ? items : dedupeMerge(prev, items))) // 중복 합치기 방지
         setNext(np)
@@ -77,7 +76,7 @@ export function usePlaces(pageSize = 8) {
         setLoading(false)
       }
     },
-    [next, pageSize],
+    [pageSize, filter],
   )
 
   // 첫 로드

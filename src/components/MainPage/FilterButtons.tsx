@@ -14,7 +14,7 @@ import styled from 'styled-components'
 export type FilterKey =
   | '취침'
   | '취식'
-  | '콘텐츠'
+  | '콘센트'
   | '개인공부'
   | '야외'
   | '오락시설'
@@ -31,7 +31,7 @@ type Props = {
 const ALL = [
   { key: '취침', Icon: Home },
   { key: '취식', Icon: Utensils },
-  { key: '콘텐츠', Icon: BookOpen },
+  { key: '콘센트', Icon: BookOpen },
   { key: '개인공부', Icon: GraduationCap },
   { key: '야외', Icon: Trees },
   { key: '오락시설', Icon: Gamepad2 },
