@@ -9,6 +9,7 @@ export type Place = {
   distanceText: string
   imageUrl: string
   typeText?: string
+  tags?: string[]
 }
 
 type Props = { place: Place; onClick?: (id: string) => void }
