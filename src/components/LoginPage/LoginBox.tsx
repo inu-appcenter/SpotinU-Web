@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import { useAuth } from '@/hooks/useAuth.ts'
 
 const LoginBoxWrapper = styled.div`
   padding: 12px 16px;
@@ -56,19 +58,41 @@ const LogoutText = styled.button`
 `
 
 export default function LoginBox() {
+  const [studentNumber, setStudentNumber] = useState('')
+  const [password, setPassword] = useState('')
+  const accessToken = localStorage.getItem('accessToken')
+  const { login, logout } = useAuth()
+
+  //로그인 상태라면 학번 자동저장
+  useEffect(() => {
+    if (accessToken) {
+      const savedId = localStorage.getItem('studentNumber') || ''
+      setStudentNumber(savedId)
+      setPassword('')
+    }
+  }, [accessToken])
+
   return (
     <LoginBoxWrapper>
       <Title>인천대 구성원</Title>
       <SubText>학교 포탈 아이디로 별도의 회원가입 없이 바로 로그인하세요!</SubText>
 
-      <Input type="text" placeholder="ID" />
-      <Input type="password" placeholder="Password" />
+      <Input
+        type="text"
+        placeholder="학번"
+        value={studentNumber}
+        onChange={(e) => setStudentNumber(e.target.value)}
+      />
+      <Input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
 
-      <BottomRow>
-        <LogoutText>로그아웃</LogoutText>
-      </BottomRow>
+      <BottomRow>{accessToken && <LogoutText onClick={logout}>로그아웃</LogoutText>}</BottomRow>
 
-      <LoginButton>로그인</LoginButton>
+      <LoginButton onClick={() => login(studentNumber, password)}>로그인</LoginButton>
     </LoginBoxWrapper>
   )
 }
