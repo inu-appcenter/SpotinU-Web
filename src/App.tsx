@@ -7,9 +7,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import BottomNavBar from '@/components/Common/BottomNavBar'
 import MainPage from '@/pages/MainPage'
 import MyCampusMap from '@/pages/MyCampusMap'
-import MyPage from '@/pages/MyPage.tsx'
 import PlaceDetails from '@/pages/PlaceDetails'
 import Register from '@/pages/Register.tsx'
+import MyPage from '@/pages/MyPage.tsx'
 
 export default function App() {
   return (

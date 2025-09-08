@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import { useAuth } from '@/hooks/useAuth.ts'
 
 const LoginBoxWrapper = styled.div`
   padding: 12px 16px;
@@ -60,43 +60,17 @@ const LogoutText = styled.button`
 export default function LoginBox() {
   const [studentNumber, setStudentNumber] = useState('')
   const [password, setPassword] = useState('')
-  const navigate = useNavigate()
+  const accessToken = localStorage.getItem('accessToken')
+  const { login, logout } = useAuth()
 
-  const handleLogin = async () => {
-    try {
-      const response = await fetch('http://localhost:8080/api/v1/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          studentNumber: parseInt(studentNumber, 10),
-          password,
-        }),
-      })
-
-      const result = await response.json()
-      if (response.status === 200) {
-        localStorage.setItem('accessToken', result.data)
-        alert('로그인 성공')
-        navigate(-1)
-      } else if (response.status === 400) {
-        alert(`비밀번호가 일치하지 않습니다. 다시 시도해주세요.`)
-      } else if (response.status === 500) {
-        const goToRegister = window.confirm(`로그인이 처음이시군요. 회원가입 페이지로 이동할까요?`)
-        if (goToRegister) {
-          navigate('/register', { state: { studentNumber: studentNumber, password: password } })
-        } else {
-          navigate(-1)
-        }
-      } else {
-        alert(`로그인 실패: ${result.message}`)
-      }
-    } catch (err) {
-      console.error(err)
-      alert('로그인 중 오류 발생')
+  //로그인 상태라면 학번 자동저장
+  useEffect(() => {
+    if (accessToken) {
+      const savedId = localStorage.getItem('studentNumber') || ''
+      setStudentNumber(savedId)
+      setPassword('')
     }
-  }
+  }, [accessToken])
 
   return (
     <LoginBoxWrapper>
@@ -105,7 +79,7 @@ export default function LoginBox() {
 
       <Input
         type="text"
-        placeholder="ID"
+        placeholder="학번"
         value={studentNumber}
         onChange={(e) => setStudentNumber(e.target.value)}
       />
@@ -116,11 +90,9 @@ export default function LoginBox() {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <BottomRow>
-        <LogoutText>로그아웃</LogoutText>
-      </BottomRow>
+      <BottomRow>{accessToken && <LogoutText onClick={logout}>로그아웃</LogoutText>}</BottomRow>
 
-      <LoginButton onClick={handleLogin}>로그인</LoginButton>
+      <LoginButton onClick={() => login(studentNumber, password)}>로그인</LoginButton>
     </LoginBoxWrapper>
   )
 }
