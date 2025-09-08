@@ -24,7 +24,7 @@ const LoginPage = () => {
   return (
     <LoginPageWrapper className="app">
       <HeaderWrapper className={'sticky-top'}>
-        <BackHeader title="로그인/회원가입" />
+        <BackHeader title="로그인" />
       </HeaderWrapper>
       <Content className="app-content">
         <LoginBox />
