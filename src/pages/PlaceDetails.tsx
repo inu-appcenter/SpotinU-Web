@@ -1,5 +1,6 @@
 import { Map } from 'lucide-react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import LoginBottomSheet from '@/components/Common/LoginBottomSheet.tsx'
@@ -58,7 +59,21 @@ const PlaceDetails = () => {
   const [isSaved, setIsSaved] = useState(false) //저장 여부
   const toggleSave = () => setIsSaved((prev) => !prev) // 저장 상태 토글
 
-  const isLogin = true // false로 바꿔보면서 테스트
+  const navigate = useNavigate()
+
+  const isLogin = !!localStorage.getItem('accessToken')
+
+  const handleReviewClick = () => {
+    if (isLogin) {
+      navigate('/places/review')
+    } else {
+      setShowBottomSheet(true)
+    }
+  }
+
+  const handleClickLogin = () => {
+    navigate('/login')
+  }
 
   return (
     <>
@@ -71,7 +86,7 @@ const PlaceDetails = () => {
               isSaved={isSaved}
               toggleSave={toggleSave}
               showLoginSheet={() => setShowBottomSheet(true)}
-              goToReviewPage={() => console.log('후기작성 페이지로 이동')}
+              goToReviewPage={handleReviewClick}
             />
           </HeaderWrapper>
           <PlaceTitle />
@@ -94,7 +109,7 @@ const PlaceDetails = () => {
         <LoginBottomSheet
           isOpen={showBottomSheet}
           onClose={() => setShowBottomSheet(false)}
-          onClickLogin={() => console.log('로그인 페이지로 이동')}
+          onClickLogin={handleClickLogin}
         />
       )}
     </>
