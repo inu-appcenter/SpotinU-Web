@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import api from '@/lib/axios.ts'
+import api from '@/contexts/axios.ts'
 import type { PlaceDetails } from '@/types/PlaceDetailsType'
 
 const usePlaceDetails = (spotId: number) => {

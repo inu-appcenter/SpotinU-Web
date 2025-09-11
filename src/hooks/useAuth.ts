@@ -1,7 +1,8 @@
 import { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-import api from '@/lib/axios.ts'
+import api from '@/contexts/axios.ts'
+import { useAuthContext } from '@/contexts/AuthContext'
 
 //서버 응답 타입
 type ApiResponse<T> = {
@@ -12,6 +13,7 @@ type ApiResponse<T> = {
 
 export const useAuth = () => {
   const navigate = useNavigate()
+  const { setAuth } = useAuthContext()
 
   //회원가입
   const signup = async (name: string, studentNumber: string, password: string) => {
@@ -54,8 +56,8 @@ export const useAuth = () => {
       const { data } = await api.post<ApiResponse<string>>('/api/v1/auth/login', body)
 
       const accessToken = data.data
-      localStorage.setItem('accessToken', accessToken)
-      localStorage.setItem('studentNumber', studentNumber)
+      setAuth(accessToken, studentNumber)
+
       alert('로그인 성공!')
       navigate(-1)
     } catch (err: unknown) {
@@ -83,8 +85,7 @@ export const useAuth = () => {
 
   // 로그아웃
   const logout = () => {
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('studentNumber')
+    setAuth(null, null)
     alert('로그아웃 되었습니다.')
     navigate('/')
   }
@@ -93,8 +94,8 @@ export const useAuth = () => {
   const deleteAccount = async () => {
     try {
       await api.delete('/api/v1/auth/delete')
-      localStorage.removeItem('accessToken')
-      localStorage.removeItem('studentNumber')
+      setAuth(null, null)
+
       alert('회원탈퇴가 완료되었습니다.')
       navigate('/')
     } catch (err: unknown) {
