@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import InfoBoxWrapper from './InfoBoxWrapper.tsx'
 
 type Props = {
-  directions: string[]
+  directions: string
 }
 
 const Description = styled.div`
@@ -16,10 +16,15 @@ const Description = styled.div`
   gap: 6px;
 `
 const DirectionInfoBox = ({ directions }: Props) => {
+  const splitDirections = directions
+    .split('.')
+    .map((d) => d.trim())
+    .filter((d) => d.length > 0)
+
   return (
     <InfoBoxWrapper title={'가는방법'}>
       <Description>
-        {directions.map((d, i) => (
+        {splitDirections.map((d, i) => (
           <div key={i}>{`${i + 1}. ${d}`}</div>
         ))}
       </Description>

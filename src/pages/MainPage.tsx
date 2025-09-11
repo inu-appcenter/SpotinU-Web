@@ -38,7 +38,7 @@ const MainPage = () => {
       </StickyWrap>
 
       <Content className="app-content">
-        <PlaceList filter={filter} onCardClick={() => navigate('/places')} />
+        <PlaceList filter={filter} onCardClick={() => navigate(`/places/2`)} />
       </Content>
     </main>
   )

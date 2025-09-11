@@ -8,7 +8,7 @@ import RegisterBox from '@/components/Register/RegisterBox.tsx'
 import { useViewportVH } from '@/hooks/useViewportVH'
 
 const RegisterWrapper = styled.div`
-  background: white
+  background: white;
   display: flex;
   flex-direction: column;
   position: relative;

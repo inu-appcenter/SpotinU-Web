@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
+
 import { useAuth } from '@/hooks/useAuth.ts'
 
 const LoginBoxWrapper = styled.div`
