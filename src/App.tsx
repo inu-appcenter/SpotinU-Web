@@ -8,7 +8,6 @@ import BottomNavBar from '@/components/Common/BottomNavBar'
 import LoginPage from '@/pages/LoginPage'
 import MainPage from '@/pages/MainPage'
 import MyCampusMap from '@/pages/MyCampusMap'
-import MyPage from '@/pages/MyPage'
 import PlaceDetails from '@/pages/PlaceDetails'
 import PlaceReviewPage from '@/pages/PlaceReviewPage'
 import ProfileEdit from '@/pages/ProfileEdit'
@@ -23,7 +22,7 @@ export default function App() {
         <Route path="/" element={<MainPage />} />
         <Route path="/places/:id" element={<PlaceDetails />} />
         <Route path="/my-campus-map" element={<MyCampusMap />} />
-        <Route path="/my-page" element={<MyPage />} />
+        <Route path="/my-page" element={<Register />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<Register />} />
         <Route path="/reviews/history" element={<RecentVisit />} />
