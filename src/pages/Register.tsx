@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
 import BackHeader from '@/components/Common/BackHeader.tsx'
 import CommonModal from '@/components/Common/CommonModal.tsx'
 import FormButton from '@/components/Common/FormButton.tsx'
 import RegisterBox from '@/components/Register/RegisterBox.tsx'
+import { useAuth } from '@/hooks/useAuth.ts'
 import { useViewportVH } from '@/hooks/useViewportVH'
 
 const RegisterWrapper = styled.div`
@@ -36,11 +38,21 @@ const Description = styled.span`
 `
 const Register = () => {
   useViewportVH()
+
+  const { signup } = useAuth()
   const [showModal, setShowModal] = useState(false)
   const [isValid, setIsValid] = useState(false)
+  const [formValues, setFormValues] = useState({ name: '', studentNumber: '', password: '' })
+
+  //로그인에서 입력한 학번을 받아옴
+  const location = useLocation()
+  const prefilledStudentNumber =
+    (location.state as { studentNumber?: string } | null)?.studentNumber ?? ''
 
   const handleSubmit = () => {
-    console.log(' 회원가입 버튼 ')
+    if (!isValid) return
+    const { name, studentNumber, password } = formValues
+    signup(name, studentNumber, password)
   }
 
   return (
@@ -56,6 +68,8 @@ const Register = () => {
           showPrivacy={true}
           onPrivacyClick={() => setShowModal(true)}
           onValidChange={setIsValid}
+          onChange={setFormValues} // 입력값을 상태로 받음
+          prefilledStudentNumber={prefilledStudentNumber}
         />
         <FormButton
           buttonStyle={'filled'}

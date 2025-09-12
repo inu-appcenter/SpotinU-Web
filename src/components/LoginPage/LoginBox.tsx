@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useAuth } from '@/hooks/useAuth.ts'
@@ -63,6 +64,7 @@ export default function LoginBox() {
   const [password, setPassword] = useState('')
   const accessToken = localStorage.getItem('accessToken')
   const { login, logout } = useAuth()
+  const navigate = useNavigate()
 
   //로그인 상태라면 학번 자동저장
   useEffect(() => {
@@ -91,8 +93,15 @@ export default function LoginBox() {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <BottomRow>{accessToken && <LogoutText onClick={logout}>로그아웃</LogoutText>}</BottomRow>
-
+      <BottomRow>
+        {accessToken ? (
+          <LogoutText onClick={logout}>로그아웃</LogoutText>
+        ) : (
+          <LogoutText onClick={() => navigate('/register', { state: { studentNumber } })}>
+            회원가입
+          </LogoutText>
+        )}
+      </BottomRow>
       <LoginButton onClick={() => login(studentNumber, password)}>로그인</LoginButton>
     </LoginBoxWrapper>
   )

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 import BackHeader from '@/components/Common/BackHeader.tsx'
-import LoginBox from '@/components/LoginPage/LoginBox.tsx'
+import LoginBox from '@/components/LoginPage/LoginBox'
 import { useViewportVH } from '@/hooks/useViewportVH'
 
 const LoginPageWrapper = styled.div`

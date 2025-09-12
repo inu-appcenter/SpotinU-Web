@@ -66,7 +66,7 @@ const PlaceDetails = () => {
 
   const handleReviewClick = () => {
     if (isLogin) {
-      navigate('/place/review')
+      console.log('후기작성 페이지로 이동')
     } else {
       setShowBottomSheet(true)
     }

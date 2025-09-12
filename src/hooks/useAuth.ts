@@ -1,8 +1,8 @@
 import { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-import api from '@/contexts/axios.ts'
 import { useAuthContext } from '@/contexts/AuthContext'
+import api from '@/contexts/axios.ts'
 
 //서버 응답 타입
 type ApiResponse<T> = {
@@ -109,5 +109,5 @@ export const useAuth = () => {
     }
   }
 
-  return { signup, login, logout, deleteAccount }
+  return { signup: signup, login, logout, deleteAccount }
 }

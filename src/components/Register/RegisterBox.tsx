@@ -8,6 +8,8 @@ type Props = {
   onPrivacyClick?: () => void
   showPrivacy?: boolean
   onValidChange?: (valid: boolean) => void
+  onChange?: (values: { name: string; studentNumber: string; password: string }) => void
+  prefilledStudentNumber?: string
 }
 
 const Wrapper = styled.div`
@@ -42,11 +44,22 @@ const StyledCheckbox = styled.input`
   top: 1.5px;
 `
 
-const RegisterBox = ({ onPrivacyClick, showPrivacy, onValidChange }: Props) => {
+const RegisterBox = ({
+  onPrivacyClick,
+  showPrivacy,
+  onValidChange,
+  onChange,
+  prefilledStudentNumber = '',
+}: Props) => {
   const [name, setName] = useState('')
-  const [studentNumber, setStudentNumber] = useState('')
+  const [studentNumber, setStudentNumber] = useState(prefilledStudentNumber)
   const [password, setPassword] = useState('')
   const [agreed, setAgreed] = useState(false)
+
+  //라우터 state가 새로 들어와도 반영?
+  useEffect(() => {
+    setStudentNumber(prefilledStudentNumber)
+  }, [prefilledStudentNumber])
 
   //모두 입력했는지
   const isMustWrite =
@@ -57,7 +70,8 @@ const RegisterBox = ({ onPrivacyClick, showPrivacy, onValidChange }: Props) => {
 
   useEffect(() => {
     onValidChange?.(isMustWrite)
-  }, [isMustWrite, onValidChange])
+    onChange?.({ name, studentNumber, password }) //부모로 값 전달
+  }, [name, studentNumber, password, isMustWrite, onValidChange, onChange])
 
   return (
     <Wrapper>
