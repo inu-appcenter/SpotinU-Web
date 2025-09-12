@@ -1,8 +1,8 @@
 import { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-import { useAuthContext } from '@/contexts/AuthContext'
 import api from '@/contexts/axios.ts'
+import { useAuthContext } from '@/hooks/useAuthContext'
 
 //서버 응답 타입
 type ApiResponse<T> = {
@@ -53,6 +53,8 @@ export const useAuth = () => {
   const login = async (studentNumber: string, password: string) => {
     try {
       const body = { studentNumber: Number(studentNumber), password }
+      console.log('🔍 login request:', api.defaults.baseURL, body)
+
       const { data } = await api.post<ApiResponse<string>>('/api/v1/auth/login', body)
 
       const accessToken = data.data
@@ -109,5 +111,5 @@ export const useAuth = () => {
     }
   }
 
-  return { signup: signup, login, logout, deleteAccount }
+  return { signup, login, logout, deleteAccount }
 }

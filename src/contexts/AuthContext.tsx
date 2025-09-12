@@ -1,5 +1,5 @@
 // src/contexts/AuthContext.tsx
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useEffect, useState, type ReactNode } from 'react'
 
 type AuthContextType = {
   isAuthenticated: boolean
@@ -7,7 +7,7 @@ type AuthContextType = {
   setAuth: (token: string | null, studentNumber: string | null) => void
 }
 
-const AuthContext = createContext<AuthContextType | null>(null)
+export const AuthContext = createContext<AuthContextType | null>(null)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null)
@@ -44,10 +44,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AuthContext.Provider>
   )
-}
-
-export const useAuthContext = () => {
-  const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error('AuthProvider로 앱을 감싸야 합니다.')
-  return ctx
 }
