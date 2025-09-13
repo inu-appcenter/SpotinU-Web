@@ -73,7 +73,7 @@ const PlaceDetails = () => {
   }
 
   const handleClickLogin = () => {
-    navigate('/login')
+    navigate('/login', { state: { from: location.pathname } })
   }
 
   if (!place) return null

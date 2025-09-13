@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useAuth } from '@/hooks/useAuth.ts'
@@ -65,6 +65,7 @@ export default function LoginBox() {
   const accessToken = localStorage.getItem('accessToken')
   const { login, logout } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
 
   //로그인 상태라면 학번 자동저장
   useEffect(() => {
@@ -97,7 +98,16 @@ export default function LoginBox() {
         {accessToken ? (
           <LogoutText onClick={logout}>로그아웃</LogoutText>
         ) : (
-          <LogoutText onClick={() => navigate('/register', { state: { studentNumber } })}>
+          <LogoutText
+            onClick={() =>
+              navigate('/register', {
+                state: {
+                  studentNumber,
+                  from: (location.state as { from?: string })?.from,
+                },
+              })
+            }
+          >
             회원가입
           </LogoutText>
         )}

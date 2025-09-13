@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 import api from '@/contexts/axios.ts'
 import { useAuthContext } from '@/hooks/useAuthContext'
@@ -13,6 +13,7 @@ type ApiResponse<T> = {
 
 export const useAuth = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { setAuth } = useAuthContext()
 
   //회원가입
@@ -53,15 +54,14 @@ export const useAuth = () => {
   const login = async (studentNumber: string, password: string) => {
     try {
       const body = { studentNumber: Number(studentNumber), password }
-      console.log('🔍 login request:', api.defaults.baseURL, body)
-
       const { data } = await api.post<ApiResponse<string>>('/api/v1/auth/login', body)
 
-      const accessToken = data.data
-      setAuth(accessToken, studentNumber)
+      setAuth(data.data, studentNumber)
+      alert('로그인이 완료되었습니다.')
 
-      alert('로그인 성공!')
-      navigate(-1)
+      //상세페이지( 이용후기등록 등)를 통해 회원가입-> 자동로그인 후 원래 경로로 복귀
+      const from = (location.state as { from?: string })?.from
+      navigate(from || '/', { replace: true })
     } catch (err: unknown) {
       const error = err as AxiosError<{ status: number; message: string; data?: unknown }>
       const res = error.response
@@ -77,7 +77,8 @@ export const useAuth = () => {
           '회원가입 정보가 없습니다. 회원가입 페이지로 이동할까요?',
         )
         if (goToRegister) {
-          navigate('/register', { state: { studentNumber } })
+          const from = (location.state as { from?: string })?.from
+          navigate('/register', { state: { studentNumber, from } })
         }
       } else {
         alert(res.data?.message ?? '로그인 실패 !')
