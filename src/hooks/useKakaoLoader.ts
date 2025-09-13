@@ -1,13 +1,5 @@
 import { useEffect, useState } from 'react'
 
-declare global {
-  interface Window {
-    // eslint 오류 임시 제거
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    kakao: any
-  }
-}
-
 export function useKakaoLoader() {
   const [loaded, setLoaded] = useState(false)
 

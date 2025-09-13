@@ -60,12 +60,12 @@ export const StickyBottom = styled.div`
   z-index: 10;
 `
 
-export default function PlaceReviewPage() {
+const PlaceReviewPage = () => {
   const navigate = useNavigate()
   const { state: restore } = useLocation() as { state?: RestoreState }
 
   const handleClose = () => {
-    navigate('/place/detail')
+    navigate(-1)
   }
 
   const images = useMemo(() => ['/장소사진더미.svg', '/장소사진더미.svg', '/장소사진더미.svg'], [])
@@ -316,3 +316,5 @@ export default function PlaceReviewPage() {
     </Page>
   )
 }
+
+export default PlaceReviewPage
