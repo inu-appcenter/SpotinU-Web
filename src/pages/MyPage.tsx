@@ -2,31 +2,52 @@ import { ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
+import { useAuthContext } from '@/hooks/useAuthContext.ts'
+import { useViewportVH } from '@/hooks/useViewportVH'
+
 export default function MyPage() {
+  useViewportVH()
+
+  const { isAuthenticated } = useAuthContext()
+
   return (
     <Wrap>
       <Content>
         <Title>My Page</Title>
 
         <Card>
-          <Row to="/login">
-            <Left>로그인 / 회원가입</Left>
-            <Right>
-              <ChevronRight size={24} />
-            </Right>
-          </Row>
-          <Row to="/reviews/history">
-            <Left>작성 후기 수정 / 최근 기록</Left>
-            <Right>
-              <ChevronRight size={24} />
-            </Right>
-          </Row>
-          <Row to="/profile">
-            <Left>프로필 수정 및 회원탈퇴</Left>
-            <Right>
-              <ChevronRight size={24} />
-            </Right>
-          </Row>
+          {!isAuthenticated ? (
+            //  비로그인 사용자 → 로그인/회원가입만
+            <Row to="/login">
+              <Left>로그인 / 회원가입</Left>
+              <Right>
+                <ChevronRight size={24} />
+              </Right>
+            </Row>
+          ) : (
+            <>
+              {/*  로그인 사용자 → 로그아웃  */}
+              <Row to="/login">
+                <Left>로그아웃</Left>
+                <Right>
+                  <ChevronRight size={24} />
+                </Right>
+              </Row>
+
+              <Row to="/reviews/history">
+                <Left>작성 후기 수정 / 최근 기록</Left>
+                <Right>
+                  <ChevronRight size={24} />
+                </Right>
+              </Row>
+              <Row to="/profile">
+                <Left>프로필 수정 및 회원탈퇴</Left>
+                <Right>
+                  <ChevronRight size={24} />
+                </Right>
+              </Row>
+            </>
+          )}
         </Card>
       </Content>
     </Wrap>
