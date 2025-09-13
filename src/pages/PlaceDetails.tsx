@@ -1,6 +1,6 @@
 import { Map } from 'lucide-react'
 import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
 import LoginBottomSheet from '@/components/Common/LoginBottomSheet.tsx'
@@ -13,6 +13,7 @@ import ReviewModal from '@/components/PlaceDetails/ReviewModal.tsx'
 import TimeInfoBox from '@/components/PlaceDetails/TimeInfoBox.tsx'
 import usePlaceDetails from '@/hooks/usePlaceDetails.ts'
 import { useViewportVH } from '@/hooks/useViewportVH'
+import { useAuthContext } from '@/hooks/useAuthContext.ts'
 
 const PlaceDetailsWrapper = styled.div``
 
@@ -61,8 +62,10 @@ const PlaceDetails = () => {
   const toggleSave = () => setIsSaved((prev) => !prev) // 저장 상태 토글
 
   const navigate = useNavigate()
+  const location = useLocation()
 
-  const isLogin = !!localStorage.getItem('accessToken')
+  const { isAuthenticated } = useAuthContext()
+  const isLogin = isAuthenticated
 
   const handleReviewClick = () => {
     if (isLogin) {
@@ -101,7 +104,11 @@ const PlaceDetails = () => {
 
         <Content className={'app-content'}>
           <TimeInfoBox right={place.businessHours} />
-          <MapButton onClick={() => console.log('캠퍼스맵으로 이동')}>
+          <MapButton
+            onClick={() => {
+              navigate('/my-campus-map')
+            }}
+          >
             <Map size={14} />
             인천대 캠퍼스맵으로 이동
           </MapButton>
