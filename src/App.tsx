@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
+import InsertPlace from '@/tests/insertPlace'
 import BottomNavBar from '@/components/Common/BottomNavBar'
 import LoginPage from '@/pages/LoginPage'
 import MainPage from '@/pages/MainPage'
@@ -16,6 +17,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/tests/insert-place" element={<InsertPlace />} />
         <Route path="/" element={<MainPage />} />
         <Route path="/places/:id" element={<PlaceDetails />} />
         <Route path="/my-campus-map" element={<MyCampusMap />} />
