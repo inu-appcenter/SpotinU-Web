@@ -1,36 +1,5 @@
 import styled from 'styled-components'
-
-//필터 매핑 테이블 (재사용 가능하면 따로 뺄 예정)
-const filterMap: Record<string, string> = {
-  sleepingAllowed: '취침',
-  eatingAllowed: '취식',
-  hasPowerOutlet: '콘센트',
-  studyAllowed: '개인공부',
-  entertainment: '오락시설',
-  reservationRequired: '예약제',
-}
-
-const data = {
-  name: '선예원',
-  locationDetail: '11호관 302호',
-  sleepingAllowed: true,
-  eatingAllowed: false,
-  hasPowerOutlet: true,
-  studyAllowed: true,
-  entertainment: false,
-  reservationRequired: true,
-  placeType: 'INDOOR',
-}
-
-//true인 필터만 표시
-const showTag = Object.entries(filterMap)
-  .filter(([key]) => data[key as keyof typeof data])
-  .map(([, value]) => `#${value}`)
-
-//placeType이 야외일때만 표시
-if (data.placeType === 'OUTDOOR') {
-  showTag.push('#야외')
-}
+import type { PlaceDetails } from '@/types/PlaceDetailsType.ts'
 
 const PlaceTitleWrapper = styled.div`
   padding: 12px 16px;
@@ -53,15 +22,39 @@ const Tag = styled.div`
   flex-wrap: wrap;
 `
 
-const PlaceTtitle = () => {
+type Props = {
+  place: PlaceDetails
+}
+
+const PlaceTitle = ({ place }: Props) => {
+  //필터 매핑 테이블
+  const filterMap: Record<string, string> = {
+    sleepingAllowed: '취침',
+    eatingAllowed: '취식',
+    hasPowerOutlet: '콘센트',
+    studyAllowed: '개인공부',
+    entertainment: '오락시설',
+    reservationRequired: '예약제',
+  }
+
+  //true인 필터만 표시
+  const showTag = Object.entries(filterMap)
+    .filter(([key]) => place[key as keyof PlaceDetails])
+    .map(([, value]) => `#${value}`)
+
+  //placeType이 야외일때만 표시
+  if (place.placeType === 'OUTDOOR') {
+    showTag.push('#야외')
+  }
+
   return (
     <PlaceTitleWrapper>
       <Title>
-        {data.locationDetail} [{data.name}]
+        {place.locationDetail} [{place.name}]
       </Title>
       <Tag>{showTag.join(' ')}</Tag>
     </PlaceTitleWrapper>
   )
 }
 
-export default PlaceTtitle
+export default PlaceTitle

@@ -1,5 +1,6 @@
 import { Map } from 'lucide-react'
 import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import LoginBottomSheet from '@/components/Common/LoginBottomSheet.tsx'
@@ -10,7 +11,7 @@ import PlaceTitle from '@/components/PlaceDetails/PlaceTitle.tsx'
 import ReviewInfoBox from '@/components/PlaceDetails/ReviewInfoBox.tsx'
 import ReviewModal from '@/components/PlaceDetails/ReviewModal.tsx'
 import TimeInfoBox from '@/components/PlaceDetails/TimeInfoBox.tsx'
-import { businessHours, descriptionDetail, imageDummy, reviews } from '@/dummy/PlaceDetailsDummy.ts'
+import usePlaceDetails from '@/hooks/usePlaceDetails.ts'
 import { useViewportVH } from '@/hooks/useViewportVH'
 
 const PlaceDetailsWrapper = styled.div``
@@ -47,43 +48,63 @@ const MapButton = styled.button`
   gap: 10px;
 `
 
-const sortReviews = [...reviews].sort(
-  (a, b) => new Date(b.visitDate).getTime() - new Date(a.visitDate).getTime(),
-)
-
 const PlaceDetails = () => {
   useViewportVH()
+
+  const { id } = useParams()
+  const spotId = Number(id)
+  const { place } = usePlaceDetails(spotId)
+
   const [showModal, setShowModal] = useState(false)
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const [isSaved, setIsSaved] = useState(false) //저장 여부
   const toggleSave = () => setIsSaved((prev) => !prev) // 저장 상태 토글
+  const navigate = useNavigate()
 
-  const isLogin = true // false로 바꿔보면서 테스트
+  const isLogin = !!localStorage.getItem('accessToken')
+
+  const handleReviewClick = () => {
+    if (isLogin) {
+      console.log('후기작성 페이지로 이동')
+    } else {
+      setShowBottomSheet(true)
+    }
+  }
+
+  const handleClickLogin = () => {
+    navigate('/login')
+  }
+
+  if (!place) return null
+
+  const sortReviews = [...place.reviews].sort(
+    (a, b) => new Date(b.visitDate).getTime() - new Date(a.visitDate).getTime(),
+  )
 
   return (
     <>
       <PlaceDetailsWrapper className="app">
         <SlideWrapper>
-          <PlaceImageSlide photos={imageDummy} />
+          <PlaceImageSlide photos={place.photos} />
           <HeaderWrapper>
             <PageHeader
               isLogin={isLogin}
               isSaved={isSaved}
               toggleSave={toggleSave}
               showLoginSheet={() => setShowBottomSheet(true)}
-              goToReviewPage={() => console.log('후기작성 페이지로 이동')}
+              goToReviewPage={handleReviewClick}
             />
           </HeaderWrapper>
-          <PlaceTitle />
+          <PlaceTitle place={place} />
         </SlideWrapper>
 
         <Content className={'app-content'}>
-          <TimeInfoBox right={businessHours} />
+          <TimeInfoBox right={place.businessHours} />
           <MapButton onClick={() => console.log('캠퍼스맵으로 이동')}>
             <Map size={14} />
             인천대 캠퍼스맵으로 이동
           </MapButton>
-          <DirectionInfoBox directions={descriptionDetail} />
+          <DirectionInfoBox directions={place.descriptionDetail} />
           <ReviewInfoBox latestReview={sortReviews[0]} onSeeAll={() => setShowModal(true)} />
         </Content>
 
@@ -94,7 +115,7 @@ const PlaceDetails = () => {
         <LoginBottomSheet
           isOpen={showBottomSheet}
           onClose={() => setShowBottomSheet(false)}
-          onClickLogin={() => console.log('로그인 페이지로 이동')}
+          onClickLogin={handleClickLogin}
         />
       )}
     </>

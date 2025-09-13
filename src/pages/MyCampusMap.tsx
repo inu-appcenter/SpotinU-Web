@@ -1,7 +1,9 @@
 import BackHeader from '@/components/Common/BackHeader'
 import MapContainer from '@/components/MyCampusMap/MapContainer'
+import { useViewportVH } from '@/hooks/useViewportVH'
 
 const MyCampusMap = () => {
+  useViewportVH()
   return (
     <>
       <BackHeader title="나만의 캠퍼스 맵" />

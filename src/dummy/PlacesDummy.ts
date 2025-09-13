@@ -26,7 +26,7 @@ export const PLACES: PlaceItem[] = Array.from({ length: 40 }, (_, idx) => {
     distanceText: `현재 위치에서 ${50 + (idx % 10) * 25}m`,
     imageUrl: `https://picsum.photos/seed/spotinu-${n}/800/450`,
     typeText: isReserved ? '예약제' : '자유석',
-    tags: isReserved
+    tags: isReserved // 예약제만 테스트
       ? [baseTag as string, extraTag as string, '예약제']
       : [baseTag as string, extraTag as string],
   }

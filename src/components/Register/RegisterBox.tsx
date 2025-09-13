@@ -8,6 +8,8 @@ type Props = {
   onPrivacyClick?: () => void
   showPrivacy?: boolean
   onValidChange?: (valid: boolean) => void
+  onChange?: (values: { name: string; studentNumber: string; password: string }) => void
+  prefilledStudentNumber?: string
 }
 
 const Wrapper = styled.div`
@@ -42,72 +44,58 @@ const StyledCheckbox = styled.input`
   top: 1.5px;
 `
 
-const RegisterBox = ({ onPrivacyClick, showPrivacy, onValidChange }: Props) => {
-  const [nickname, setNickname] = useState('')
-  const [department, setDepartment] = useState('')
-  const [studentNumber, setStudentNumber] = useState('')
-  const [building, setBuilding] = useState('')
+const RegisterBox = ({
+  onPrivacyClick,
+  showPrivacy,
+  onValidChange,
+  onChange,
+  prefilledStudentNumber = '',
+}: Props) => {
+  const [name, setName] = useState('')
+  const [studentNumber, setStudentNumber] = useState(prefilledStudentNumber)
+  const [password, setPassword] = useState('')
   const [agreed, setAgreed] = useState(false)
 
-  //뭔진 모르겠는데 닉네임/학번 조합 ?
-  const isValidNickname = /^[가-힣a-z0-9]{4,12}$/.test(nickname)
-  const isValidStudentNumber = /^\d{9}$/.test(studentNumber)
+  //라우터 state가 새로 들어와도 반영?
+  useEffect(() => {
+    setStudentNumber(prefilledStudentNumber)
+  }, [prefilledStudentNumber])
 
-  //에러 텍스트
-  const nicknameError = nickname.length === 0 ? '' : !isValidNickname ? '정확하게 입력해주세요' : ''
-
-  const studentNumberError =
-    studentNumber.length === 0 ? '' : !isValidStudentNumber ? '정확하게 입력해주세요' : ''
-
-  //필수항목 입력했는지
+  //모두 입력했는지
   const isMustWrite =
-    isValidNickname &&
-    department.trim() !== '' &&
-    isValidStudentNumber &&
+    name.trim() !== '' &&
+    studentNumber.trim() !== '' &&
+    password.trim() !== '' &&
     (showPrivacy ? agreed : true)
 
   useEffect(() => {
     onValidChange?.(isMustWrite)
-  }, [isMustWrite, onValidChange])
-
-  const handleCheckNickname = () => {
-    console.log('중복확인 버튼')
-  }
+    onChange?.({ name, studentNumber, password }) //부모로 값 전달
+  }, [name, studentNumber, password, isMustWrite, onValidChange, onChange])
 
   return (
     <Wrapper>
       <InputField
-        label="닉네임*"
-        value={nickname}
-        onChange={(e) => setNickname(e.target.value)}
-        placeholder="닉네임을 입력하세요"
-        subText="4~12자 / 한글, 영문 소문자(숫자 조합 가능)"
-        hasCheckButton
-        onCheck={handleCheckNickname}
-        error={nicknameError}
-        showNotice
+        label="이름"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="이름을 입력하세요"
       />
 
       <InputField
-        label="학과*"
-        value={department}
-        onChange={(e) => setDepartment(e.target.value)}
-        placeholder="ex: 도시과학대학 도시건축학부 도시건축학전공 "
-      />
-
-      <InputField
-        label="학번*"
+        label="학번"
         value={studentNumber}
         onChange={(e) => setStudentNumber(e.target.value)}
         placeholder="ex: 2025*****"
-        error={studentNumberError}
       />
 
       <InputField
-        label="전공 호관"
-        value={building}
-        onChange={(e) => setBuilding(e.target.value)}
-        placeholder="ex: 12호관, 28호관"
+        label="비밀번호"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="비밀번호를 입력하세요"
+        subText={'8~20자'}
       />
 
       {showPrivacy && (

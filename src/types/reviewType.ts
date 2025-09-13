@@ -1,7 +1,7 @@
 export interface Review {
   id: number
   memberName: string
-  photo: string
+  photos: string[]
   content: string
   visitDate: string
   visitTime: string
