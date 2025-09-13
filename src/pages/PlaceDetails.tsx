@@ -59,7 +59,6 @@ const PlaceDetails = () => {
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const [isSaved, setIsSaved] = useState(false) //저장 여부
   const toggleSave = () => setIsSaved((prev) => !prev) // 저장 상태 토글
-
   const navigate = useNavigate()
 
   const isLogin = !!localStorage.getItem('accessToken')
