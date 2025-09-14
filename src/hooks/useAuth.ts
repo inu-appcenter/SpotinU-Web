@@ -2,7 +2,7 @@ import { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
 
 import api from '@/contexts/axios.ts'
-import { useAuthContext } from '@/hooks/useAuthContext'
+import { useAuthStore } from '@/stores/authStore'
 
 //서버 응답 타입
 type ApiResponse<T> = {
@@ -13,7 +13,7 @@ type ApiResponse<T> = {
 
 export const useAuth = () => {
   const navigate = useNavigate()
-  const { setAuth } = useAuthContext()
+  const setAuth = useAuthStore((s) => s.setAuth)
 
   //회원가입
   const signup = async (name: string, studentNumber: string, password: string) => {
