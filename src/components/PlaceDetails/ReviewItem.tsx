@@ -78,7 +78,8 @@ const IconWrapper = styled.div`
 `
 
 const ReviewItem = ({ review }: Props) => {
-  const { photo, content, visitDate, visitTime, keywords } = review
+  const { photos, content, visitDate, visitTime, keywords } = review
+  const photo = Array.isArray(photos) && photos.length > 0 ? photos[0] : undefined
   const day = `${visitDate.replaceAll('-', '.')} (${getDay(visitDate)}) ${visitTime.slice(0, 2)}시`
 
   return (
