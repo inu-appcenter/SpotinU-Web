@@ -12,6 +12,7 @@ import ReviewInfoBox from '@/components/PlaceDetails/ReviewInfoBox.tsx'
 import ReviewModal from '@/components/PlaceDetails/ReviewModal.tsx'
 import TimeInfoBox from '@/components/PlaceDetails/TimeInfoBox.tsx'
 import usePlaceDetails from '@/hooks/usePlaceDetails.ts'
+import { useAuthContext } from '@/hooks/useAuthContext'
 import { useViewportVH } from '@/hooks/useViewportVH'
 
 const PlaceDetailsWrapper = styled.div``
@@ -61,7 +62,7 @@ const PlaceDetails = () => {
   const toggleSave = () => setIsSaved((prev) => !prev) // 저장 상태 토글
   const navigate = useNavigate()
 
-  const isLogin = !!localStorage.getItem('accessToken')
+  const { isAuthenticated: isLogin } = useAuthContext()
 
   const handleReviewClick = () => {
     if (isLogin) {

@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
-import InsertPlace from '@/tests/insertPlace'
 import BottomNavBar from '@/components/Common/BottomNavBar'
 import LoginPage from '@/pages/LoginPage'
 import MainPage from '@/pages/MainPage'
@@ -12,6 +11,7 @@ import ProfileEdit from '@/pages/ProfileEdit'
 import RecentVisit from '@/pages/RecentVisit'
 import Register from '@/pages/Register.tsx'
 import VisitCompletePage from '@/pages/VisitCompletePage'
+import InsertPlace from '@/tests/insertPlace'
 
 export default function App() {
   return (
