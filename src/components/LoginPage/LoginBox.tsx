@@ -62,6 +62,7 @@ const LogoutText = styled.button`
 export default function LoginBox() {
   const [studentNumber, setStudentNumber] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
   const accessToken = localStorage.getItem('accessToken')
   const { login, logout } = useAuth()
   const navigate = useNavigate()
@@ -97,12 +98,27 @@ export default function LoginBox() {
         {accessToken ? (
           <LogoutText onClick={logout}>로그아웃</LogoutText>
         ) : (
-          <LogoutText onClick={() => navigate('/register', { state: { studentNumber } })}>
+          <LogoutText
+            onClick={() => navigate('/register', { state: { studentNumber } })}
+            disabled={loading}
+          >
             회원가입
           </LogoutText>
         )}
       </BottomRow>
-      <LoginButton onClick={() => login(studentNumber, password)}>로그인</LoginButton>
+      <LoginButton
+        onClick={async () => {
+          try {
+            setLoading(true)
+            await login(studentNumber, password)
+          } finally {
+            setLoading(false)
+          }
+        }}
+        disabled={loading}
+      >
+        {loading ? '로그인 중…' : '로그인'}
+      </LoginButton>
     </LoginBoxWrapper>
   )
 }
