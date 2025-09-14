@@ -1,7 +1,9 @@
 import axios from 'axios'
 
+// 환경변수 기반 base URL + /api/v1 접미사 고정
+const base = (import.meta.env.VITE_API_BASE_URL as string | undefined) || ''
 export const api = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
+  baseURL: base.replace(/\/$/, '') + '/api/v1',
   withCredentials: true,
   timeout: 15000,
 })
