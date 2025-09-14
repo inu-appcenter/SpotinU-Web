@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import api from '@/contexts/axios.ts'
+import { api } from '@/apis/api'
 import type { PlaceDetails } from '@/types/PlaceDetailsType'
 
 const usePlaceDetails = (spotId: number) => {
@@ -9,8 +9,8 @@ const usePlaceDetails = (spotId: number) => {
   useEffect(() => {
     const fetchPlaceDetails = async () => {
       try {
-        const res = await api.get(`/api/v1/spots/${spotId}`)
-        console.log('API 요청 URL:', `/api/v1/spots/${spotId}`)
+        const res = await api.get(`/spots/${spotId}`)
+        console.log('API 요청 URL:', `/spots/${spotId}`)
         console.log('API 응답:', res.data)
         setPlace(res.data.data)
       } catch (err) {
