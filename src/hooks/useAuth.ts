@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-import api from '@/contexts/axios.ts'
+import { api } from '@/apis/api'
 import { useAuthContext } from '@/hooks/useAuthContext'
 
 //서버 응답 타입
@@ -25,7 +25,7 @@ export const useAuth = () => {
         role: 'USER',
       }
 
-      await api.post<ApiResponse<null>>('/api/v1/auth/signup', body)
+      await api.post<ApiResponse<null>>('/auth/signup', body)
 
       alert('회원가입이 완료되었습니다. 자동으로 로그인 할게요!')
 
@@ -55,7 +55,7 @@ export const useAuth = () => {
       const body = { studentNumber: Number(studentNumber), password }
       console.log('🔍 login request:', api.defaults.baseURL, body)
 
-      const { data } = await api.post<ApiResponse<string>>('/api/v1/auth/login', body)
+      const { data } = await api.post<ApiResponse<string>>('/auth/login', body)
 
       const accessToken = data.data
       setAuth(accessToken, studentNumber)
@@ -95,7 +95,7 @@ export const useAuth = () => {
   //회원탈퇴
   const deleteAccount = async () => {
     try {
-      await api.delete('/api/v1/auth/delete')
+      await api.delete('/auth/delete')
       setAuth(null, null)
 
       alert('회원탈퇴가 완료되었습니다.')
