@@ -13,7 +13,7 @@ type ApiResponse<T> = {
 
 export const useAuth = () => {
   const navigate = useNavigate()
-  const { setAuth } = useAuthContext()
+  const setAuth = useAuthStore((s) => s.setAuth)
 
   //회원가입
   const signup = async (name: string, studentNumber: string, password: string) => {
