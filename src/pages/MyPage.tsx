@@ -1,32 +1,48 @@
 import { ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useAuthStore } from '@/stores/authStore'
+import { useAuth } from '@/hooks/useAuth'
 import styled from 'styled-components'
 
 export default function MyPage() {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+  const { logout } = useAuth()
   return (
     <Wrap>
       <Content>
         <Title>My Page</Title>
 
         <Card>
-          <Row to="/login">
-            <Left>로그인 / 회원가입</Left>
-            <Right>
-              <ChevronRight size={24} />
-            </Right>
-          </Row>
-          <Row to="/reviews/history">
-            <Left>작성 후기 수정 / 최근 기록</Left>
-            <Right>
-              <ChevronRight size={24} />
-            </Right>
-          </Row>
-          <Row to="/profile">
-            <Left>프로필 수정 및 회원탈퇴</Left>
-            <Right>
-              <ChevronRight size={24} />
-            </Right>
-          </Row>
+          {!isAuthenticated && (
+            <Row to="/login">
+              <Left>로그인 / 회원가입</Left>
+              <Right>
+                <ChevronRight size={24} />
+              </Right>
+            </Row>
+          )}
+          {isAuthenticated && (
+            <>
+              <Row to="/reviews/history">
+                <Left>작성 후기 수정 / 최근 기록</Left>
+                <Right>
+                  <ChevronRight size={24} />
+                </Right>
+              </Row>
+              <Row to="/profile">
+                <Left>프로필 수정 및 회원탈퇴</Left>
+                <Right>
+                  <ChevronRight size={24} />
+                </Right>
+              </Row>
+              <Row to="/" onClick={logout}>
+                <Left>로그아웃</Left>
+                <Right>
+                  <ChevronRight size={24} />
+                </Right>
+              </Row>
+            </>
+          )}
         </Card>
       </Content>
     </Wrap>
