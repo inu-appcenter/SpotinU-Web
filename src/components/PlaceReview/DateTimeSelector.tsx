@@ -20,12 +20,12 @@ function formatKoreanDate(d: Date) {
   return `${yy}년 ${m}월 ${day}일 ${weekday}`
 }
 
-export default function DateTimeSelector({
+const DateTimeSelector = ({
   valueDate: controlledDate,
   valueTime: controlledTime,
   onChangeDate,
   onChangeTime,
-}: DateTimeSelectorProps) {
+}: DateTimeSelectorProps) => {
   const [date, setDate] = useState<Date | null>(controlledDate ?? null)
   const [time, setTime] = useState<{ hour: number; minute: number } | null>(controlledTime ?? null)
 
@@ -146,6 +146,8 @@ export default function DateTimeSelector({
     </Wrap>
   )
 }
+
+export default DateTimeSelector
 
 function to2(n: number) {
   return n.toString().padStart(2, '0')

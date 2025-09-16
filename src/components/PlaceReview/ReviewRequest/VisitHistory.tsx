@@ -78,13 +78,13 @@ function formatDate(isoOrDate?: string | Date) {
   return `${y}.${m}.${day}.(${week})`
 }
 
-export default function VisitHistory({
+const VisitHistory = ({
   placeName,
   visitAt,
   visitCount,
   keywords,
   noKeyword,
-}: Props) {
+}: Props) => {
   const dateText = formatDate(visitAt)
 
   return (
@@ -111,3 +111,5 @@ export default function VisitHistory({
     </Wrap>
   )
 }
+
+export default VisitHistory

@@ -132,7 +132,7 @@ const Counter = styled.div<{ $danger?: boolean }>`
   color: ${({ $danger }) => ($danger ? '#a6363aff' : '#8a94a6')};
 `
 
-export default function ReviewInput({ photos, comment, maxLength = 400, onChange }: Props) {
+const ReviewInput = ({ photos, comment, maxLength = 400, onChange }: Props) => {
   const fileRef = useRef<HTMLInputElement>(null)
 
   // 파일 선택 트리거
@@ -237,3 +237,5 @@ export default function ReviewInput({ photos, comment, maxLength = 400, onChange
     </Wrap>
   )
 }
+
+export default ReviewInput

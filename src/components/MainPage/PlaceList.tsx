@@ -28,7 +28,7 @@ type Props = {
   filter?: string | ''
 }
 
-export default function PlaceList({ onCardClick, filter = '' }: Props) {
+const PlaceList = ({ onCardClick, filter = '' }: Props) => {
   const { list, loading, hasNext, loadMore } = usePlaces(8, filter)
 
   // 최신 상태를 보게 하고, 로딩/마지막 페이지 때는 관찰 잠깐 중지
@@ -56,3 +56,5 @@ export default function PlaceList({ onCardClick, filter = '' }: Props) {
     </>
   )
 }
+
+export default PlaceList

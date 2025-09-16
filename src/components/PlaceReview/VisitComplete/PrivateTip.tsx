@@ -7,7 +7,7 @@ type Props = {
   defaultOpen?: boolean
 }
 
-export default function PrivateTip({ defaultOpen = true }: Props) {
+const PrivateTip = ({ defaultOpen = true }: Props) => {
   const [open, setOpen] = useState(defaultOpen)
 
   if (!open) return null
@@ -24,6 +24,8 @@ export default function PrivateTip({ defaultOpen = true }: Props) {
     </Wrap>
   )
 }
+
+export default PrivateTip
 
 const Wrap = styled.div`
   height: 54px;

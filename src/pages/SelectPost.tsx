@@ -7,7 +7,7 @@ type Props = {
   hasPermission: boolean
 }
 
-export default function SelectPost({ hasPermission }: Props) {
+const SelectPost = ({ hasPermission }: Props) => {
   return (
     <Page>
       <BackHeader title="사진 불러오기 (최근 항목)" />
@@ -32,6 +32,8 @@ export default function SelectPost({ hasPermission }: Props) {
     </Page>
   )
 }
+
+export default SelectPost
 
 const Page = styled.div`
   min-height: 100svh;

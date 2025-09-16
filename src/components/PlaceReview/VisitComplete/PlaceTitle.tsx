@@ -10,13 +10,13 @@ type Props = {
   hideLabel?: boolean
 }
 
-export default function PlaceTitle({
+const PlaceTitle = ({
   label = '[공간 이름]',
   buildingText = '00호관 00층 00호',
   onToggleFavorite,
   rightSlot,
   hideLabel = false,
-}: Props) {
+}: Props) => {
   return (
     <Wrap>
       <Left>
@@ -30,6 +30,8 @@ export default function PlaceTitle({
     </Wrap>
   )
 }
+
+export default PlaceTitle
 
 const Wrap = styled.div`
   display: flex;

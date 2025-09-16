@@ -1,10 +1,11 @@
 import { ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { useAuthStore } from '@/stores/authStore'
-import { useAuth } from '@/hooks/useAuth'
 import styled from 'styled-components'
 
-export default function MyPage() {
+import { useAuth } from '@/hooks/useAuth'
+import { useAuthStore } from '@/stores/authStore'
+
+const MyPage = () => {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
   const { logout } = useAuth()
   return (
@@ -48,6 +49,8 @@ export default function MyPage() {
     </Wrap>
   )
 }
+
+export default MyPage
 
 const Wrap = styled.main`
   --gutter: 16px;

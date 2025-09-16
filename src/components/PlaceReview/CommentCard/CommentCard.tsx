@@ -8,7 +8,7 @@ type Props = {
   imagePosition?: 'left' | 'right'
 }
 
-export default function CommentCard({ text = '', imageUrls = [], imagePosition = 'left' }: Props) {
+const CommentCard = ({ text = '', imageUrls = [], imagePosition = 'left' }: Props) => {
   const first = imageUrls[0]
   const moreCount = imageUrls.length > 1 ? imageUrls.length - 1 : 0
   const reverse = imagePosition === 'right'
@@ -32,6 +32,8 @@ export default function CommentCard({ text = '', imageUrls = [], imagePosition =
     </Card>
   )
 }
+
+export default CommentCard
 
 const Card = styled.div`
   padding: 12px;

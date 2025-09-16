@@ -60,7 +60,7 @@ const LogoutText = styled.button`
   text-decoration: underline;
 `
 
-export default function LoginBox() {
+const LoginBox = () => {
   const [studentNumber, setStudentNumber] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -123,3 +123,5 @@ export default function LoginBox() {
     </LoginBoxWrapper>
   )
 }
+
+export default LoginBox

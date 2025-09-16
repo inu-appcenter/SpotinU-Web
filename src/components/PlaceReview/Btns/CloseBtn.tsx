@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 type Props = { onClose?: () => void }
 
-export default function CloseHeader({ onClose }: Props) {
+const CloseHeader = ({ onClose }: Props) => {
   return (
     <HeaderOuter>
       {' '}
@@ -16,6 +16,8 @@ export default function CloseHeader({ onClose }: Props) {
     </HeaderOuter>
   )
 }
+
+export default CloseHeader
 
 const HeaderOuter = styled.header`
   flex: 0 0 auto;
