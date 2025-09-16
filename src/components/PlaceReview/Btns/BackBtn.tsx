@@ -6,7 +6,7 @@ type Props = {
   onClick?: () => void
 }
 
-export default function BackButton({ onClick }: Props) {
+const BackButton = ({ onClick }: Props) => {
   const navigate = useNavigate()
 
   const handleClick = () => {
@@ -23,6 +23,8 @@ export default function BackButton({ onClick }: Props) {
     </Button>
   )
 }
+
+export default BackButton
 
 const Button = styled.button`
   position: absolute;

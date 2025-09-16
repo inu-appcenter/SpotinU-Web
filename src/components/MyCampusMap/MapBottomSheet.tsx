@@ -105,13 +105,13 @@ const PrimaryBtn = styled.button`
   font-size: 15px;
 `
 
-export default function MapBottomSheet({
+const MapBottomSheet = ({
   isOpen,
   onClose,
   place,
   onClickPrimary,
   primaryLabel = '자세히 보기',
-}: Props) {
+}: Props) => {
   const visible = useMemo(() => isOpen && !!place, [isOpen, place])
 
   useEffect(() => {
@@ -154,3 +154,5 @@ export default function MapBottomSheet({
     </>
   )
 }
+
+export default MapBottomSheet

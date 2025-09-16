@@ -9,13 +9,13 @@ type PlaceCardProps = {
   imgHeight?: number // 기본 190
 }
 
-export default function PlaceCard({
+const PlaceCard = ({
   buildingText,
   placeName,
   guideText = '방문 일시를 확인해 주세요!',
   images,
   imgHeight = 140,
-}: PlaceCardProps) {
+}: PlaceCardProps) => {
   const [index, setIndex] = useState(0)
   const scrollerRef = useRef<HTMLDivElement>(null)
 
@@ -82,6 +82,8 @@ export default function PlaceCard({
     </Card>
   )
 }
+
+export default PlaceCard
 
 const Group = styled.div`
   position: relative;

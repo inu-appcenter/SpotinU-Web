@@ -10,7 +10,7 @@ type Props = {
   onDelete?: () => void
 }
 
-export default function VisitMetaRow({ dateText, timeText, countText, onDelete }: Props) {
+const VisitMetaRow = ({ dateText, timeText, countText, onDelete }: Props) => {
   return (
     <Wrap>
       <Left>
@@ -29,6 +29,8 @@ export default function VisitMetaRow({ dateText, timeText, countText, onDelete }
     </Wrap>
   )
 }
+
+export default VisitMetaRow
 
 const Wrap = styled.div`
   display: flex;

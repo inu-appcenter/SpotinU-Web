@@ -29,7 +29,7 @@ const Item = styled.div<{ type: 'success' | 'error' | 'info' }>`
   pointer-events: auto;
 `
 
-export default function ToastContainer() {
+const ToastContainer = () => {
   const toasts = useToastStore((s) => s.toasts)
 
   if (!toasts.length) return null
@@ -44,3 +44,4 @@ export default function ToastContainer() {
   )
 }
 
+export default ToastContainer

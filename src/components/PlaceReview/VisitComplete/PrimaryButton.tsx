@@ -8,7 +8,7 @@ type Props = {
   disabled?: boolean // 비활성화 여부
 }
 
-export default function PrimaryButton({ label, onClick, disabled }: Props) {
+const PrimaryButton = ({ label, onClick, disabled }: Props) => {
   return (
     <Btn type="button" onClick={onClick} disabled={disabled}>
       <PencilLine size={18} strokeWidth={2} />
@@ -16,6 +16,8 @@ export default function PrimaryButton({ label, onClick, disabled }: Props) {
     </Btn>
   )
 }
+
+export default PrimaryButton
 
 const Btn = styled.button`
   width: 93%;

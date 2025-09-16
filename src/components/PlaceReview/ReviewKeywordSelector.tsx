@@ -35,7 +35,7 @@ const DEFAULT_GROUPS: Group[] = [
   },
 ]
 
-export default function ReviewKeywordSelector({
+const ReviewKeywordSelector = ({
   selected,
   onChange,
   noKeyword,
@@ -44,7 +44,7 @@ export default function ReviewKeywordSelector({
   maxPick = 3,
   groups = DEFAULT_GROUPS,
   valueKey = 'id',
-}: Props) {
+}: Props) => {
   const toggleByValue = (val: string) => {
     if (noKeyword) return
     const next = new Set(selected)
@@ -124,6 +124,8 @@ export default function ReviewKeywordSelector({
     </Wrap>
   )
 }
+
+export default ReviewKeywordSelector
 
 const Wrap = styled.section`
   border-radius: 12px;

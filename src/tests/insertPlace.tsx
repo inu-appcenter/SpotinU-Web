@@ -4,7 +4,7 @@ import { useRef, useState } from 'react'
 const toBool = (s: string) => /^(true|1|y|yes)$/i.test(String(s).trim())
 const withBearer = (t: string) => (t ? (t.startsWith('Bearer ') ? t : `Bearer ${t}`) : '')
 
-export default function InsertPlaceMini() {
+const InsertPlaceMini = () => {
   const [baseUrl, setBaseUrl] = useState(
     import.meta.env.VITE_API_BASE_URL ?? 'https://spotinu-server.inuappcenter.kr',
   )
@@ -316,3 +316,5 @@ export default function InsertPlaceMini() {
     </div>
   )
 }
+
+export default InsertPlaceMini

@@ -27,7 +27,7 @@ type VisitCompleteState = {
   comment?: string
 }
 
-export default function VisitCompletePage() {
+const VisitCompletePage = () => {
   const navigate = useNavigate()
   const nav = useNavigate()
   const { state } = useLocation() as { state?: VisitCompleteState }
@@ -196,6 +196,8 @@ export default function VisitCompletePage() {
     </Viewport>
   )
 }
+
+export default VisitCompletePage
 
 const BackWrap = styled.div`
   position: absolute;

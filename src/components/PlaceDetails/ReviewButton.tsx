@@ -14,6 +14,8 @@ type Props = {
   onClickReview: () => void
 }
 
-export default function ReviewButton({ isLogin, onClickLogin, onClickReview }: Props) {
+const ReviewButton = ({ isLogin, onClickLogin, onClickReview }: Props) => {
   return <Button onClick={isLogin ? onClickReview : onClickLogin}>이용후기 등록</Button>
 }
+
+export default ReviewButton

@@ -12,7 +12,7 @@ type Props = {
   className?: string
 }
 
-export default function PrevNextBtn({
+const PrevNextBtn = ({
   onPrev,
   onNext,
   prevLabel = '이전',
@@ -21,7 +21,7 @@ export default function PrevNextBtn({
   fixed = true,
   bottom,
   className,
-}: Props) {
+}: Props) => {
   return (
     <Bar $fixed={fixed} $bottom={bottom} className={className}>
       <Buttons>
@@ -37,6 +37,8 @@ export default function PrevNextBtn({
     </Bar>
   )
 }
+
+export default PrevNextBtn
 
 const Bar = styled.div<{ $fixed?: boolean; $bottom?: string }>`
   position: ${({ $fixed }) => ($fixed ? 'fixed' : 'static')};

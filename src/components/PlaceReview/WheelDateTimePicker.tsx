@@ -17,7 +17,7 @@ type Props = {
   onConfirmTime?: (t: TimeVal) => void
 }
 
-export default function WheelDateTimePicker({
+const WheelDateTimePicker = ({
   open,
   mode,
   initialDate = new Date(),
@@ -25,7 +25,7 @@ export default function WheelDateTimePicker({
   onClose,
   onConfirmDate,
   onConfirmTime,
-}: Props) {
+}: Props) => {
   const [year, setYear] = useState(initialDate.getFullYear())
   const [month, setMonth] = useState(initialDate.getMonth() + 1) // 1~12
   const [day, setDay] = useState(initialDate.getDate())
@@ -105,6 +105,8 @@ export default function WheelDateTimePicker({
     </Dim>
   )
 }
+
+export default WheelDateTimePicker
 
 function WheelColumn<T extends number | string>({
   values,

@@ -7,7 +7,7 @@ type Props = {
   onClick: () => void
 }
 
-export default function NextBtn({ label = '다음', disabled, onClick }: Props) {
+const NextBtn = ({ label = '다음', disabled, onClick }: Props) => {
   return (
     <Bar>
       <Button disabled={disabled} onClick={onClick}>
@@ -16,6 +16,8 @@ export default function NextBtn({ label = '다음', disabled, onClick }: Props) 
     </Bar>
   )
 }
+
+export default NextBtn
 
 const Bar = styled.div`
   position: fixed;
