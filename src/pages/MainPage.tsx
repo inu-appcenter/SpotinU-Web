@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 // 민준 :
 // 사실 이 임포트 방식이 좋지 않음
-// alias 걸어서 @/ 이렇게 하는게 좋을 것 같긴 한데.. 이건 논의해보죠
+// alias 걸어서 @/ 이렇게 하는게 좋을 것 같긴 한데.. 이건 논의해보죠z
 import Banner from '@/components/MainPage/Banner'
 import FilterButtons, { type FilterKey } from '@/components/MainPage/FilterButtons'
 import PlaceList from '@/components/MainPage/PlaceList'
@@ -38,7 +38,7 @@ const MainPage = () => {
       </StickyWrap>
 
       <Content className="app-content">
-        <PlaceList filter={filter} onCardClick={() => navigate(`/places/2`)} />
+        <PlaceList filter={filter} onCardClick={() => navigate(`/places/32`)} />
       </Content>
     </main>
   )
