@@ -66,7 +66,7 @@ const PlaceDetails = () => {
 
   const handleReviewClick = () => {
     if (isLogin) {
-      console.log('후기작성 페이지로 이동')
+      navigate('/place/review')
     } else {
       setShowBottomSheet(true)
     }
@@ -100,7 +100,10 @@ const PlaceDetails = () => {
         </SlideWrapper>
 
         <Content className={'app-content'}>
-          <TimeInfoBox right={place.businessHours} />
+          <TimeInfoBox
+            businessHours={place.businessHours}
+            businessHoursDetail={place.businessHoursDetail}
+          />
           <MapButton onClick={() => console.log('캠퍼스맵으로 이동')}>
             <Map size={14} />
             인천대 캠퍼스맵으로 이동
