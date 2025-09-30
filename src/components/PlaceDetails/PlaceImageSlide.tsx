@@ -12,7 +12,7 @@ type Props = {
 
 const PlaceImageSlideWrapper = styled.div`
   width: 100%;
-  aspect-ratio: 1.5;
+  aspect-ratio: 16/9;
   position: relative;
 `
 const CustomSwiper = styled(Swiper)`

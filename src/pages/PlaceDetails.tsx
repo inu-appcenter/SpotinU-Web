@@ -18,11 +18,12 @@ import { useAuthStore } from '@/stores/authStore'
 const PlaceDetailsWrapper = styled.div``
 
 const SlideWrapper = styled.div`
+  width: 100%;
   position: relative;
   z-index: 0;
 `
 const HeaderWrapper = styled.div`
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
   width: 100%;
@@ -85,19 +86,21 @@ const PlaceDetails = () => {
   return (
     <>
       <PlaceDetailsWrapper className="app">
+        <HeaderWrapper>
+          <PageHeader
+            isLogin={isLogin}
+            isSaved={isSaved}
+            toggleSave={toggleSave}
+            showLoginSheet={() => setShowBottomSheet(true)}
+            goToReviewPage={handleReviewClick}
+          />
+        </HeaderWrapper>
+
         <SlideWrapper>
           <PlaceImageSlide photos={place.photos} />
-          <HeaderWrapper>
-            <PageHeader
-              isLogin={isLogin}
-              isSaved={isSaved}
-              toggleSave={toggleSave}
-              showLoginSheet={() => setShowBottomSheet(true)}
-              goToReviewPage={handleReviewClick}
-            />
-          </HeaderWrapper>
-          <PlaceTitle place={place} />
         </SlideWrapper>
+
+        <PlaceTitle place={place} />
 
         <Content className={'app-content'}>
           <TimeInfoBox
