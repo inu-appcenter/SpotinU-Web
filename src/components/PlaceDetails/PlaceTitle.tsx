@@ -8,7 +8,7 @@ const PlaceTitleWrapper = styled.div`
   z-index: 1;
 `
 const Title = styled.h1`
-  font-size: clamp(18px, 4vw, 24px);
+  font-size: clamp(20px, 4vw, 24px);
   font-weight: 800;
   margin-bottom: 8px;
   line-height: 1.4;

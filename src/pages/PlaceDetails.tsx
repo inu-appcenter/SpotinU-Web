@@ -11,9 +11,11 @@ import PlaceTitle from '@/components/PlaceDetails/PlaceTitle.tsx'
 import ReviewInfoBox from '@/components/PlaceDetails/ReviewInfoBox.tsx'
 import ReviewModal from '@/components/PlaceDetails/ReviewModal.tsx'
 import TimeInfoBox from '@/components/PlaceDetails/TimeInfoBox.tsx'
+import { useFavorite } from '@/hooks/useFavorite.ts'
 import usePlaceDetails from '@/hooks/usePlaceDetails.ts'
 import { useViewportVH } from '@/hooks/useViewportVH'
 import { useAuthStore } from '@/stores/authStore'
+import { useFavoriteStore } from '@/stores/favoriteStore.ts'
 
 const PlaceDetailsWrapper = styled.div``
 
@@ -59,11 +61,13 @@ const PlaceDetails = () => {
 
   const [showModal, setShowModal] = useState(false)
   const [showBottomSheet, setShowBottomSheet] = useState(false)
-  const [isSaved, setIsSaved] = useState(false) //저장 여부
-  const toggleSave = () => setIsSaved((prev) => !prev) // 저장 상태 토글
+
   const navigate = useNavigate()
 
   const isLogin = useAuthStore((s) => s.isAuthenticated)
+
+  const { toggleFavorite } = useFavorite()
+  const isSaved = useFavoriteStore((s) => s.hasFavorite(spotId))
 
   const handleReviewClick = () => {
     if (isLogin) {
@@ -75,6 +79,14 @@ const PlaceDetails = () => {
 
   const handleClickLogin = () => {
     navigate('/login')
+  }
+
+  const handleToggleSave = () => {
+    if (!isLogin) {
+      setShowBottomSheet(true)
+      return
+    }
+    toggleFavorite(spotId)
   }
 
   if (!place) return null
@@ -90,7 +102,7 @@ const PlaceDetails = () => {
           <PageHeader
             isLogin={isLogin}
             isSaved={isSaved}
-            toggleSave={toggleSave}
+            toggleSave={handleToggleSave}
             showLoginSheet={() => setShowBottomSheet(true)}
             goToReviewPage={handleReviewClick}
           />
