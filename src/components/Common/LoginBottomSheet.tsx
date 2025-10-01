@@ -24,12 +24,14 @@ const Dimmed = styled.div`
   background: rgba(0, 0, 0, 0.6);
   z-index: 999;
 `
-const SheetWrapper = styled.div`
+const SheetWrapper = styled.div<{ translateY: number }>`
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
+  transform: ${({ translateY }) => `translateY(${translateY}px)`};
+  transition: transform 0.2s ease-out;
 `
 
 const Sheet = styled.div`
@@ -39,7 +41,6 @@ const Sheet = styled.div`
   background: #eeeeee;
   border-radius: 20px 20px 0 0;
   padding: 8px 14px 0;
-
   animation: ${slideUp} 0.5s ease-out forwards;
 `
 
@@ -109,6 +110,8 @@ const LoginBottomSheet = ({
   title = '로그인 후 이용 가능한 서비스입니다.\n지금 로그인하시겠어요?',
 }: Props) => {
   const [isVisible, setIsVisible] = useState(false)
+  const [dragStartY, setDragStartY] = useState<number | null>(null)
+  const [translateY, setTranslateY] = useState(0)
 
   // 열고 닫는 애니메이션 감지
   useEffect(() => {
@@ -126,12 +129,39 @@ const LoginBottomSheet = ({
 
   if (!isVisible) return null
 
+  // 터치/드래그 시작
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setDragStartY(e.touches[0].clientY)
+  }
+
+  // 드래그 중 아래로 끌면 translateY 반영
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (dragStartY !== null) {
+      const diff = e.touches[0].clientY - dragStartY
+      if (diff > 0) setTranslateY(diff) // 아래로만 이동
+    }
+  }
+
+  // 드래그 끝 일정 이상 내리면 닫기
+  const handleTouchEnd = () => {
+    if (translateY > 100) {
+      onClose()
+    } else {
+      setTranslateY(0) // 원위치
+    }
+    setDragStartY(null)
+  }
+
   return (
     <>
       <Dimmed onClick={onClose} />
-      <SheetWrapper>
+      <SheetWrapper translateY={translateY}>
         <Sheet>
-          <GrayBar />
+          <GrayBar
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          />
           <Title>{title}</Title>
           <Content>
             <MascotImg src={mascot} alt="횃불이" />
