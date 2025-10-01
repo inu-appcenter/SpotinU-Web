@@ -1,12 +1,12 @@
 import styled from 'styled-components'
 
-const Root = styled.section<{ $h: number }>`
+const Root = styled.section`
   position: relative;
-  height: ${({ $h }) => $h}px;
+  width: 100vw;
+  height: clamp(180px, 56vw, 260px);
 
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  width: 100vw;
   overflow: hidden;
 
   &::before {
@@ -43,7 +43,7 @@ const Slide = styled.div`
 const Img = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: fill;
   display: block;
 `
 
@@ -68,7 +68,7 @@ const Banner = () => {
   const images = ['/Banner/Banner1.png', '/Banner/Banner2.png', '/Banner/Banner3.png']
 
   return (
-    <Root $h={200}>
+    <Root>
       <Viewport>
         {images.map((src, i) => (
           <Slide key={i}>
