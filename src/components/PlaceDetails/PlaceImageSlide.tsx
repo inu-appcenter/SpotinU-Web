@@ -1,16 +1,18 @@
 import styled from 'styled-components'
 import { Autoplay, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
+
 import 'swiper/css'
 import 'swiper/css/pagination'
+import type { Photo } from '@/types/PlaceDetailsType.ts'
 
 type Props = {
-  photos: string[]
+  photos: Photo[]
 }
 
 const PlaceImageSlideWrapper = styled.div`
   width: 100%;
-  aspect-ratio: 1.5;
+  aspect-ratio: 16/9;
   position: relative;
 `
 const CustomSwiper = styled(Swiper)`
@@ -40,9 +42,9 @@ const PlaceImageSlide = ({ photos }: Props) => {
         loop={true}
       >
         {photos.length > 0 &&
-          photos.map((src, index) => (
-            <SwiperSlide key={index}>
-              <Image src={src} alt={`장소 이미지 ${index + 1}`} />
+          photos.map((photo, index) => (
+            <SwiperSlide key={photo.id ?? index}>
+              <Image src={photo.url} alt={`장소 이미지 ${index + 1}`} />
             </SwiperSlide>
           ))}
       </CustomSwiper>

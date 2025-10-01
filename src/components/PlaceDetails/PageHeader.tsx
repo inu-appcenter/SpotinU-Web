@@ -1,9 +1,9 @@
 import { ArrowLeft } from 'lucide-react'
 import styled from 'styled-components'
 
-import SaveButton from '@/components/Common/SaveButton.tsx'
-
 import ReviewButton from './ReviewButton.tsx'
+
+import SaveButton from '@/components/Common/SaveButton.tsx'
 
 /**
  * 장소 상세페이지 상단 헤더
@@ -17,9 +17,9 @@ const PageHeaderWrapper = styled.header`
   align-items: center;
   padding: 16px;
   background: transparent;
-  position: absolute;
+  position: relative;
   top: 0;
-  z-index: 2;
+  z-index: 20;
   width: 100%;
 `
 const Left = styled.div`

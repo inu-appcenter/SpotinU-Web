@@ -38,7 +38,7 @@ const InfoBoxWrapper = ({ title, icon, seeAll, children }: Props) => {
     <Box>
       <TitleRow>
         <Title>
-          <IconWrapper>{icon}</IconWrapper>
+          {icon && <IconWrapper>{icon}</IconWrapper>}
           {title}
         </Title>
         {seeAll && seeAll}

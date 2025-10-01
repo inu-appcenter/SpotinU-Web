@@ -1,17 +1,19 @@
 import styled from 'styled-components'
+
 import type { PlaceDetails } from '@/types/PlaceDetailsType.ts'
 
 const PlaceTitleWrapper = styled.div`
   padding: 12px 16px;
-  position: absolute;
-  bottom: 30px;
   color: black;
   z-index: 1;
 `
 const Title = styled.h1`
-  font-size: 24px;
+  font-size: clamp(20px, 4vw, 24px);
   font-weight: 800;
   margin-bottom: 8px;
+  line-height: 1.4;
+  word-break: keep-all;
+  white-space: pre-line;
 `
 const Tag = styled.div`
   display: flex;
@@ -47,11 +49,15 @@ const PlaceTitle = ({ place }: Props) => {
     showTag.push('#야외')
   }
 
+  //위치설명이 너무 길어지면 줄바꿈 처리
+  const isLong = place.locationDetail.length > 13
+  const text = isLong
+    ? `${place.locationDetail}\n[${place.name}]`
+    : `${place.locationDetail} [${place.name}]`
+
   return (
     <PlaceTitleWrapper>
-      <Title>
-        {place.locationDetail} [{place.name}]
-      </Title>
+      <Title>{text}</Title>
       <Tag>{showTag.join(' ')}</Tag>
     </PlaceTitleWrapper>
   )

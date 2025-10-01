@@ -11,18 +11,21 @@ import PlaceTitle from '@/components/PlaceDetails/PlaceTitle.tsx'
 import ReviewInfoBox from '@/components/PlaceDetails/ReviewInfoBox.tsx'
 import ReviewModal from '@/components/PlaceDetails/ReviewModal.tsx'
 import TimeInfoBox from '@/components/PlaceDetails/TimeInfoBox.tsx'
+import { useFavorite } from '@/hooks/useFavorite.ts'
 import usePlaceDetails from '@/hooks/usePlaceDetails.ts'
 import { useViewportVH } from '@/hooks/useViewportVH'
 import { useAuthStore } from '@/stores/authStore'
+import { useFavoriteStore } from '@/stores/favoriteStore.ts'
 
 const PlaceDetailsWrapper = styled.div``
 
 const SlideWrapper = styled.div`
+  width: 100%;
   position: relative;
   z-index: 0;
 `
 const HeaderWrapper = styled.div`
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
   width: 100%;
@@ -41,7 +44,7 @@ const MapButton = styled.button`
   color: white;
   font-size: 12px;
   border-radius: 20px;
-  padding: 4px;
+  padding: 8px;
 
   display: flex;
   align-items: center;
@@ -58,15 +61,17 @@ const PlaceDetails = () => {
 
   const [showModal, setShowModal] = useState(false)
   const [showBottomSheet, setShowBottomSheet] = useState(false)
-  const [isSaved, setIsSaved] = useState(false) //저장 여부
-  const toggleSave = () => setIsSaved((prev) => !prev) // 저장 상태 토글
+
   const navigate = useNavigate()
 
   const isLogin = useAuthStore((s) => s.isAuthenticated)
 
+  const { toggleFavorite } = useFavorite()
+  const isSaved = useFavoriteStore((s) => s.hasFavorite(spotId))
+
   const handleReviewClick = () => {
     if (isLogin) {
-      console.log('후기작성 페이지로 이동')
+      navigate('/place/review')
     } else {
       setShowBottomSheet(true)
     }
@@ -74,6 +79,14 @@ const PlaceDetails = () => {
 
   const handleClickLogin = () => {
     navigate('/login')
+  }
+
+  const handleToggleSave = () => {
+    if (!isLogin) {
+      setShowBottomSheet(true)
+      return
+    }
+    toggleFavorite(spotId)
   }
 
   if (!place) return null
@@ -85,22 +98,27 @@ const PlaceDetails = () => {
   return (
     <>
       <PlaceDetailsWrapper className="app">
+        <HeaderWrapper>
+          <PageHeader
+            isLogin={isLogin}
+            isSaved={isSaved}
+            toggleSave={handleToggleSave}
+            showLoginSheet={() => setShowBottomSheet(true)}
+            goToReviewPage={handleReviewClick}
+          />
+        </HeaderWrapper>
+
         <SlideWrapper>
           <PlaceImageSlide photos={place.photos} />
-          <HeaderWrapper>
-            <PageHeader
-              isLogin={isLogin}
-              isSaved={isSaved}
-              toggleSave={toggleSave}
-              showLoginSheet={() => setShowBottomSheet(true)}
-              goToReviewPage={handleReviewClick}
-            />
-          </HeaderWrapper>
-          <PlaceTitle place={place} />
         </SlideWrapper>
 
+        <PlaceTitle place={place} />
+
         <Content className={'app-content'}>
-          <TimeInfoBox right={place.businessHours} />
+          <TimeInfoBox
+            businessHours={place.businessHours}
+            businessHoursDetail={place.businessHoursDetail}
+          />
           <MapButton onClick={() => console.log('캠퍼스맵으로 이동')}>
             <Map size={14} />
             인천대 캠퍼스맵으로 이동

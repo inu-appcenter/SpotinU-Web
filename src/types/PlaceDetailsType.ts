@@ -1,5 +1,12 @@
 import type { Review } from '@/types/reviewType'
 
+export interface Photo {
+  id: number
+  url: string
+  thumbnail: boolean
+  orderIndex: number
+}
+
 export interface PlaceDetails {
   id: number
   latitude: string
@@ -15,7 +22,7 @@ export interface PlaceDetails {
   entertainment: boolean
   reservationRequired: boolean
   placeType: string
-  photos: string[]
+  photos: Photo[]
   businessHoursDetail: string
   descriptionDetail: string
   reviews: Review[]
