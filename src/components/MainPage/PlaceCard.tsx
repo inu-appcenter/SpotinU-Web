@@ -1,18 +1,9 @@
 import { Building2, MapPin, Users } from 'lucide-react'
 import styled from 'styled-components'
 
-export type Place = {
-  id: string
-  title: string
-  subtitle: string
-  building: string
-  distanceText: string
-  imageUrl: string
-  typeText?: string
-  tags?: string[]
-}
+import type { PlaceSummary } from '@/types/PlaceSummaryType'
 
-type Props = { place: Place; onClick?: (id: string) => void }
+type Props = { place: PlaceSummary; onClick?: (id: string) => void }
 
 const Card = styled.article`
   background: #fff;
@@ -37,12 +28,11 @@ const Body = styled.div`
   gap: 12px;
 `
 
-/* 첫 줄: 제목 좌 / 설명 우 */
+/* 첫 줄: 제목 아래 설명 */
 const TopRow = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
+  flex-direction: column;
+  gap: 4px;
 `
 const Title = styled.h3`
   margin: 0;
@@ -53,9 +43,8 @@ const Title = styled.h3`
 const Subtitle = styled.p`
   margin: 0;
   font-size: 14px;
-  color: #6b7280;
-  text-align: right;
-  flex-shrink: 0;
+  color: #4b5563;
+  line-height: 1.4;
 `
 
 /* 두 번째 줄: 건물/층 정보 */
@@ -93,7 +82,7 @@ const DistanceInfo = styled.div`
 const PlaceCard = ({ place, onClick }: Props) => {
   return (
     <Card onClick={() => onClick?.(place.id)}>
-      <Image src={place.imageUrl} alt={place.title} />
+      <Image src={place.imageUrl} alt={place.title} loading="lazy" />
 
       <Body>
         <TopRow>
@@ -109,7 +98,7 @@ const PlaceCard = ({ place, onClick }: Props) => {
         <BottomRow>
           <TypeInfo>
             <Users size={16} />
-            <span>{place.typeText}</span>
+            <span>{place.typeText ?? '정보 없음'}</span>
           </TypeInfo>
           <DistanceInfo>
             <MapPin size={16} />

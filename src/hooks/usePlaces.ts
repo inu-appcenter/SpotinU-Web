@@ -1,94 +1,222 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { PLACES } from '@/dummy/PlacesDummy'
 
-export type Place = {
-  id: string
-  title: string
-  subtitle: string
-  building: string
-  distanceText: string
-  imageUrl: string
-  typeText?: string
-  tags?: string[]
+import { api } from '@/apis/api'
+import type { PlaceSummary } from '@/types/PlaceSummaryType'
+import {
+  calculateDistanceInMeters,
+  derivePlaceTags,
+  formatDistanceText,
+} from '@/utils/placeSummary'
+
+export type Place = PlaceSummary
+
+type Coordinates = { lat: number; lng: number }
+
+type SpotApiItem = {
+  id: number
+  latitude: string
+  longitude: string
+  name: string
+  locationDetail: string
+  description: string
+  photo: string
+  sleepingAllowed: boolean
+  eatingAllowed: boolean
+  hasPowerOutlet: boolean
+  studyAllowed: boolean
+  entertainment: boolean
+  reservationRequired: boolean
+  placeType: string
 }
 
-/** 더미 fetch: 더미 데이터(PLACES)에서 필터+페이지네이션 적용 */
-async function fetchPlaces(page: number, pageSize: number, filter: string | '' = '') {
-  const start = (page - 1) * pageSize
-  const pool = filter ? PLACES.filter((p) => p.tags.includes(filter)) : PLACES
-  const total = pool.length
-  const slice = pool.slice(start, start + pageSize)
-  const items: Place[] = slice.map((p) => ({
-    id: p.id,
-    title: p.title,
-    subtitle: p.subtitle,
-    building: p.building,
-    distanceText: p.distanceText,
-    imageUrl: p.imageUrl,
-    typeText: p.typeText,
-    tags: p.tags,
-  }))
-
-  await new Promise((r) => setTimeout(r, 200))
-  const next = start + items.length < total ? page + 1 : null
-  return { items, next }
+type SpotListPayload = {
+  content: SpotApiItem[]
+  page: number
+  size: number
+  totalElements: number
 }
 
-/** 중복 호출/중복 merge를 막는 초간단 페이징 스토어 */
-export function usePlaces(pageSize = 8, filter: string | '' = '') {
-  const [list, setList] = useState<Place[]>([])
-  const [next, setNext] = useState<number | null>(1)
-  const [loading, setLoading] = useState(false)
+type FetchResult = {
+  spots: SpotApiItem[]
+  page: number
+  size: number
+  total: number
+}
 
-  // 페이지 단위 락/기록
-  const inFlight = useRef<Set<number>>(new Set())
-  const loaded = useRef<Set<number>>(new Set())
+const DEFAULT_DISTANCE_TEXT = '거리 정보 없음'
 
-  const dedupeMerge = (prev: Place[], incoming: Place[]) => {
-    const seen = new Set(prev.map((p) => p.id))
-    const add = incoming.filter((p) => !seen.has(p.id))
-    return prev.concat(add)
+const ensureNumber = (value: string | number | null | undefined): number | null => {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null
+  if (typeof value === 'string' && value.trim().length > 0) {
+    const parsed = Number(value)
+    return Number.isFinite(parsed) ? parsed : null
+  }
+  return null
+}
+
+const requestSpots = async (page: number, pageSize: number): Promise<FetchResult> => {
+  const response = await api.get('/spots', {
+    params: { page: page - 1, size: pageSize },
+  })
+
+  const data: SpotListPayload | undefined = response.data?.data
+  if (!data) return { spots: [], page: page - 1, size: pageSize, total: 0 }
+
+  return {
+    spots: Array.isArray(data.content) ? data.content : [],
+    page: typeof data.page === 'number' ? data.page : page - 1,
+    size: typeof data.size === 'number' ? data.size : pageSize,
+    total: typeof data.totalElements === 'number' ? data.totalElements : 0,
+  }
+}
+
+const buildTypeText = (tags: string[], placeType: string): string | undefined => {
+  const normalized = placeType?.toUpperCase()
+  const typeLabel = normalized === 'OUTDOOR' ? '야외' : normalized === 'INDOOR' ? '실내' : undefined
+  const attributes = tags.filter((tag) => tag !== '야외' && tag !== '실내')
+
+  const display = [typeLabel, ...attributes].filter(Boolean).slice(0, 2) as string[]
+  return display.length > 0 ? display.join(' · ') : undefined
+}
+
+const mapSpotToPlace = (spot: SpotApiItem): PlaceSummary => {
+  const latitude = ensureNumber(spot.latitude)
+  const longitude = ensureNumber(spot.longitude)
+
+  const tags = derivePlaceTags({
+    sleepingAllowed: Boolean(spot.sleepingAllowed),
+    eatingAllowed: Boolean(spot.eatingAllowed),
+    hasPowerOutlet: Boolean(spot.hasPowerOutlet),
+    studyAllowed: Boolean(spot.studyAllowed),
+    entertainment: Boolean(spot.entertainment),
+    reservationRequired: Boolean(spot.reservationRequired),
+    placeType: spot.placeType,
+  })
+
+  const uniqueTags = Array.from(new Set(tags))
+
+  return {
+    id: String(spot.id),
+    title: spot.name ?? '',
+    subtitle: spot.description ?? '',
+    building: spot.locationDetail ?? '',
+    distanceText: DEFAULT_DISTANCE_TEXT,
+    imageUrl: spot.photo || '',
+    typeText: buildTypeText(uniqueTags, spot.placeType),
+    tags: uniqueTags,
+    latitude,
+    longitude,
+  }
+}
+
+const withUpdatedDistance = (
+  place: PlaceSummary,
+  coords: Coordinates | null,
+): { place: PlaceSummary; distance: number | null } => {
+  if (!coords || place.latitude == null || place.longitude == null) {
+    return { place, distance: null }
   }
 
-  const load = useCallback(
-    async (page: number, reset = false) => {
-      if (page == null) return
-
-      // reset이면 모든 상태 초기화
-      if (reset) {
-        inFlight.current.clear()
-        loaded.current.clear()
-        setList([])
-      }
-
-      // 이미 로딩 중/로딩 완료된 페이지면 스킵
-      if (inFlight.current.has(page) || loaded.current.has(page)) return
-
-      inFlight.current.add(page)
-      setLoading(true)
-      try {
-        const { items, next: np } = await fetchPlaces(page, pageSize, filter)
-        loaded.current.add(page)
-        setList((prev) => (reset ? items : dedupeMerge(prev, items))) // 중복 합치기 방지
-        setNext(np)
-      } finally {
-        inFlight.current.delete(page)
-        setLoading(false)
-      }
+  const meters = calculateDistanceInMeters(coords.lat, coords.lng, place.latitude, place.longitude)
+  return {
+    place: {
+      ...place,
+      distanceText: formatDistanceText(meters),
     },
-    [pageSize, filter],
-  )
+    distance: meters,
+  }
+}
 
-  // 첫 로드
-  useEffect(() => {
-    load(1, true)
-  }, [load])
+const mergeAndSortByDistance = (
+  prev: PlaceSummary[],
+  incoming: PlaceSummary[],
+  coords: Coordinates | null,
+) => {
+  const registry = new Map<string, PlaceSummary>()
+  prev.forEach((p) => registry.set(p.id, p))
+  incoming.forEach((p) => registry.set(p.id, p))
 
-  const loadMore = useCallback(() => {
-    if (next != null && !inFlight.current.has(next)) {
-      load(next)
+  const enriched = Array.from(registry.values()).map((place) => withUpdatedDistance(place, coords))
+
+  enriched.sort((a, b) => {
+    const ad = a.distance
+    const bd = b.distance
+    if (ad == null && bd == null) return 0
+    if (ad == null) return 1
+    if (bd == null) return -1
+    return ad - bd
+  })
+
+  return enriched.map(({ place }) => place)
+}
+
+const applyFilter = (places: PlaceSummary[], filter: string | '') =>
+  filter ? places.filter((item) => item.tags.includes(filter)) : places
+
+export function usePlaces(pageSize = 8, filter: string | '' = '') {
+  const [allPlaces, setAllPlaces] = useState<PlaceSummary[]>([])
+  const [list, setList] = useState<PlaceSummary[]>([])
+  const [loading, setLoading] = useState(false)
+  const coordsRef = useRef<Coordinates | null>(null)
+
+  const fetchAllPages = useCallback(async () => {
+    setLoading(true)
+    try {
+      const collected: PlaceSummary[] = []
+      let page = 1
+
+      while (true) {
+        const { spots, size, total } = await requestSpots(page, pageSize)
+        if (spots.length === 0) break
+
+        const mapped = spots.map(mapSpotToPlace)
+        collected.push(...mapped)
+
+        const pageSizeUsed = size || pageSize
+        const totalLoaded = page * pageSizeUsed
+        const moreByTotal = total > totalLoaded
+        const moreByContent = spots.length === pageSizeUsed && spots.length > 0
+
+        if (!(moreByTotal || moreByContent)) break
+        page += 1
+      }
+
+      const sorted = mergeAndSortByDistance([], collected, coordsRef.current ?? null)
+      setAllPlaces(sorted)
+    } catch (error) {
+      console.error('장소 목록을 불러오지 못했습니다:', error)
+      setAllPlaces([])
+    } finally {
+      setLoading(false)
     }
-  }, [next, load])
+  }, [pageSize])
 
-  return { list, loading, hasNext: next !== null, loadMore }
+  useEffect(() => {
+    fetchAllPages().catch(console.error)
+  }, [fetchAllPages])
+
+  useEffect(() => {
+    setList(applyFilter(allPlaces, filter))
+  }, [allPlaces, filter])
+
+  useEffect(() => {
+    if (!navigator.geolocation) return
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const nextCoords = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        }
+        coordsRef.current = nextCoords
+        setAllPlaces((prev) => mergeAndSortByDistance([], prev, nextCoords))
+      },
+      (error) => {
+        console.warn('위치 정보를 가져오지 못했습니다:', error)
+      },
+      { enableHighAccuracy: true, maximumAge: 1000 * 60 * 5, timeout: 10000 },
+    )
+  }, [])
+
+  return { list, loading }
 }
