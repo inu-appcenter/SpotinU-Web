@@ -44,7 +44,7 @@ const MapButton = styled.button`
   color: white;
   font-size: 12px;
   border-radius: 20px;
-  padding: 4px;
+  padding: 8px;
 
   display: flex;
   align-items: center;
