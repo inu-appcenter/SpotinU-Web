@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 
 type PlaceLite = {
@@ -20,8 +20,12 @@ type Props = {
 }
 
 const slideUp = keyframes`
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 `
 
 const Dimmed = styled.div`
@@ -31,12 +35,14 @@ const Dimmed = styled.div`
   z-index: 999;
 `
 
-const SheetWrap = styled.div`
+const SheetWrap = styled.div<{ translateY: number }>`
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
+  transform: ${({ translateY }) => `translateY(${translateY}px)`};
+  transition: transform 0.18s ease-out;
 `
 
 const Sheet = styled.div`
@@ -48,6 +54,17 @@ const Sheet = styled.div`
   padding: 10px 14px 14px;
   box-shadow: 0 -12px 28px rgba(0, 0, 0, 0.18);
   animation: ${slideUp} 280ms ease-out forwards;
+  position: relative;
+`
+
+// 상단 어디든 잡히도록 전체 폭 드래그 존
+const DragZone = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  touch-action: none;
 `
 
 const Handle = styled.div`
@@ -114,8 +131,13 @@ const MapBottomSheet = ({
 }: Props) => {
   const visible = useMemo(() => isOpen && !!place, [isOpen, place])
 
+  const [dragStartY, setDragStartY] = useState<number | null>(null)
+  const [translateY, setTranslateY] = useState(0)
+
   useEffect(() => {
     if (visible) {
+      setTranslateY(0)
+      setDragStartY(null)
       const prev = document.body.style.overflow
       document.body.style.overflow = 'hidden'
       return () => {
@@ -126,11 +148,44 @@ const MapBottomSheet = ({
 
   if (!visible || !place) return null
 
+  // 터치 시작
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setDragStartY(e.touches[0].clientY)
+  }
+
+  // 터치 이동 (아래로만)
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (dragStartY === null) return
+    const currY = e.touches[0].clientY
+    const diff = currY - dragStartY
+    if (diff > 0) {
+      e.preventDefault() // 페이지 스크롤 방지
+      setTranslateY(diff)
+    }
+  }
+
+  // 터치 종료
+  const handleTouchEnd = () => {
+    const THRESHOLD = 100
+    if (translateY > THRESHOLD) {
+      setTranslateY(0)
+      onClose()
+    } else {
+      setTranslateY(0)
+    }
+    setDragStartY(null)
+  }
+
   return (
     <>
       <Dimmed onClick={onClose} />
-      <SheetWrap>
+      <SheetWrap translateY={translateY}>
         <Sheet role="dialog" aria-modal="true" aria-label={place.title}>
+          <DragZone
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          />
           <Handle />
           <Row>
             {place.imageUrl ? <Thumb src={place.imageUrl} alt={place.title} /> : <Thumb as="div" />}
