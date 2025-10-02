@@ -42,6 +42,16 @@ const Sheet = styled.div`
   border-radius: 20px 20px 0 0;
   padding: 8px 14px 0;
   animation: ${slideUp} 0.5s ease-out forwards;
+  position: relative;
+`
+// 상단 전체 드래그 영역
+const DragZone = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  touch-action: none;
 `
 
 const GrayBar = styled.div`
@@ -117,6 +127,8 @@ const LoginBottomSheet = ({
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true)
+      setTranslateY(0) // 다시 열릴 때 초기화
+      setDragStartY(null)
       document.body.style.overflow = 'hidden'
     } else {
       setIsVisible(false)
@@ -134,20 +146,22 @@ const LoginBottomSheet = ({
     setDragStartY(e.touches[0].clientY)
   }
 
-  // 드래그 중 아래로 끌면 translateY 반영
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (dragStartY !== null) {
-      const diff = e.touches[0].clientY - dragStartY
-      if (diff > 0) setTranslateY(diff) // 아래로만 이동
+    if (dragStartY === null) return
+    const diff = e.touches[0].clientY - dragStartY
+    if (diff > 0) {
+      e.preventDefault() // 스크롤 개입 막기
+      setTranslateY(diff)
     }
   }
 
-  // 드래그 끝 일정 이상 내리면 닫기
   const handleTouchEnd = () => {
-    if (translateY > 100) {
+    const THRESHOLD = 100
+    if (translateY > THRESHOLD) {
+      setTranslateY(0)
       onClose()
     } else {
-      setTranslateY(0) // 원위치
+      setTranslateY(0)
     }
     setDragStartY(null)
   }
@@ -157,11 +171,12 @@ const LoginBottomSheet = ({
       <Dimmed onClick={onClose} />
       <SheetWrapper translateY={translateY}>
         <Sheet>
-          <GrayBar
+          <DragZone
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           />
+          <GrayBar />
           <Title>{title}</Title>
           <Content>
             <MascotImg src={mascot} alt="횃불이" />
