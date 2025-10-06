@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
+import savedIconUrl from '@/assets/savedIcon.svg'
 import MapBottomSheet from '@/components/MyCampusMap/MapBottomSheet'
-import { PLACES } from '@/dummy/PlacesDummy'
 import { useKakaoLoader } from '@/hooks/useKakaoLoader'
 
 /*
@@ -9,6 +9,51 @@ import { useKakaoLoader } from '@/hooks/useKakaoLoader'
 */
 
 const DEFAULT_CENTER = { lat: 37.37504153409204, lng: 126.63212161312468 }
+
+type FavPlace = {
+  id: string
+  title: string
+  subtitle?: string
+  building: string
+  distanceText?: string
+  imageUrl?: string
+  lat: number
+  lng: number
+}
+
+// 인천대 좌표 주변 더미 즐겨찾기 3개
+const FAVORITES: FavPlace[] = [
+  {
+    id: 'fav-1',
+    title: '캠퍼스 공간 1',
+    subtitle: '햇살 좋은 창가 자리',
+    building: '1호관 1층',
+    distanceText: '가까움',
+    imageUrl: '',
+    lat: DEFAULT_CENTER.lat + 0.0007,
+    lng: DEFAULT_CENTER.lng + 0.0006,
+  },
+  {
+    id: 'fav-2',
+    title: '캠퍼스 공간 2',
+    subtitle: '조용한 학습 공간',
+    building: '2호관 2층',
+    distanceText: '보통',
+    imageUrl: '',
+    lat: DEFAULT_CENTER.lat - 0.0008,
+    lng: DEFAULT_CENTER.lng + 0.0004,
+  },
+  {
+    id: 'fav-3',
+    title: '캠퍼스 공간 3',
+    subtitle: '소규모 모임에 적합',
+    building: '3호관 3층',
+    distanceText: '조금 멈',
+    imageUrl: '',
+    lat: DEFAULT_CENTER.lat + 0.0005,
+    lng: DEFAULT_CENTER.lng - 0.0007,
+  },
+]
 
 const MapContainer = () => {
   const loaded = useKakaoLoader()
@@ -25,7 +70,7 @@ const MapContainer = () => {
   // 바텀시트 상태
   const [sheetOpen, setSheetOpen] = useState(false)
   const [pickedId, setPickedId] = useState<string | null>(null)
-  const picked = pickedId ? PLACES.find((p) => p.id === pickedId) : null
+  const picked = pickedId ? FAVORITES.find((p) => p.id === pickedId) : null
 
   useEffect(() => {
     if (!loaded || !mapRef.current) return
@@ -38,6 +83,23 @@ const MapContainer = () => {
       level: 3,
     })
     mapObj.current = map
+
+    // 즐겨찾기 마커 렌더링
+    const favImage = new kakao.maps.MarkerImage(savedIconUrl, new kakao.maps.Size(28, 28), {
+      offset: new kakao.maps.Point(14, 14),
+    })
+    FAVORITES.forEach((f) => {
+      const marker = new kakao.maps.Marker({
+        position: new kakao.maps.LatLng(f.lat, f.lng),
+        image: favImage,
+        map,
+        clickable: true,
+      })
+      kakao.maps.event.addListener(marker, 'click', () => {
+        setPickedId(f.id)
+        setSheetOpen(true)
+      })
+    })
 
     // 현재 위치 오버레이/정확도 원 업데이트
     const updateMe = (lat: number, lng: number, acc?: number) => {
@@ -135,49 +197,7 @@ const MapContainer = () => {
     >
       <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
 
-      {/* 즐겨찾기 Picker (예시: 상단 중앙) */}
-      <div
-        style={{
-          position: 'absolute',
-          left: '50%',
-          top: 60,
-          transform: 'translateX(-50%)',
-          zIndex: 1,
-          display: 'flex',
-          gap: 8,
-          padding: '6px 8px',
-          borderRadius: 12,
-          background: 'rgba(255,255,255,.9)',
-          backdropFilter: 'blur(6px)',
-          border: '1px solid #e5e7eb',
-          maxWidth: 'calc(100% - 24px)',
-          overflowX: 'auto',
-          whiteSpace: 'nowrap',
-        }}
-        aria-label="즐겨찾기 선택"
-      >
-        {PLACES.slice(0, 8).map((p) => (
-          <button
-            key={p.id}
-            onClick={() => {
-              setPickedId(p.id)
-              setSheetOpen(true)
-            }}
-            type="button"
-            style={{
-              padding: '6px 10px',
-              borderRadius: 999,
-              border: '1px solid #d1d5db',
-              background: pickedId === p.id ? '#073b7b' : '#fff',
-              color: pickedId === p.id ? '#fff' : '#111827',
-              fontWeight: 600,
-              fontSize: 13,
-            }}
-          >
-            {p.title}
-          </button>
-        ))}
-      </div>
+      {/* 상단 즐겨찾기 버튼 제거 → 지도 마커로 대체 */}
 
       <button
         onClick={recenter}
@@ -207,11 +227,11 @@ const MapContainer = () => {
             ? {
                 id: picked.id,
                 title: picked.title,
-                subtitle: picked.subtitle,
+                subtitle: picked.subtitle ?? '',
                 building: picked.building,
-                distanceText: picked.distanceText,
-                imageUrl: picked.imageUrl,
-                typeText: picked.typeText,
+                distanceText: picked.distanceText ?? '',
+                imageUrl: picked.imageUrl ?? '',
+                typeText: undefined,
               }
             : null
         }
