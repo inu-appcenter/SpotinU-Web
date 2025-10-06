@@ -24,12 +24,14 @@ const Dimmed = styled.div`
   background: rgba(0, 0, 0, 0.6);
   z-index: 999;
 `
-const SheetWrapper = styled.div`
+const SheetWrapper = styled.div<{ translateY: number }>`
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
+  transform: ${({ translateY }) => `translateY(${translateY}px)`};
+  transition: transform 0.2s ease-out;
 `
 
 const Sheet = styled.div`
@@ -39,8 +41,17 @@ const Sheet = styled.div`
   background: #eeeeee;
   border-radius: 20px 20px 0 0;
   padding: 8px 14px 0;
-
   animation: ${slideUp} 0.5s ease-out forwards;
+  position: relative;
+`
+// 상단 전체 드래그 영역
+const DragZone = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  touch-action: none;
 `
 
 const GrayBar = styled.div`
@@ -109,11 +120,15 @@ const LoginBottomSheet = ({
   title = '로그인 후 이용 가능한 서비스입니다.\n지금 로그인하시겠어요?',
 }: Props) => {
   const [isVisible, setIsVisible] = useState(false)
+  const [dragStartY, setDragStartY] = useState<number | null>(null)
+  const [translateY, setTranslateY] = useState(0)
 
   // 열고 닫는 애니메이션 감지
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true)
+      setTranslateY(0) // 다시 열릴 때 초기화
+      setDragStartY(null)
       document.body.style.overflow = 'hidden'
     } else {
       setIsVisible(false)
@@ -126,11 +141,41 @@ const LoginBottomSheet = ({
 
   if (!isVisible) return null
 
+  // 터치/드래그 시작
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setDragStartY(e.touches[0].clientY)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (dragStartY === null) return
+    const diff = e.touches[0].clientY - dragStartY
+    if (diff > 0) {
+      e.preventDefault() // 스크롤 개입 막기
+      setTranslateY(diff)
+    }
+  }
+
+  const handleTouchEnd = () => {
+    const THRESHOLD = 100
+    if (translateY > THRESHOLD) {
+      setTranslateY(0)
+      onClose()
+    } else {
+      setTranslateY(0)
+    }
+    setDragStartY(null)
+  }
+
   return (
     <>
       <Dimmed onClick={onClose} />
-      <SheetWrapper>
+      <SheetWrapper translateY={translateY}>
         <Sheet>
+          <DragZone
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          />
           <GrayBar />
           <Title>{title}</Title>
           <Content>
