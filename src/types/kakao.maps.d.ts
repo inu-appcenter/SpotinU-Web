@@ -21,6 +21,14 @@ declare namespace kakao {
       setLevel(level: number): void
     }
 
+    // Basic geometry helpers
+    class Size {
+      constructor(width: number, height: number)
+    }
+    class Point {
+      constructor(x: number, y: number)
+    }
+
     type CustomOverlayOptions = {
       position: LatLng
       map?: Map
@@ -51,14 +59,26 @@ declare namespace kakao {
       setRadius(radius: number): void
     }
 
+    // Marker image
+    class MarkerImage {
+      constructor(src: string, size: Size, opts?: { offset?: Point })
+    }
+
     type MarkerOptions = {
       position: LatLng
       map?: Map
+      image?: MarkerImage
+      clickable?: boolean
     }
 
     class Marker {
       constructor(options: MarkerOptions)
       setMap(map: Map | null): void
+    }
+
+    // Events
+    namespace event {
+      function addListener(target: any, type: string, handler: (...args: any[]) => void): void
     }
   }
 }
