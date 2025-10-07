@@ -2,16 +2,16 @@ import styled from 'styled-components'
 
 type Props = {
   name: string
-  locationDetail?: string
-  isFavorite?: boolean
+  locationDetail: string
+  isFavorite: boolean
   onToggleFavorite?: () => void
   rightSlot?: React.ReactNode
   hideLabel?: boolean
 }
 
 const PlaceTitle = ({
-  name = '[공간 이름]',
-  locationDetail = '0호관 0층 0호',
+  name,
+  locationDetail,
   onToggleFavorite,
   rightSlot,
   hideLabel = false,

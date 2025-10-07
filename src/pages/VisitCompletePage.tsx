@@ -16,10 +16,9 @@ import PrivateTip from '@/components/PlaceReview/VisitComplete/PrivateTip'
 import VisitMetaRow from '@/components/PlaceReview/VisitComplete/VisitMetaRow'
 
 type VisitCompleteState = {
-  placeName?: string
-  buildingText?: string
+  name: string
+  locationDetail: string
   visitAt?: string
-  visitCount?: number
   isFavorite?: boolean
   keywords?: string[]
   noKeyword?: boolean
@@ -56,13 +55,14 @@ const VisitCompletePage = () => {
   // 삭제 확인 모달 on/off (공용 CommonModal 사용)
   const [isDeleteOpen, setDeleteOpen] = useState(false)
 
-  const placeTitle = state?.placeName ?? state?.buildingText ?? '00호관 00층 00호'
+  const name = state?.name ?? state?.name ?? ''
+  const locationDetail = state?.locationDetail ?? state?.locationDetail ?? ''
+
   const visitDate = state?.visitAt ? new Date(state.visitAt) : new Date()
   const dateText = format(visitDate, 'M월 d일 EEE', { locale: ko })
   const timeText = format(visitDate, 'a h시', { locale: ko })
     .replace('AM', '오전')
     .replace('PM', '오후')
-  const countText = state?.visitCount ? `${state.visitCount}번째 방문` : undefined
 
   const isFavorite = !!state?.isFavorite
   const keywords = state?.keywords ?? []
@@ -130,7 +130,8 @@ const VisitCompletePage = () => {
       <Screen>
         <Main>
           <PlaceTitle
-            buildingText={placeTitle} // 아랫줄만
+            name={name}
+            locationDetail={locationDetail} // 아랫줄만
             hideLabel // 윗줄 숨김
             isFavorite={isFavorite}
             onToggleFavorite={() => console.log('toggle favorite')}
@@ -147,7 +148,6 @@ const VisitCompletePage = () => {
           <VisitMetaRow
             dateText={dateText}
             timeText={timeText}
-            countText={countText}
             onDelete={() => setDeleteOpen(true)}
           />
 
@@ -162,8 +162,8 @@ const VisitCompletePage = () => {
                 nav('/place/review/edit', {
                   state: {
                     from: 'visit-complete',
-                    placeName: state?.placeName,
-                    buildingText: state?.buildingText,
+                    name: state?.name,
+                    locationDetail: state?.locationDetail,
                     visitAt: visitDate.toISOString(),
                     medias: [],
                     comment: '',
