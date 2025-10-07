@@ -1,19 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
+import type { SpotPhoto } from '@/types/spot'
+
 type PlaceCardProps = {
-  buildingText: string // 몇 호관 몇 층 몇 호
-  placeName: string // [공간이름]
+  locationDetail: string
+  name: string
   guideText?: string // 방문 일시를 확인해 주세요!
-  images: string[] // 이미지 여러 장
-  imgHeight?: number // 기본 190
+  photo: SpotPhoto[]
+  imgHeight?: number //  190
 }
 
 const PlaceCard = ({
-  buildingText,
-  placeName,
+  locationDetail,
+  name,
   guideText = '방문 일시를 확인해 주세요!',
-  images,
+  photo,
   imgHeight = 140,
 }: PlaceCardProps) => {
   const [index, setIndex] = useState(0)
@@ -39,7 +41,6 @@ const PlaceCard = ({
     }
   }, [])
 
-  // 점 클릭 이동 함수 유지
   const go = (i: number) => {
     const el = scrollerRef.current
     if (!el) return
@@ -50,24 +51,24 @@ const PlaceCard = ({
     <Card>
       <Group>
         <Header>
-          <Title>{buildingText}</Title>
-          <Sub>[{placeName}]</Sub>
+          <Title>{locationDetail}</Title>
+          <Sub>[{name}]</Sub>
           <Guide>{guideText}</Guide>
         </Header>
 
         <Frame>
           <Scroller ref={scrollerRef}>
-            {images.map((src, i) => (
-              <Slide key={i}>
-                <Img src={src} alt={`${placeName}-${i + 1}`} $h={imgHeight} />
+            {photo.map((p, i) => (
+              <Slide key={p.id}>
+                <Img src={p.url} alt={`${name}-${i + 1}`} $h={imgHeight} />
               </Slide>
             ))}
           </Scroller>
           <Underlay />
 
-          {images.length > 1 && (
+          {photo.length > 1 && (
             <Dots>
-              {images.map((_, i) => (
+              {photo.map((_, i) => (
                 <Dot
                   key={i}
                   $active={i === index}
@@ -108,7 +109,7 @@ const Card = styled.section`
   max-width: 360px;
   margin: 0 auto;
 
-  contain: paint; /* ← 카드 영역만 페인트 */
+  contain: paint;
   backface-visibility: hidden;
 `
 

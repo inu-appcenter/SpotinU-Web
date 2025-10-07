@@ -1,7 +1,7 @@
 // 리뷰등록페이지
-import type React from 'react' // React.MouseEvent 타입용 (JSX 자동임포트와 별개)
+import type React from 'react'
 import { useEffect, useMemo, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import styled, { createGlobalStyle } from 'styled-components'
 
 import CommonModal from '@/components/Common/CommonModal'
@@ -13,6 +13,7 @@ import PlaceCard from '@/components/PlaceReview/PlaceCard'
 import ReviewKeywordSelector from '@/components/PlaceReview/ReviewKeywordSelector'
 import ReviewInput from '@/components/PlaceReview/ReviewRequest/ReviewInput'
 import VisitHistory from '@/components/PlaceReview/ReviewRequest/VisitHistory'
+import { useSpot } from '@/hooks/useSpot'
 
 type TimeVal = { hour: number; minute: number }
 type Step = 'date' | 'keyword' | 'media'
@@ -22,7 +23,7 @@ type RestoreState = {
   visitAt?: string
   keywords?: string[]
   noKeyword?: boolean
-  mediaUrls?: string[] // 사진(문자열 경로를 넘긴 경우)
+  mediaUrls?: string[]
   comment?: string
 }
 
@@ -62,18 +63,13 @@ export const StickyBottom = styled.div`
 
 const PlaceReviewPage = () => {
   const navigate = useNavigate()
-  const { state: restore } = useLocation() as { state?: RestoreState }
+  const [searchParams] = useSearchParams()
+  const { state: restore } = useLocation() as { state?: RestoreState & { spotId?: number } }
 
-  const handleClose = () => {
-    navigate(-1)
-  }
+  const spotId = Number(searchParams.get('spotId') ?? restore?.spotId)
 
-  const images = useMemo(() => ['/장소사진더미.svg', '/장소사진더미.svg', '/장소사진더미.svg'], [])
-  const buildingText = '00호관 101호'
-  const placeName = '공간이름'
-  const visitCount = 1
+  const { data: place, loading, error } = useSpot(Number.isFinite(spotId) ? spotId : null)
 
-  // 방문 일시
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [selectedTime, setSelectedTime] = useState<TimeVal | null>(null)
   const finalDateTime = useMemo(() => {
@@ -83,14 +79,10 @@ const PlaceReviewPage = () => {
     return d
   }, [selectedDate, selectedTime])
 
-  // 스텝 전환
-  // const [step, setStep] = useState<Step>('date')
   const [step, setStep] = useState<Step>(restore?.step ?? 'date')
 
-  // 키워드
   const [selectedKeywords, setSelectedKeywords] = useState<Set<string>>(new Set())
   const [noKeyword, setNoKeyword] = useState(false)
-
   const handleKeywordsChange = (next: Set<string> | string[]) => {
     setSelectedKeywords(new Set(Array.isArray(next) ? next : [...next]))
   }
@@ -98,46 +90,35 @@ const PlaceReviewPage = () => {
     setNoKeyword(next)
     setSelectedKeywords(new Set()) // 다시 눌러도 초기화
   }
-
   const canGoNextFromKeyword = Boolean(finalDateTime) && (noKeyword || selectedKeywords.size >= 1)
 
   const [photos, setPhotos] = useState<(File | string)[]>([])
   const [comment, setComment] = useState('')
 
-  // 모달 on/off (리뷰 비어있을 때)
   const [showEmptyModal, setShowEmptyModal] = useState(false)
 
   useEffect(() => {
     if (!restore) return
-
-    // 날짜/시간
     if (restore.visitAt) {
       const d = new Date(restore.visitAt)
       setSelectedDate(d)
       setSelectedTime({ hour: d.getHours(), minute: d.getMinutes() })
     }
-
-    // 키워드/노키워드
     if (restore.keywords) setSelectedKeywords(new Set(restore.keywords))
     if (typeof restore.noKeyword === 'boolean') setNoKeyword(restore.noKeyword)
-
-    // 사진/코멘트
-    if (restore.mediaUrls) {
-      setPhotos(restore.mediaUrls)
-    }
+    if (restore.mediaUrls) setPhotos(restore.mediaUrls)
     if (typeof restore.comment === 'string') setComment(restore.comment)
-
-    // 마지막으로 요청된 step으로 이동
     if (restore.step) setStep(restore.step)
   }, [restore])
 
-  // 등록 버튼(미디어 스텝)
+  const handleClose = () => navigate(-1)
+
   const handleRegister = () => {
     if (!finalDateTime) return
     const noMedia = photos.length === 0
     const noComment = comment.trim() === ''
     if (noMedia && noComment) {
-      setShowEmptyModal(true) // 🔹 네 모달 열기
+      setShowEmptyModal(true)
       return
     }
     submitWithReview()
@@ -145,8 +126,7 @@ const PlaceReviewPage = () => {
 
   // 리뷰 포함 등록
   const submitWithReview = () => {
-    if (!finalDateTime) return
-
+    if (!finalDateTime || !place) return
     const uploadedUrls = photos.map((p) => (typeof p === 'string' ? p : URL.createObjectURL(p)))
 
     console.log('리뷰 포함 등록', {
@@ -159,10 +139,10 @@ const PlaceReviewPage = () => {
 
     navigate('/visit/complete', {
       state: {
-        placeName,
-        buildingText,
+        name: place.name,
+        locationDetail: place.locationDetail,
         visitAt: finalDateTime.toISOString(),
-        visitCount,
+
         isFavorite: false,
         keywords: Array.from(selectedKeywords),
         noKeyword,
@@ -175,7 +155,7 @@ const PlaceReviewPage = () => {
 
   // 방문만 기록
   const submitVisitOnly = () => {
-    if (!finalDateTime) return
+    if (!finalDateTime || !place) return
 
     console.log('방문만 기록', {
       visitAt: finalDateTime.toISOString(),
@@ -186,10 +166,10 @@ const PlaceReviewPage = () => {
 
     navigate('/visit/complete', {
       state: {
-        placeName,
-        buildingText,
+        name: place.name,
+        locationDetail: place.locationDetail,
         visitAt: finalDateTime.toISOString(),
-        visitCount,
+
         isFavorite: false,
         keywords: Array.from(selectedKeywords),
         noKeyword,
@@ -200,7 +180,6 @@ const PlaceReviewPage = () => {
     })
   }
 
-  // 모달 버튼들
   const handleVisitOnly = (e?: React.MouseEvent) => {
     e?.preventDefault()
     setShowEmptyModal(false)
@@ -208,96 +187,111 @@ const PlaceReviewPage = () => {
   }
   const handleCancel = () => setShowEmptyModal(false)
 
+  if (!place) {
+    return <Page>장소 정보를 불러오지 못했습니다.</Page>
+  }
+  // 파생값(훅 아님)
+  const name = place.name
+  const locationDetail = place.locationDetail
+  const photo = place.photos ?? []
+
   return (
     <Page>
       <RaiseBottomBarZ />
 
-      <Container>
-        <CloseHeader onClose={handleClose} />
+      {!place ? (
+        <Container>
+          <CloseHeader onClose={handleClose} />
+          <div style={{ padding: 16 }}>
+            {loading ? '장소 정보를 불러오는 중' : (error ?? '장소 정보를 불러오지 못했습니다.')}
+          </div>
+        </Container>
+      ) : (
+        <Container>
+          <CloseHeader onClose={handleClose} />
 
-        {step === 'date' && (
-          <>
-            <PlaceCard buildingText={buildingText} placeName={placeName} images={images} />
+          {step === 'date' && (
+            <>
+              <PlaceCard locationDetail={locationDetail} name={name} photo={photo} />
 
-            <DateTimeSelector
-              valueDate={selectedDate}
-              valueTime={selectedTime}
-              onChangeDate={setSelectedDate}
-              onChangeTime={setSelectedTime}
-            />
+              <DateTimeSelector
+                valueDate={selectedDate}
+                valueTime={selectedTime}
+                onChangeDate={setSelectedDate}
+                onChangeTime={setSelectedTime}
+              />
 
-            <StickyBottom>
-              <NextBtn
-                disabled={!finalDateTime}
-                onClick={() => {
-                  if (!finalDateTime) return
-                  setStep('keyword')
+              <StickyBottom>
+                <NextBtn
+                  disabled={!finalDateTime}
+                  onClick={() => {
+                    if (!finalDateTime) return
+                    setStep('keyword')
+                  }}
+                />
+              </StickyBottom>
+            </>
+          )}
+
+          {step === 'keyword' && (
+            <>
+              <PlaceCard locationDetail={locationDetail} name={name} photo={photo} />
+
+              <ReviewKeywordSelector
+                selected={selectedKeywords}
+                onChange={handleKeywordsChange}
+                noKeyword={noKeyword}
+                onNoKeywordChange={handleNoKeywordChange}
+                minPick={1}
+                maxPick={3}
+                valueKey="label"
+              />
+
+              <StickyBottom>
+                <PrevNextBtn
+                  onPrev={() => setStep('date')}
+                  onNext={() => {
+                    if (canGoNextFromKeyword) setStep('media')
+                  }}
+                  nextDisabled={!canGoNextFromKeyword}
+                  prevLabel="이전"
+                  nextLabel="다음"
+                />
+              </StickyBottom>
+            </>
+          )}
+
+          {step === 'media' && (
+            <>
+              <VisitHistory
+                name={name}
+                visitAt={finalDateTime?.toISOString()}
+                keywords={[...selectedKeywords]}
+                noKeyword={noKeyword}
+              />
+
+              <ReviewInput
+                photos={photos}
+                comment={comment}
+                onChange={(p, c) => {
+                  setPhotos(p)
+                  setComment(c)
                 }}
               />
-            </StickyBottom>
-          </>
-        )}
 
-        {step === 'keyword' && (
-          <>
-            <PlaceCard buildingText={buildingText} placeName={placeName} images={images} />
-
-            <ReviewKeywordSelector
-              selected={selectedKeywords}
-              onChange={handleKeywordsChange}
-              noKeyword={noKeyword}
-              onNoKeywordChange={handleNoKeywordChange}
-              minPick={1}
-              maxPick={3}
-              valueKey="label"
-            />
-
-            <StickyBottom>
+              {/* 버튼은 NavBar '위'에 고정 */}
               <PrevNextBtn
-                onPrev={() => setStep('date')}
-                onNext={() => {
-                  if (canGoNextFromKeyword) setStep('media')
-                }}
-                nextDisabled={!canGoNextFromKeyword}
+                onPrev={() => setStep('keyword')}
+                onNext={handleRegister}
                 prevLabel="이전"
-                nextLabel="다음"
+                nextLabel="등록"
+                fixed
               />
-            </StickyBottom>
-          </>
-        )}
+            </>
+          )}
+        </Container>
+      )}
 
-        {step === 'media' && (
-          <>
-            <VisitHistory
-              placeName="공간이름"
-              visitAt={finalDateTime?.toISOString()}
-              visitCount={1}
-              keywords={[...selectedKeywords]}
-              noKeyword={noKeyword}
-            />
-
-            <ReviewInput
-              photos={photos}
-              comment={comment}
-              onChange={(p, c) => {
-                setPhotos(p)
-                setComment(c)
-              }}
-            />
-
-            {/* 버튼은 NavBar '위'에 고정 */}
-            <PrevNextBtn
-              onPrev={() => setStep('keyword')}
-              onNext={handleRegister}
-              prevLabel="이전"
-              nextLabel="등록"
-              fixed
-            />
-          </>
-        )}
-      </Container>
-
-      {/* <ConfirmModal open={showEmptyModal} onCancel={handleCancel} onVisitOnly={handleVisitOnly} /> */}
       <CommonModal
         isOpen={showEmptyModal}
         title="" // 제목은 비워두면 안 보임

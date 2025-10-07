@@ -1,10 +1,9 @@
-// 상단
 import styled from 'styled-components'
 
 type Props = {
-  placeName: string
+  name: string
   visitAt?: string | Date
-  visitCount: number
+  visitCount?: number
   keywords: string[]
   noKeyword: boolean
 }
@@ -78,20 +77,14 @@ function formatDate(isoOrDate?: string | Date) {
   return `${y}.${m}.${day}.(${week})`
 }
 
-const VisitHistory = ({
-  placeName,
-  visitAt,
-  visitCount,
-  keywords,
-  noKeyword,
-}: Props) => {
+const VisitHistory = ({ name, visitAt, visitCount, keywords, noKeyword }: Props) => {
   const dateText = formatDate(visitAt)
 
   return (
     <Wrap>
       <Head>
         <Title>
-          <strong>[{placeName}]</strong>
+          <strong>[{name}]</strong>
           <div className="meta">
             {dateText || '방문 일시 미선택'}
             <span className="visit">{visitCount}번째 방문</span>
