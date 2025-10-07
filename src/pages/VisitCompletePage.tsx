@@ -132,7 +132,6 @@ const VisitCompletePage = () => {
           <PlaceTitle
             name={name}
             locationDetail={locationDetail} // 아랫줄만
-            hideLabel // 윗줄 숨김
             isFavorite={isFavorite}
             onToggleFavorite={() => console.log('toggle favorite')}
             rightSlot={

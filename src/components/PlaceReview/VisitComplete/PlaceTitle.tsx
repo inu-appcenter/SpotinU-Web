@@ -6,20 +6,13 @@ type Props = {
   isFavorite: boolean
   onToggleFavorite?: () => void
   rightSlot?: React.ReactNode
-  hideLabel?: boolean
 }
 
-const PlaceTitle = ({
-  name,
-  locationDetail,
-  onToggleFavorite,
-  rightSlot,
-  hideLabel = false,
-}: Props) => {
+const PlaceTitle = ({ name, locationDetail, onToggleFavorite, rightSlot }: Props) => {
   return (
     <Wrap>
       <Left>
-        {!hideLabel && <Label>{name}</Label>}
+        <Label>{name}</Label>
         <Title>{locationDetail}</Title>
       </Left>
       <Right>
