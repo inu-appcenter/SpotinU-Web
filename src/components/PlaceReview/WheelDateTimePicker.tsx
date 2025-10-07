@@ -27,11 +27,11 @@ const WheelDateTimePicker = ({
   onConfirmTime,
 }: Props) => {
   const [year, setYear] = useState(initialDate.getFullYear())
-  const [month, setMonth] = useState(initialDate.getMonth() + 1) // 1~12
+  const [month, setMonth] = useState(initialDate.getMonth() + 1)
   const [day, setDay] = useState(initialDate.getDate())
 
   const [hour, setHour] = useState(initialTime.hour)
-  const [minute, setMinute] = useState(initialTime.minute - (initialTime.minute % 5)) // 5분 스텝
+  const [minute, setMinute] = useState(initialTime.minute - (initialTime.minute % 5))
 
   const daysInMonth = useMemo(() => new Date(year, month, 0).getDate(), [year, month])
 
@@ -46,7 +46,6 @@ const WheelDateTimePicker = ({
   const hours = useMemo(() => range(0, 23), [])
   const minutes = useMemo(() => range(0, 55, 5), [])
 
-  /** 훅 선언 이후에 조건부 렌더 */
   if (!open) return null
 
   //  바깥 클릭 시 현재 값으로 자동 저장 + 닫기
@@ -59,7 +58,6 @@ const WheelDateTimePicker = ({
   return (
     //  바깥 클릭 -> 자동 저장에  닫기까지
     <Dim onClick={confirmAndClose}>
-      {/* 안쪽 클릭은 전파 막기 (딤 클릭으로 처리되지 않도록) */}
       <Modal role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
         <WheelWrap $cols={mode === 'date' ? 3 : 2}>
           {mode === 'date' ? (

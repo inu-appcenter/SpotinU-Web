@@ -15,7 +15,6 @@ const Wrap = styled.section`
   padding-inline: clamp(2px, 5vw, 9px);
 `
 
-// 업로드 박스
 const UploadBox = styled.button`
   width: 100%;
   min-height: 180px;
@@ -55,7 +54,7 @@ const UploadInner = styled.div`
   }
 `
 
-// 미리보기 영역(있을 때만 노출됨)
+// 미리보기 (있을 때만 띄움
 const PreviewStrip = styled.div`
   display: flex;
   gap: 8px;
@@ -96,7 +95,6 @@ const RemoveBtn = styled.button`
   cursor: pointer;
 `
 
-// 텍스트 박스
 const TextCard = styled.div`
   border-radius: 16px;
   background: #d9d9d9;
@@ -138,14 +136,14 @@ const ReviewInput = ({ photos, comment, maxLength = 400, onChange }: Props) => {
   // 파일 선택 트리거
   const openPicker = () => fileRef.current?.click()
 
-  // 파일 추가
+  // 추가
   const appendFiles = (list: FileList | null) => {
     if (!list) return
     const next = [...photos, ...Array.from(list)]
     onChange(next, comment)
   }
 
-  // 파일 제거
+  //  제거
   const removeAt = (idx: number) => {
     const next = photos.filter((_, i) => i !== idx)
     onChange(next, comment)
@@ -157,14 +155,12 @@ const ReviewInput = ({ photos, comment, maxLength = 400, onChange }: Props) => {
     onChange(photos, v)
   }
 
-  // 미리보기 URL 배열 만들기
   const previews = useMemo(
     () =>
-      photos.map(
-        (f) =>
-          typeof f === 'string'
-            ? { url: f, type: 'image' } // 문자열(URL)인 경우 그대로
-            : { url: URL.createObjectURL(f), type: f.type }, // File인 경우 createObjectURL
+      photos.map((f) =>
+        typeof f === 'string'
+          ? { url: f, type: 'image' }
+          : { url: URL.createObjectURL(f), type: f.type },
       ),
     [photos],
   )
@@ -174,7 +170,6 @@ const ReviewInput = ({ photos, comment, maxLength = 400, onChange }: Props) => {
     return () => previews.forEach((p) => URL.revokeObjectURL(p.url))
   }, [previews])
 
-  // 드래그&드롭(선택)
   const onDrop: React.DragEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault()
     appendFiles(e.dataTransfer.files)

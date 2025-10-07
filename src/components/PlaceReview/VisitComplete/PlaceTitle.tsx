@@ -1,31 +1,23 @@
-// 즐겨찾기 + [공간이름], 호관, 층, 호
 import styled from 'styled-components'
 
 type Props = {
-  label?: string
-  buildingText?: string
-  isFavorite?: boolean
+  name: string
+  locationDetail: string
+  isFavorite: boolean
   onToggleFavorite?: () => void
   rightSlot?: React.ReactNode
-  hideLabel?: boolean
 }
 
-const PlaceTitle = ({
-  label = '[공간 이름]',
-  buildingText = '00호관 00층 00호',
-  onToggleFavorite,
-  rightSlot,
-  hideLabel = false,
-}: Props) => {
+const PlaceTitle = ({ name, locationDetail, onToggleFavorite, rightSlot }: Props) => {
   return (
     <Wrap>
       <Left>
-        {!hideLabel && <Label>{label}</Label>}
-        <Title>{buildingText}</Title>
+        <Label>{name}</Label>
+        <Title>{locationDetail}</Title>
       </Left>
       <Right>
         <StarBtn onClick={onToggleFavorite} aria-label="즐겨찾기" />
-        {rightSlot /*  외부에서 넣은 버튼 */}
+        {rightSlot}
       </Right>
     </Wrap>
   )

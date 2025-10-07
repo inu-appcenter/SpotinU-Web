@@ -3,8 +3,8 @@ import { PencilLine } from 'lucide-react'
 import styled from 'styled-components'
 
 type Props = {
-  label: string // 버튼 텍스트
-  onClick?: () => void // 클릭 이벤트
+  label: string
+  onClick?: () => void
   disabled?: boolean // 비활성화 여부
 }
 
